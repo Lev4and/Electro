@@ -1,0 +1,74 @@
+﻿@model LoginViewModel
+@{
+    ViewData["Title"] = "Вход";
+}
+<!-- ========== MAIN CONTENT ========== -->
+<main id="content" role="main">
+    <!-- breadcrumb -->
+    <div class="bg-gray-13 bg-md-transparent">
+        <div class="container">
+            <!-- breadcrumb -->
+            <div class="my-md-3">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb mb-3 flex-nowrap flex-xl-wrap overflow-auto overflow-xl-visble">
+                        <li class="breadcrumb-item flex-shrink-0 flex-xl-shrink-1"><a asp-area="" asp-controller="Home" asp-action="Index">Главная</a></li>
+                        <li class="breadcrumb-item flex-shrink-0 flex-xl-shrink-1 active" aria-current="page">Мой аккаунт</li>
+                    </ol>
+                </nav>
+            </div>
+            <!-- End breadcrumb -->
+        </div>
+    </div>
+    <!-- End breadcrumb -->
+
+    <div class="container">
+        <div class="mb-4">
+            <h1 class="text-center">Мой аккаунт</h1>
+        </div>
+        <div class="my-4 my-xl-8">
+            <div class="row">
+                <div class="col-md-5 m-auto mb-8 mb-md-0">
+                    <!-- Title -->
+                    <div class="border-bottom border-color-1 mb-6">
+                        <h3 class="d-inline-block section-title mb-0 pb-2 font-size-26">Вход</h3>
+                    </div>
+                    <p class="text-gray-90 mb-4">С возвращением! Войдите в свою учетную запись.</p>
+                    <!-- End Title -->
+                    <form method="post" asp-area="" asp-controller="Account" asp-action="Login">
+                        <!-- Form Group -->
+                        <div class="form-group">
+                            <label class="form-label" style="text-transform: none;">
+                                <span style="text-transform: none;">Имя пользователя или адрес электронной почты</span>
+                                <span class="text-danger">*</span>
+                            </label>
+                            <input type="text" class="form-control" placeholder="Имя пользователя или адрес электронной почты" asp-for="EmailOrLogin" required>
+                            <span class="invalid-feedback" style="display: block;" asp-validation-for="EmailOrLogin"></span>
+                        </div>
+                        <!-- End Form Group -->
+                        <!-- Form Group -->
+                        <div class="form-group">
+                            <label class="form-label" style="text-transform: none;">
+                                <span style="text-transform: none;">Пароль</span>
+                                <span class="text-danger">*</span>
+                            </label>
+                            <input type="password" class="form-control" placeholder="Пароль" asp-for="Password" required>
+                            <span class="invalid-feedback" style="display: block;" asp-validation-for="Password"></span>
+                        </div>
+                        <!-- End Form Group -->
+                        <!-- Button -->
+                        <div class="mb-1">
+                            <div class="mb-3 text-center">
+                                <button type="submit" class="btn btn-primary-dark-w px-5">Войти</button>
+                            </div>
+                            <div class="mb-2 text-center">
+                                <a class="text-blue" href="#">Вы потеряли свой пароль?</a>
+                            </div>
+                        </div>
+                        <!-- End Button -->
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+<!-- ========== END MAIN CONTENT ========== -->

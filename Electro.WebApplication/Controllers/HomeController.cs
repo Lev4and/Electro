@@ -4,13 +4,16 @@ namespace Electro.WebApplication.Controllers
 {
     public class HomeController : Controller
     {
-        public HomeController()
-        {
-
-        }
-
         public IActionResult Index()
         {
+            if (User.Identity.IsAuthenticated)
+            {
+                if (User.IsInRole("Администратор"))
+                {
+                    return Redirect("~/Admin/Home/Index");
+                }
+            }
+
             return View();
         }
     }

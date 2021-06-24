@@ -1,6 +1,16 @@
-﻿<!-- ========== FOOTER ========== -->
+﻿@{
+    ViewData["Controller"] = ViewContext.RouteData.Values["Controller"];
+    ViewData["Action"] = ViewContext.RouteData.Values["Action"];
+}
+<!-- ========== FOOTER ========== -->
 <footer>
-    @await Html.PartialAsync("~/Views/Shared/Footer/TopWidgetPartial.cshtml")
+    @if (string.IsNullOrEmpty(ViewData["Controller"].ToString()) ? true : ViewData["Controller"].ToString() == "Home")
+    {
+        @if (string.IsNullOrEmpty(ViewData["Action"].ToString()) ? true : ViewData["Action"].ToString() == "Index")
+        {
+            @await Html.PartialAsync("~/Views/Shared/Footer/TopWidgetPartial.cshtml")
+        }
+    }
     @await Html.PartialAsync("~/Views/Shared/Footer/NewsletterPartial.cshtml")
     @await Html.PartialAsync("~/Views/Shared/Footer/BottomWidgetsPartial.cshtml")
     @await Html.PartialAsync("~/Views/Shared/Footer/CopyRightPartial.cshtml")

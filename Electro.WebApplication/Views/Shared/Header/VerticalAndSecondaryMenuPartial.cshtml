@@ -1,0 +1,9 @@
+﻿@using Electro.WebApplication.Components.Header.VerticalAndSecondaryMenu
+<!-- Vertical-and-secondary-menu -->
+<div class="d-none d-xl-block container">
+    <div class="row">
+        @await Component.InvokeAsync(typeof(VerticalMenu))
+        @await Component.InvokeAsync(typeof(SecondaryMenu))
+    </div>
+</div>
+<!-- End Vertical-and-secondary-menu -->

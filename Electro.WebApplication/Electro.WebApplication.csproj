@@ -13,9 +13,7 @@
     <Folder Include="Area\Admin\Views\" />
     <Folder Include="Area\Client\Controllers\" />
     <Folder Include="Area\Client\Views\" />
-    <Folder Include="Components\" />
     <Folder Include="Models\" />
-    <Folder Include="Views\Shared\Components\" />
   </ItemGroup>
 
   <ItemGroup>

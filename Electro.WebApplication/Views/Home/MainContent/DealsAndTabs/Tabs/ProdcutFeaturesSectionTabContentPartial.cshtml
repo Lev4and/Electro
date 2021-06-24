@@ -1,0 +1,8 @@
+﻿@using Electro.WebApplication.Components.MainContent.DealsAndTabs.Tabs
+<!-- Tab Content -->
+<div class="tab-content" id="pills-tabContent">
+    @await Component.InvokeAsync(typeof(Featured)) 
+    @await Component.InvokeAsync(typeof(OnSale))
+    @await Component.InvokeAsync(typeof(TopRated))
+</div>
+<!-- End Tab Content -->

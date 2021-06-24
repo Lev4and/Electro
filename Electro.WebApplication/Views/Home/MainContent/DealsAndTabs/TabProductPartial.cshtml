@@ -1,0 +1,9 @@
+﻿@using Electro.WebApplication.Components.MainContent.DealsAndTabs.Deal 
+<!-- Deals-and-tabs -->
+<div class="mb-5">
+    <div class="row">
+        @await Component.InvokeAsync(typeof(Deal)) 
+        @await Html.PartialAsync("~/Views/Home/MainContent/DealsAndTabs/Tabs/TabProdcutFeaturesPartial.cshtml")
+    </div>
+</div>
+<!-- End Deals-and-tabs -->

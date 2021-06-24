@@ -8,20 +8,38 @@ namespace Electro.WebApplication
 {
     public class Startup
     {
+        public IConfiguration Configuration { get; }
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
         }
 
-        public IConfiguration Configuration { get; }
-
-        // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
+            //services
+            //.AddMvc()
+            //.AddRazorOptions(o =>
+            //{
+            //    o.ViewLocationFormats.Add("/Views/Shared/Components/Footer/TopWidget/OnSaleProducts/");
+            //    o.ViewLocationFormats.Add("/Views/Shared/Components/Footer/TopWidget/FeaturedProducts/");
+            //    o.ViewLocationFormats.Add("/Views/Shared/Components/Footer/TopWidget/TopRatedProducts/");
+
+            //    o.ViewLocationFormats.Add("/Views/Shared/Components/Header/Topbar/Language/");
+            //    o.ViewLocationFormats.Add("/Views/Shared/Components/Header/Topbar/AccountSidebarToggleButton/");
+            //    o.ViewLocationFormats.Add("/Views/Shared/Components/Header/VerticalAndSecondaryMenu/SecondaryMenu/");
+            //    o.ViewLocationFormats.Add("/Views/Shared/Components/Header/VerticalAndSecondaryMenu/Topbar/VerticalMenu/");
+
+            //    o.ViewLocationFormats.Add("/Views/Home/Components/MainContent/Banner/");
+            //    o.ViewLocationFormats.Add("/Views/Home/Components/MainContent/DealsAndTabs/Deal/");
+            //    o.ViewLocationFormats.Add("/Views/Home/Components/MainContent/DealsAndTabs/Tabs/Featured/");
+            //    o.ViewLocationFormats.Add("/Views/Home/Components/MainContent/DealsAndTabs/Tabs/OnSale/");
+            //    o.ViewLocationFormats.Add("/Views/Home/Components/MainContent/DealsAndTabs/Tabs/TopRated/");
+            //    o.ViewLocationFormats.Add("/Views/Home/Components/MainContent/SliderSection/");
+            //});
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
@@ -31,7 +49,6 @@ namespace Electro.WebApplication
             else
             {
                 app.UseExceptionHandler("/Home/Error");
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
             app.UseHttpsRedirection();

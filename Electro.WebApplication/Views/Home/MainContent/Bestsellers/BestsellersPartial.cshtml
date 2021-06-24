@@ -1,0 +1,10 @@
+﻿@using Electro.WebApplication.Components.MainContent.Bestsellers 
+<!-- Product-cards-carousel -->
+<div class="space-top-2">
+    <div class=" d-flex justify-content-between border-bottom border-color-1 flex-md-nowrap flex-wrap border-sm-bottom-0">
+        <h3 class="section-title mb-0 pb-2 font-size-22">Bestsellers</h3>
+        @await Component.InvokeAsync(typeof(Nav))
+    </div>
+    @await Component.InvokeAsync(typeof(SlickCarousel))
+</div>
+<!-- End Prodcut-cards-carousel -->

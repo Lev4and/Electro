@@ -1,0 +1,30 @@
+﻿@using Electro.WebApplication.Components.Header.Topbar
+<!-- Topbar -->
+<div class="u-header-topbar py-2 d-none d-xl-block">
+    <div class="container">
+        <div class="d-flex align-items-center">
+            <div class="topbar-left">
+                <a href="#" class="text-gray-110 font-size-13 hover-on-dark">Welcome to Worldwide Electronics Store</a>
+            </div>
+            <div class="topbar-right ml-auto">
+                <ul class="list-inline mb-0">
+                    <li class="list-inline-item mr-0 u-header-topbar__nav-item u-header-topbar__nav-item-border">
+                        <a href="../home/contact-v2.html" class="u-header-topbar__nav-link"><i class="ec ec-map-pointer mr-1"></i> Store Locator</a>
+                    </li>
+                    <li class="list-inline-item mr-0 u-header-topbar__nav-item u-header-topbar__nav-item-border">
+                        <a href="../shop/track-your-order.html" class="u-header-topbar__nav-link"><i class="ec ec-transport mr-1"></i> Track Your Order</a>
+                    </li>
+                    <li class="list-inline-item mr-0 u-header-topbar__nav-item u-header-topbar__nav-item-border u-header-topbar__nav-item-no-border u-header-topbar__nav-item-border-single">
+                        <div class="d-flex align-items-center">
+                            @await Component.InvokeAsync(typeof(Language))
+                        </div>
+                    </li>
+                    <li class="list-inline-item mr-0 u-header-topbar__nav-item u-header-topbar__nav-item-border">
+                        @await Component.InvokeAsync(typeof(AccountSidebarToggleButton))
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- End Topbar -->

@@ -1,0 +1,59 @@
+﻿@using Electro.WebApplication.Areas.Admin.Components
+<header class="top-header">
+    <nav class="navbar navbar-expand">
+        <div class="left-topbar d-flex align-items-center">
+            <a href="javascript:;" class="toggle-btn">
+                <i class="bx bx-menu"></i>
+            </a>
+        </div>
+        <div class="flex-grow-1 search-bar">
+            <div class="input-group">
+                <div class="input-group-prepend search-arrow-back">
+                    <button class="btn btn-search-back" type="button">
+                        <i class="bx bx-arrow-back"></i>
+                    </button>
+                </div>
+                <input type="text" class="form-control" placeholder="Поиск" />
+                <div class="input-group-append">
+                    <button class="btn btn-search" type="button">
+                        <i class="lni lni-search-alt"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="right-topbar ml-auto">
+            <ul class="navbar-nav">
+                <li class="nav-item search-btn-mobile">
+                    <a class="nav-link position-relative" href="javascript:;">
+                        <i class="bx bx-search vertical-align-middle"></i>
+                    </a>
+                </li>
+                <li class="nav-item dropdown dropdown-lg">
+                    <a class="nav-link dropdown-toggle dropdown-toggle-nocaret position-relative" href="javascript:;" data-toggle="dropdown">
+                        <span class="msg-count">0</span>
+                        <i class="bx bx-comment-detail vertical-align-middle"></i>
+                    </a>
+                </li>
+                <li class="nav-item dropdown dropdown-lg">
+                    <a class="nav-link dropdown-toggle dropdown-toggle-nocaret position-relative" href="javascript:;" data-toggle="dropdown">
+                        <i class="bx bx-bell vertical-align-middle"></i>
+                        <span class="msg-count">0</span>
+                    </a>
+                </li>
+                @await Component.InvokeAsync(typeof(AdminUserProfile))
+                <li class="nav-item dropdown dropdown-language">
+                    <a class="nav-link dropdown-toggle dropdown-toggle-nocaret" href="javascript:;" data-toggle="dropdown">
+                        <div class="lang d-flex">
+                            <div>
+                                <i class="flag-icon flag-icon-ru"></i>
+                            </div>
+                            <div>
+                                <span>Ru</span>
+                            </div>
+                        </div>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+</header>

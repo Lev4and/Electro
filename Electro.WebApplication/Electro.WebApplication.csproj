@@ -9,11 +9,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Area\Admin\Controllers\" />
-    <Folder Include="Area\Admin\Views\" />
-    <Folder Include="Area\Client\Controllers\" />
-    <Folder Include="Area\Client\Views\" />
-    <Folder Include="Models\" />
+    <Folder Include="Areas\Client\Controllers\" />
+    <Folder Include="Areas\Client\Views\" />
+    <Folder Include="wwwroot\upload\" />
   </ItemGroup>
 
   <ItemGroup>

@@ -1,11 +1,53 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Electro.Model.Database.Entities;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using System;
 
 namespace Electro.Model.Database
 {
-    public class ElectroDbContext : IdentityDbContext<IdentityUser>
+    public class ElectroDbContext : IdentityDbContext<ApplicationUser, ApplicatonRole, Guid>
     {
+        public DbSet<Category> Categories { get; set; }
+
+        public DbSet<Client> Clients { get; set; }
+
+        public DbSet<CategoryPhoto> CategoryPhotos { get; set; }
+
+        public DbSet<Characteristic> Characteristics { get; set; }
+
+        public DbSet<CharacteristicCategory> CharacteristicCategories { get; set; }
+
+        public DbSet<CharacteristicQuantityUnit> CharacteristicQuantityUnits { get; set; }
+
+        public DbSet<CharacteristicQuantityUnitValue> CharacteristicQuantityUnitValues { get; set; }
+
+        public DbSet<Manufacturer> Manufacturers { get; set; }
+
+        public DbSet<ManufacturerInformation> ManufacturerInformation { get; set; }
+
+        public DbSet<ManufacturerLogo> ManufacturerLogos { get; set; }
+
+        public DbSet<Product> Products { get; set; }
+
+        public DbSet<ProductCharacteristicQuantityUnitValue> ProductCharacteristicQuantityUnitValues { get; set; }
+
+        public DbSet<ProductInformation> ProductInformation { get; set; }
+
+        public DbSet<ProductMainPhoto> ProductMainPhotos { get; set; }
+
+        public DbSet<ProductPhoto> ProductPhotos { get; set; }
+
+        public DbSet<Quantity> Quantities { get; set; }
+
+        public DbSet<QuantityUnit> QuantityUnits { get; set; }
+
+        public DbSet<SectionCharacteristic> SectionsCharacteristics { get; set; }
+
+        public DbSet<SectionCharacteristicCategory> SectionCharacteristicCategories { get; set; }
+
+        public DbSet<Unit> Units { get; set; }
+
         public ElectroDbContext(DbContextOptions<ElectroDbContext> options) : base(options)
         {
 
@@ -24,30 +66,140 @@ namespace Electro.Model.Database
         {
             base.OnModelCreating(builder);
 
-            builder.Entity<IdentityRole>().HasData(new IdentityRole
+            builder.Entity<ApplicatonRole>().HasData(new ApplicatonRole
             {
-                Id = "B867520A-92DB-4658-BE39-84DA53A601C0",
+                Id = Guid.Parse("B867520A-92DB-4658-BE39-84DA53A601C0"),
                 Name = "Администратор",
                 NormalizedName = "АДМИНИСТРАТОР"
             });
 
-            builder.Entity<IdentityUser>().HasData(new IdentityUser
+            builder.Entity<ApplicationUser>().HasData(new ApplicationUser
             {
-                Id = "21F7B496-C675-4E8A-A34C-FC5EC0762FDB",
+                Id = Guid.Parse("21F7B496-C675-4E8A-A34C-FC5EC0762FDB"),
                 UserName = "Admin",
                 NormalizedUserName = "ADMIN",
                 Email = "andrey.levchenko.2001@gmail.com",
                 NormalizedEmail = "ANDREY.LEVCHENKO.2001@GMAIL.COM",
                 EmailConfirmed = true,
-                PasswordHash = new PasswordHasher<IdentityUser>().HashPassword(null, "Admin"),
+                PasswordHash = new PasswordHasher<ApplicationUser>().HashPassword(null, "Admin"),
                 SecurityStamp = string.Empty
             });
 
-            builder.Entity<IdentityUserRole<string>>().HasData(new IdentityUserRole<string>
+            builder.Entity<IdentityUserRole<Guid>>().HasData(new IdentityUserRole<Guid>
             {
-                RoleId = "B867520A-92DB-4658-BE39-84DA53A601C0",
-                UserId = "21F7B496-C675-4E8A-A34C-FC5EC0762FDB"
+                RoleId = Guid.Parse("B867520A-92DB-4658-BE39-84DA53A601C0"),
+                UserId = Guid.Parse("21F7B496-C675-4E8A-A34C-FC5EC0762FDB")
             });
+
+            builder.Entity<ApplicationUser>()
+                .HasOne(user => user.Client)
+                .WithOne(client => client.User)
+                .HasForeignKey<Client>(client => client.UserId);
+
+            builder.Entity<Category>()
+                .HasMany(category => category.Children)
+                .WithOne(category => category.Parent)
+                .HasForeignKey(category => category.ParentId);
+
+            builder.Entity<Category>()
+                .HasOne(category => category.Photo)
+                .WithOne(photo => photo.Category)
+                .HasForeignKey<CategoryPhoto>(photo => photo.CategoryId);
+
+            builder.Entity<Category>()
+                .HasMany(category => category.Characteristics)
+                .WithOne(characteristic => characteristic.Category)
+                .HasForeignKey(characteristic => characteristic.CategoryId);
+
+            builder.Entity<Category>()
+                .HasMany(category => category.SectionsCharacteristics)
+                .WithOne(sectionCharacteristic => sectionCharacteristic.Category)
+                .HasForeignKey(sectionCharacteristic => sectionCharacteristic.CategoryId);
+
+            builder.Entity<Category>()
+                .HasMany(category => category.Products)
+                .WithOne(product => product.Category)
+                .HasForeignKey(product => product.CategoryId);
+
+            builder.Entity<Characteristic>()
+                .HasMany(characteristic => characteristic.Categories)
+                .WithOne(category => category.Characteristic)
+                .HasForeignKey(category => category.CharacteristicId);
+
+            builder.Entity<Characteristic>()
+                .HasMany(characteristic => characteristic.CharacteristicQuantityUnits)
+                .WithOne(characteristicQuantityUnit => characteristicQuantityUnit.Characteristic)
+                .HasForeignKey(characteristicQuantityUnit => characteristicQuantityUnit.CharacteristicId);
+
+            builder.Entity<CharacteristicQuantityUnit>()
+                .HasMany(characteristicQuantityUnit => characteristicQuantityUnit.Values)
+                .WithOne(characteristicQuantityUnitValue => characteristicQuantityUnitValue.CharacteristicQuantityUnit)
+                .HasForeignKey(characteristicQuantityUnitValue => characteristicQuantityUnitValue.CharacteristicQuantityUnitId);
+
+            builder.Entity<CharacteristicQuantityUnitValue>()
+                .HasMany(characteristicQuantityUnitValue => characteristicQuantityUnitValue.Products)
+                .WithOne(product => product.CharacteristicQuantityUnitValue)
+                .HasForeignKey(product => product.CharacteristicQuantityUnitValueId);
+
+            builder.Entity<Manufacturer>()
+                .HasOne(manufacturer => manufacturer.Logo)
+                .WithOne(logo => logo.Manufacturer)
+                .HasForeignKey<ManufacturerLogo>(logo => logo.ManufacturerId);
+
+            builder.Entity<Manufacturer>()
+                .HasOne(manufacturer => manufacturer.Information)
+                .WithOne(information => information.Manufacturer)
+                .HasForeignKey<ManufacturerInformation>(information => information.ManufacturerId);
+
+            builder.Entity<Manufacturer>()
+                .HasMany(manufacturer => manufacturer.Products)
+                .WithOne(produt => produt.Manufacturer)
+                .HasForeignKey(product => product.ManufacturerId);
+
+            builder.Entity<Product>()
+                .HasOne(product => product.Information)
+                .WithOne(productInformation => productInformation.Product)
+                .HasForeignKey<ProductInformation>(productInformation => productInformation.ProductId);
+
+            builder.Entity<Product>()
+                .HasOne(product => product.MainPhoto)
+                .WithOne(mainPhoto => mainPhoto.Product)
+                .HasForeignKey<ProductMainPhoto>(mainPhoto => mainPhoto.ProductId);
+
+            builder.Entity<Product>()
+                .HasMany(product => product.Photos)
+                .WithOne(photo => photo.Product)
+                .HasForeignKey(photo => photo.ProductId);
+
+            builder.Entity<Product>()
+                .HasMany(product => product.CharacteristicQuantityUnitValues)
+                .WithOne(characteristicQuantityUnitValue => characteristicQuantityUnitValue.Product)
+                .HasForeignKey(characteristicQuantityUnitValue => characteristicQuantityUnitValue.ProductId);
+
+            builder.Entity<Quantity>()
+                .HasMany(quantity => quantity.QuantityUnits)
+                .WithOne(quantityUnit => quantityUnit.Quantity)
+                .HasForeignKey(quantityUnit => quantityUnit.QuantityId);
+
+            builder.Entity<QuantityUnit>()
+                .HasMany(quantityUnit => quantityUnit.CharacteristicQuantityUnits)
+                .WithOne(characteristicQuantityUnit => characteristicQuantityUnit.QuantityUnit)
+                .HasForeignKey(characteristicQuantityUnit => characteristicQuantityUnit.QuantityUnitId);
+
+            builder.Entity<SectionCharacteristic>()
+                .HasMany(sectionCharacteristic => sectionCharacteristic.Categories)
+                .WithOne(category => category.Section)
+                .HasForeignKey(category => category.SectionId);
+
+            builder.Entity<SectionCharacteristic>()
+                .HasMany(sectionCharacteristic => sectionCharacteristic.Characteristics)
+                .WithOne(characteristics => characteristics.Section)
+                .HasForeignKey(characteristics => characteristics.SectionId);
+
+            builder.Entity<Unit>()
+                .HasMany(unit => unit.QuantityUnits)
+                .WithOne(quantityUnit => quantityUnit.Unit)
+                .HasForeignKey(quantityUnit => quantityUnit.UnitId);
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Electro.Model.Database.Entities;
 using System;
 using System.Linq;
 
@@ -10,15 +10,15 @@ namespace Electro.Model.Database.Repositories.Abstract
 
         bool ContainsUserByEmail(string email);
 
-        bool ContainsUserByUserIdAndUserName(string userId, string userName);
+        bool ContainsUserByIdAndName(Guid id, string name);
 
-        bool ContainsUserByUserIdAndEmail(string userId, string email);
+        bool ContainsUserByIdAndEmail(Guid id, string email);
 
-        bool SaveUser(IdentityUser entity, IdentityRole role, string currentPassword, string newPassword);
+        bool SaveUser(ApplicationUser entity, ApplicatonRole role, string currentPassword, string newPassword);
 
-        IdentityUser GetUserById(Guid id, bool track = false);
+        ApplicationUser GetUserById(Guid id, bool track = false);
 
-        IQueryable<IdentityUser> GetManagers(bool track = false);
+        IQueryable<ApplicationUser> GetManagers(bool track = false);
 
         void DeleteManagerById(Guid id);
     }

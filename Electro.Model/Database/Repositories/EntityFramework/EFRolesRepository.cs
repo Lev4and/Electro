@@ -1,5 +1,5 @@
-﻿using Electro.Model.Database.Repositories.Abstract;
-using Microsoft.AspNetCore.Identity;
+﻿using Electro.Model.Database.Entities;
+using Electro.Model.Database.Repositories.Abstract;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 
@@ -14,7 +14,7 @@ namespace Electro.Model.Database.Repositories.EntityFramework
             _context = context;
         }
 
-        public IdentityRole GetRoleByName(string name, bool track = false)
+        public ApplicatonRole GetRoleByName(string name, bool track = false)
         {
             if (track)
             {
@@ -26,7 +26,7 @@ namespace Electro.Model.Database.Repositories.EntityFramework
             }
         }
 
-        public IQueryable<IdentityRole> GetRoles(bool track = false)
+        public IQueryable<ApplicatonRole> GetRoles(bool track = false)
         {
             if (track)
             {

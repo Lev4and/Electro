@@ -1,4 +1,5 @@
 ﻿using Electro.Model.Database;
+using Electro.Model.Database.Entities;
 using Electro.WebApplication.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -11,10 +12,10 @@ namespace Electro.WebApplication.Controllers
     public class AccountController : Controller
     {
         private readonly DataManager _dataManager;
-        private readonly UserManager<IdentityUser> _userManager;
-        private readonly SignInManager<IdentityUser> _signInManager;
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly SignInManager<ApplicationUser> _signInManager;
 
-        public AccountController(DataManager dataManager, UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager)
+        public AccountController(DataManager dataManager, UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager)
         {
             _dataManager = dataManager;
             _userManager = userManager;

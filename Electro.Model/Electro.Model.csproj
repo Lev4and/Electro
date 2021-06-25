@@ -5,6 +5,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Database\Migrations\20210625125506_InitDatabase.cs" />
+    <Compile Remove="Database\Migrations\20210625125506_InitDatabase.Designer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.1.16" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.16" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.1.16">
@@ -19,7 +24,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Database\Entities\" />
+    <Folder Include="Database\Migrations\" />
   </ItemGroup>
 
 </Project>

@@ -1,12 +1,12 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Electro.Model.Database.Entities;
 using System.Linq;
 
 namespace Electro.Model.Database.Repositories.Abstract
 {
     public interface IRolesRepository
     {
-        IdentityRole GetRoleByName(string name, bool track = false);
+        ApplicatonRole GetRoleByName(string name, bool track = false);
 
-        IQueryable<IdentityRole> GetRoles(bool track = false);
+        IQueryable<ApplicatonRole> GetRoles(bool track = false);
     }
 }

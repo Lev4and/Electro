@@ -1,4 +1,5 @@
 using Electro.Model.Database;
+using Electro.Model.Database.Entities;
 using Electro.Model.Database.Repositories.Abstract;
 using Electro.Model.Database.Repositories.EntityFramework;
 using Electro.WebApplication.Services;
@@ -26,8 +27,8 @@ namespace Electro.WebApplication
         {
             Configuration.Bind("DbConfig", new DbConfig());
 
-            services.AddTransient<UserManager<IdentityUser>>();
-            services.AddTransient<RoleManager<IdentityRole>>();
+            services.AddTransient<UserManager<ApplicationUser>>();
+            services.AddTransient<RoleManager<ApplicatonRole>>();
             services.AddTransient<IRolesRepository, EFRolesRepository>();
             services.AddTransient<IUsersRepository, EFUsersRepository>();
             services.AddTransient<DataManager>();
@@ -36,7 +37,7 @@ namespace Electro.WebApplication
                 options.UseSqlServer(DbConfig.ConnectionString);
             });
 
-            services.AddIdentity<IdentityUser, IdentityRole>(options =>
+            services.AddIdentity<ApplicationUser, ApplicatonRole>(options =>
             {
                 options.Password.RequireDigit = true;
                 options.Password.RequiredLength = 5;

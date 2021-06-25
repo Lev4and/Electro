@@ -1,0 +1,32 @@
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+
+namespace Electro.Model.Database.Entities
+{
+    public class Product
+    {
+        public Guid Id { get; set; }
+
+        public Guid CategoryId { get; set; }
+
+        public Guid ManufacturerId { get; set; }
+
+        [Required]
+        public string Model { get; set; }
+
+        public double Price { get; set; }
+
+        public Category Category { get; set; }
+
+        public Manufacturer Manufacturer { get; set; }
+
+        public ProductMainPhoto MainPhoto { get; set; }
+
+        public ProductInformation Information { get; set; }
+
+        public virtual ICollection<ProductPhoto> Photos { get; set; }
+
+        public virtual ICollection<ProductCharacteristicQuantityUnitValue> CharacteristicQuantityUnitValues { get; set; }
+    }
+}

@@ -1,4 +1,5 @@
-﻿using Electro.Model.Database.Repositories.Abstract;
+﻿using Electro.Model.Database.Entities;
+using Electro.Model.Database.Repositories.Abstract;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -9,9 +10,9 @@ namespace Electro.Model.Database.Repositories.EntityFramework
     public class EFUsersRepository : IUsersRepository
     {
         private readonly ElectroDbContext _context;
-        private readonly UserManager<IdentityUser> _userManager;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public EFUsersRepository(ElectroDbContext context, UserManager<IdentityUser> userManager)
+        public EFUsersRepository(ElectroDbContext context, UserManager<ApplicationUser> userManager)
         {
             _context = context;
             _userManager = userManager;
@@ -27,17 +28,17 @@ namespace Electro.Model.Database.Repositories.EntityFramework
             return _userManager.Users.AsNoTracking().SingleOrDefault(user => user.Email == email) != null;
         }
 
-        public bool ContainsUserByUserIdAndUserName(string userId, string userName)
+        public bool ContainsUserByIdAndName(Guid id, string name)
         {
-            return _userManager.Users.AsNoTracking().SingleOrDefault(user => user.Id == userId && user.UserName == userName) != null;
+            return _userManager.Users.AsNoTracking().SingleOrDefault(user => user.Id == id && user.UserName == name) != null;
         }
 
-        public bool ContainsUserByUserIdAndEmail(string userId, string email)
+        public bool ContainsUserByIdAndEmail(Guid id, string email)
         {
-            return _userManager.Users.AsNoTracking().SingleOrDefault(user => user.Id == userId && user.Email == email) != null;
+            return _userManager.Users.AsNoTracking().SingleOrDefault(user => user.Id == id && user.Email == email) != null;
         }
 
-        public bool SaveUser(IdentityUser entity, IdentityRole role, string currentPassword, string newPassword)
+        public bool SaveUser(ApplicationUser entity, ApplicatonRole role, string currentPassword, string newPassword)
         {
             if (string.IsNullOrEmpty(newPassword))
             {
@@ -56,9 +57,9 @@ namespace Electro.Model.Database.Repositories.EntityFramework
             }
             else
             {
-                if (!ContainsUserByUserIdAndUserName(entity.Id, entity.UserName) || !ContainsUserByUserIdAndEmail(entity.Id, entity.Email))
+                if (!ContainsUserByIdAndName(entity.Id, entity.UserName) || !ContainsUserByIdAndEmail(entity.Id, entity.Email))
                 {
-                    if (!ContainsUserByUserIdAndUserName(entity.Id, entity.UserName) ? !ContainsUserByName(entity.UserName) : !ContainsUserByEmail(entity.Email))
+                    if (!ContainsUserByIdAndName(entity.Id, entity.UserName) ? !ContainsUserByName(entity.UserName) : !ContainsUserByEmail(entity.Email))
                     {
                         if (_userManager.UpdateAsync(entity).Result == IdentityResult.Success)
                         {
@@ -110,19 +111,19 @@ namespace Electro.Model.Database.Repositories.EntityFramework
             return false;
         }
 
-        public IdentityUser GetUserById(Guid id, bool track = false)
+        public ApplicationUser GetUserById(Guid id, bool track = false)
         {
             if (track)
             {
-                return _userManager.Users.SingleOrDefault(user => user.Id == id.ToString("D"));
+                return _userManager.Users.SingleOrDefault(user => user.Id == id);
             }
             else
             {
-                return _userManager.Users.AsNoTracking().SingleOrDefault(user => user.Id == id.ToString("D"));
+                return _userManager.Users.AsNoTracking().SingleOrDefault(user => user.Id == id);
             }
         }
 
-        public IQueryable<IdentityUser> GetManagers(bool track = false)
+        public IQueryable<ApplicationUser> GetManagers(bool track = false)
         {
             if (track)
             {

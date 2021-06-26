@@ -17,13 +17,13 @@ namespace Electro.Model.Database.Entities
 
         public double Price { get; set; }
 
-        public Category Category { get; set; }
+        public virtual Category Category { get; set; }
 
-        public Manufacturer Manufacturer { get; set; }
+        public virtual Manufacturer Manufacturer { get; set; }
 
-        public ProductMainPhoto MainPhoto { get; set; }
+        public virtual ProductMainPhoto MainPhoto { get; set; }
 
-        public ProductInformation Information { get; set; }
+        public virtual ProductInformation Information { get; set; }
 
         public virtual ICollection<ProductPhoto> Photos { get; set; }
 

@@ -10,8 +10,8 @@ namespace Electro.Model.Database.Entities
 
         public Guid CategoryId { get; set; }
 
-        public SectionCharacteristic Section { get; set; }
+        public virtual SectionCharacteristic Section { get; set; }
 
-        public Category Category { get; set; }
+        public virtual Category Category { get; set; }
     }
 }

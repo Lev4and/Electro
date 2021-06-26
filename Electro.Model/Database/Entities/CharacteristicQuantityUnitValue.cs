@@ -13,7 +13,7 @@ namespace Electro.Model.Database.Entities
         [Required]
         public string Value { get; set; }
 
-        public CharacteristicQuantityUnit CharacteristicQuantityUnit { get; set; }
+        public virtual CharacteristicQuantityUnit CharacteristicQuantityUnit { get; set; }
 
         public virtual ICollection<ProductCharacteristicQuantityUnitValue> Products { get; set; }
     }

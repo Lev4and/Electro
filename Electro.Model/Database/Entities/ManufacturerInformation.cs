@@ -12,6 +12,6 @@ namespace Electro.Model.Database.Entities
         [Required]
         public string Description { get; set; }
 
-        public Manufacturer Manufacturer { get; set; }
+        public virtual Manufacturer Manufacturer { get; set; }
     }
 }

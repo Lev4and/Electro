@@ -11,9 +11,9 @@ namespace Electro.Model.Database.Entities
 
         public Guid UnitId { get; set; }
 
-        public Quantity Quantity { get; set; }
+        public virtual Quantity Quantity { get; set; }
 
-        public Unit Unit { get; set; }
+        public virtual Unit Unit { get; set; }
 
         public virtual ICollection<CharacteristicQuantityUnit> CharacteristicQuantityUnits { get; set; }
     }

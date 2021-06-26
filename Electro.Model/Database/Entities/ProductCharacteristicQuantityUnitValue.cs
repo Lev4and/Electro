@@ -10,8 +10,8 @@ namespace Electro.Model.Database.Entities
 
         public Guid CharacteristicQuantityUnitValueId { get; set; }
 
-        public Product Product { get; set; }
+        public virtual Product Product { get; set; }
 
-        public CharacteristicQuantityUnitValue CharacteristicQuantityUnitValue { get; set; }
+        public virtual CharacteristicQuantityUnitValue CharacteristicQuantityUnitValue { get; set; }
     }
 }

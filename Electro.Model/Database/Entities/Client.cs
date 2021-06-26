@@ -8,6 +8,6 @@ namespace Electro.Model.Database.Entities
 
         public Guid UserId { get; set; }
 
-        public ApplicationUser User { get; set; }
+        public virtual ApplicationUser User { get; set; }
     }
 }

@@ -11,9 +11,9 @@ namespace Electro.Model.Database.Entities
         [Required]
         public string Name { get; set; }
 
-        public ManufacturerLogo Logo { get; set; }
+        public virtual ManufacturerLogo Logo { get; set; }
 
-        public ManufacturerInformation Information { get; set; }
+        public virtual ManufacturerInformation Information { get; set; }
 
         public virtual ICollection<Product> Products { get; set; }
     }

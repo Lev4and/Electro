@@ -11,9 +11,9 @@ namespace Electro.Model.Database.Entities
 
         public string Name { get; set; }
 
-        public Category Parent { get; set; }
+        public virtual Category Parent { get; set; }
 
-        public CategoryPhoto Photo { get; set; }
+        public virtual CategoryPhoto Photo { get; set; }
 
         public virtual ICollection<Product> Products { get; set; }
 

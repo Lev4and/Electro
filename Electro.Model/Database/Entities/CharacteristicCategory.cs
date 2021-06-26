@@ -16,10 +16,10 @@ namespace Electro.Model.Database.Entities
 
         public bool UseWhenDisplayingAsBasicInformation { get; set; }
 
-        public SectionCharacteristic Section { get; set; }
+        public virtual SectionCharacteristic Section { get; set; }
 
-        public Characteristic Characteristic { get; set; }
+        public virtual Characteristic Characteristic { get; set; }
 
-        public Category Category { get; set; }
+        public virtual Category Category { get; set; }
     }
 }

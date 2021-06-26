@@ -3,6 +3,8 @@ using Electro.Model.Database.Entities;
 using Electro.Model.Database.Repositories.Abstract;
 using Electro.Model.Database.Repositories.EntityFramework;
 using Electro.WebApplication.Services;
+using Electro.WebApplication.Services.ImageResizable;
+using Electro.WebApplication.Services.ImageResizable.ImageProfiles;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -27,10 +29,18 @@ namespace Electro.WebApplication
         {
             Configuration.Bind("DbConfig", new DbConfig());
 
-            services.AddTransient<UserManager<ApplicationUser>>();
+            services.AddTransient<IImageProfile, BoxImageProfile>();
+            services.AddTransient<IImageProfile, LogoImageProfile>();
+            services.AddTransient<ImageService>();
+
+            services.AddTransient<FileService>();
+
             services.AddTransient<RoleManager<ApplicatonRole>>();
+            services.AddTransient<UserManager<ApplicationUser>>();
             services.AddTransient<IRolesRepository, EFRolesRepository>();
             services.AddTransient<IUsersRepository, EFUsersRepository>();
+            services.AddTransient<ICategoriesRepository, EFCategoriesRepository>();
+            services.AddTransient<ICategoryPhotosRepository, EFCategoryPhotosRepository>();
             services.AddTransient<DataManager>();
             services.AddDbContext<ElectroDbContext>((options) =>
             {
@@ -60,7 +70,6 @@ namespace Electro.WebApplication
             {
                 x.AddPolicy("AdminArea", policy => { policy.RequireRole("Администратор"); });
                 x.AddPolicy("ClientArea", policy => { policy.RequireRole("Клиент"); });
-                x.AddPolicy("ManagerArea", policy => { policy.RequireRole("Менеджер"); });
             });
 
             services.AddControllersWithViews(x =>

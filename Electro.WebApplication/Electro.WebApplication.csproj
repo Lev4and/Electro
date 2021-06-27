@@ -12,6 +12,7 @@
     <Folder Include="Areas\Client\Controllers\" />
     <Folder Include="Areas\Client\Views\" />
     <Folder Include="wwwroot\upload\categories\" />
+    <Folder Include="wwwroot\upload\manufacturers\" />
   </ItemGroup>
 
   <ItemGroup>

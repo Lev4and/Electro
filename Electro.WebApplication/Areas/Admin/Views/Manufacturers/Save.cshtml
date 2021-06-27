@@ -1,6 +1,6 @@
-﻿@model CategoryViewModel
+﻿@model Manufacturer
 @section StylePage
-{
+{*
     <link rel="stylesheet" type="text/css" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" asp-append-version="true" />
     <link rel="stylesheet" type="text/css" href="~/plugins/datatable/css/dataTables.bootstrap4.min.css" asp-append-version="true" />
     <link rel="stylesheet" type="text/css" href="~/plugins/datatable/css/buttons.bootstrap4.min.css" asp-append-version="true" />
@@ -9,7 +9,7 @@
     <link rel="stylesheet" type="text/css" href="~/css/custom.css" asp-append-version="true" />
 }
 @{
-    ViewData["Title"] = "Сохранение категории";
+    ViewData["Title"] = "Сохранение производителя";
 }
 <div class="page-wrapper">
     <div class="page-content-wrapper">
@@ -22,7 +22,7 @@
                             <li class="breadcrumb-item">
                                 <a href="javascript:;"><i class='bx bx-home-alt'></i></a>
                             </li>
-                            <li class="breadcrumb-item active" aria-current="page">Категории</li>
+                            <li class="breadcrumb-item active" aria-current="page">Производители</li>
                         </ol>
                     </nav>
                 </div>
@@ -34,45 +34,29 @@
                     </div>
                     <hr />
                     <div class="form-body">
-                        <form method="post" action="/Admin/Categories/Save" enctype="multipart/form-data">
-                            <input type="hidden" asp-for="Category.Id" />
-                            <input type="hidden" asp-for="Category.Photo.Id" />
-                            <input id="input-hidden-photo-url" type="hidden" asp-for="Category.Photo.Url" />
-                            @if (Model.Categories != null)
-                            {
-                                @for (int i = 0; i < Model.Categories.Count; i++)
-                                {
-                                    <input type="hidden" asp-for="@Model.Categories[i].Id" />
-                                    <input type="hidden" asp-for="@Model.Categories[i].Name" />
-                                }
-                            }
+                        <form method="post" action="/Admin/Manufacturers/Save" enctype="multipart/form-data">
+                            <input type="hidden" asp-for="Id" />
+                            <input type="hidden" asp-for="Logo.Id" />
+                            <input type="hidden" asp-for="Information.Id" />
+                            <input id="input-hidden-photo-url" type="hidden" asp-for="Logo.Url" />
                             <div class="form-group row">
                                 <label class="col-sm-2 col-form-label">Фотография</label>
                                 <div class="col-sm-10 form-group-row-container-image">
-                                    <img id="current-photo-image" src="~/@(Model.Category.Photo != null ? Model.Category.Photo.Url : "")" />
+                                    <img id="current-photo-image" src="~/@(Model.Logo != null ? Model.Logo.Url : "")" />
                                 </div>
                             </div>
                             <div class="form-group row">
                                 <label class="col-sm-2 col-form-label">Наименование</label>
                                 <div class="col-sm-10">
-                                    <input type="text" class="form-control" asp-for="Category.Name" required>
-                                    <span class="invalid-feedback" style="display: block;" asp-validation-for="Category.Name"></span>
+                                    <input type="text" class="form-control" asp-for="Name" required>
+                                    <span class="invalid-feedback" style="display: block;" asp-validation-for="Name"></span>
                                 </div>
                             </div>
                             <div class="form-group row">
-                                <label class="col-sm-2 col-form-label">Родительская категория</label>
+                                <label class="col-sm-2 col-form-label">Описание</label>
                                 <div class="col-sm-10">
-                                    <select class="form-control" asp-for="Category.ParentId">
-                                        @if (Model.Categories != null)
-                                        {
-                                            @foreach (var category in Model.Categories)
-                                            {
-                                                <option value="@category.Id">@category.Name</option>
-                                            }
-                                            <option value="@null">Отсутствует</option>
-                                        }
-                                    </select>
-                                    <span class="invalid-feedback" style="display: block;" asp-validation-for="Category.ParentId"></span>
+                                    <textarea id="description-text-area" asp-for="Information.Description"></textarea>
+                                    <span class="invalid-feedback" style="display: block;" asp-validation-for="Information.Description"></span>
                                 </div>
                             </div>
                             <div class="form-group row">
@@ -103,7 +87,7 @@
         </div>
     </div>
 </div>
-@section ScriptPage 
+@section ScriptPage
 {
     <script src="~/plugins/fancy-file-uploader/jquery.ui.widget.js" asp-append-version="true"></script>
     <script src="~/plugins/fancy-file-uploader/jquery.fileupload.js" asp-append-version="true"></script>
@@ -111,6 +95,10 @@
     <script src="~/plugins/fancy-file-uploader/jquery.fancy-fileupload.js" asp-append-version="true"></script>
     <script src="~/plugins/Drag-And-Drop/dist/imageuploadify.min.js" asp-append-version="true"></script>
     <script src="~/js/bs-custom-file-input.min.js" asp-append-version="true"></script>
+    <script src="~/plugins/ckeditor/ckeditor.js" asp-append-version="true"></script>
+    <script>
+        CKEDITOR.replace("Information.Description");
+    </script>
     <script>
         $(document).ready(function () {
             bsCustomFileInput.init()

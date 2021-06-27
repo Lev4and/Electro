@@ -7,6 +7,8 @@
   <ItemGroup>
     <Compile Remove="Database\Migrations\20210625125506_InitDatabase.cs" />
     <Compile Remove="Database\Migrations\20210625125506_InitDatabase.Designer.cs" />
+    <Compile Remove="Database\Migrations\20210627035921_ChangeDeleteRuleForRelationCategoryAndCategory.cs" />
+    <Compile Remove="Database\Migrations\20210627035921_ChangeDeleteRuleForRelationCategoryAndCategory.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -21,10 +23,6 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Database\Migrations\" />
   </ItemGroup>
 
 </Project>

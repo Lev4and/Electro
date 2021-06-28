@@ -90,6 +90,23 @@ namespace Electro.Model.Database.Repositories.EntityFramework
             }
         }
 
+        public IQueryable<Unit> GetnNotUsedUnitsForQuantityByQuantityId(Guid quantityId, bool track = false)
+        {
+            if (track)
+            {
+                return _context.Units
+                    .Include(unit => unit.QuantityUnits).ThenInclude(quantityUnit => quantityUnit.Quantity)
+                    .Where(unit => unit.QuantityUnits.All(quantityUnit => quantityUnit.QuantityId != quantityId) == true);
+            }
+            else
+            {
+                return _context.Units
+                    .Include(unit => unit.QuantityUnits).ThenInclude(quantityUnit => quantityUnit.Quantity)
+                    .AsNoTracking()
+                    .Where(unit => unit.QuantityUnits.All(quantityUnit => quantityUnit.QuantityId != quantityId) == true);
+            }
+        }
+
         public void DeleteUnitById(Guid id)
         {
             _context.Units.Remove(GetUnitById(id));

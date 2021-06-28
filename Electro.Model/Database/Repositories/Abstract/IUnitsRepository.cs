@@ -14,6 +14,8 @@ namespace Electro.Model.Database.Repositories.Abstract
 
         IQueryable<Unit> GetUnits(bool track = false);
 
+        IQueryable<Unit> GetnNotUsedUnitsForQuantityByQuantityId(Guid quantityId, bool track = false);
+
         void DeleteUnitById(Guid id);
     }
 }

@@ -48,6 +48,7 @@
                             <thead>
                                 <tr>
                                     <th>Наименование</th>
+                                    <th>Обозначение</th>
                                     <th>Действия</th>
                                 </tr>
                             </thead>
@@ -56,6 +57,7 @@
                                 {
                                     <tr>
                                         <td>@unit.Name</td>
+                                        <td>@unit.Designation</td>
                                         <td>
                                             <div class="btn-group pull-right">
                                                 <a asp-area="Admin" asp-controller="Units" asp-action="Save" asp-route-id="@unit.Id">
@@ -80,6 +82,7 @@
                             <tfoot>
                                 <tr>
                                     <th>Наименование</th>
+                                    <th>Обозначение</th>
                                     <th>Действия</th>
                                 </tr>
                             </tfoot>

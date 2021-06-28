@@ -74,14 +74,14 @@
                                         {
                                             @foreach (var unit in Model.UsedUnits)
                                             {
-                                                <option value="@unit.Id" selected="selected">@unit.Name</option>
+                                                <option value="@unit.Id" selected="selected">@unit.Name (@unit.Designation)</option>
                                             }
                                         }
                                         @if (Model.NotUsedUnitsForQuantity != null)
                                         {
                                             @foreach (var unit in Model.NotUsedUnitsForQuantity)
                                             {
-                                                <option value="@unit.Id">@unit.Name</option>
+                                                <option value="@unit.Id">@unit.Name (@unit.Designation)</option>
                                             }
                                         }
                                     </select>

@@ -11,6 +11,8 @@ namespace Electro.Model.Database.Entities
         [Required]
         public string Name { get; set; }
 
+        public string Designation { get; set; }
+
         public virtual ICollection<QuantityUnit> QuantityUnits { get; set; }
     }
 }

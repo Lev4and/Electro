@@ -16,6 +16,8 @@ namespace Electro.Model.Database.Repositories.Abstract
 
         IQueryable<Category> GetCategoriesWithoutASpecific(Guid id, bool track = false);
 
+        IQueryable<Category> GetNotUsedCategoriesForSectionCharacteristic(Guid sectionCharacteristicId, bool track = false);
+
         void DeleteCategoryById(Guid id);
     }
 }

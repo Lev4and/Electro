@@ -20,6 +20,10 @@ namespace Electro.Model.Database
 
         public IRolesRepository Roles { get; private set; }
 
+        public ISectionCharacteristicCategoriesRepository SectionCharacteristicCategories { get; private set; }
+
+        public ISectionsCharacteristicsRepository SectionsCharacteristics { get; private set; }
+
         public IUnitsRepository Units { get; private set; }
 
         public IUsersRepository Users { get; private set; }
@@ -27,7 +31,9 @@ namespace Electro.Model.Database
         public DataManager(ICategoriesRepository categories, ICategoryPhotosRepository categoryPhotos,
             IManufacturersRepository manufacturers, IManufacturerInformationRepository manufacturerInformation, 
             IManufacturerLogosRepository manufacturerLogos, IQuantitiesRepository quantities, 
-            IQuantityUnitsRepository quantityUnits, IRolesRepository roles, IUnitsRepository units, IUsersRepository users)
+            IQuantityUnitsRepository quantityUnits, IRolesRepository roles, 
+            ISectionCharacteristicCategoriesRepository sectionCharacteristicCategories,
+            ISectionsCharacteristicsRepository sectionsCharacteristics, IUnitsRepository units, IUsersRepository users)
         {
             Categories = categories;
             CategoryPhotos = categoryPhotos;
@@ -37,6 +43,8 @@ namespace Electro.Model.Database
             Quantities = quantities;
             QuantityUnits = quantityUnits;
             Roles = roles;
+            SectionCharacteristicCategories = sectionCharacteristicCategories;
+            SectionsCharacteristics = sectionsCharacteristics;
             Units = units;
             Users = users;
         }

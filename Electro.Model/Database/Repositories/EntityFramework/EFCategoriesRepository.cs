@@ -124,6 +124,25 @@ namespace Electro.Model.Database.Repositories.EntityFramework
             }
         }
 
+        public IQueryable<Category> GetNotUsedCategoriesForSectionCharacteristic(Guid sectionCharacteristicId, bool track = false)
+        {
+            if (track)
+            {
+                return _context.Categories
+                    .Include(category => category.SectionsCharacteristics)
+                    .Where(category => category.SectionsCharacteristics.All(sectionCharacteristic => 
+                        sectionCharacteristic.SectionId != sectionCharacteristicId) == true);
+            }
+            else
+            {
+                return _context.Categories
+                    .Include(category => category.SectionsCharacteristics)
+                    .AsNoTracking()
+                    .Where(category => category.SectionsCharacteristics.All(sectionCharacteristic => 
+                        sectionCharacteristic.SectionId != sectionCharacteristicId) == true);
+            }
+        }
+
         public void DeleteCategoryById(Guid id)
         {
             _context.Categories.Remove(GetCategoryById(id));

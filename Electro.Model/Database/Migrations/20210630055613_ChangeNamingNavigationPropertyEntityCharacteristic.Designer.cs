@@ -4,14 +4,16 @@ using Electro.Model.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Electro.Model.Database.Migrations
 {
     [DbContext(typeof(ElectroDbContext))]
-    partial class ElectroDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210630055613_ChangeNamingNavigationPropertyEntityCharacteristic")]
+    partial class ChangeNamingNavigationPropertyEntityCharacteristic
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

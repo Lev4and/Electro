@@ -67,7 +67,8 @@ namespace Electro.Model.Database.Repositories.EntityFramework
                 return _context.QuantityUnits
                     .Include(quantityUnit => quantityUnit.Unit)
                     .Include(quantityUnit => quantityUnit.Quantity)
-                    .Include(quantityUnit => quantityUnit.CharacteristicQuantityUnits).ThenInclude(characteristicQuantityUnit => characteristicQuantityUnit.Characteristic)
+                    .Include(quantityUnit => quantityUnit.CharacteristicQuantityUnits)
+                        .ThenInclude(characteristicQuantityUnit => characteristicQuantityUnit.Characteristic)
                     .SingleOrDefault(quantityUnit => quantityUnit.Id == id);
             }
             else
@@ -75,7 +76,8 @@ namespace Electro.Model.Database.Repositories.EntityFramework
                 return _context.QuantityUnits
                     .Include(quantityUnit => quantityUnit.Unit)
                     .Include(quantityUnit => quantityUnit.Quantity)
-                    .Include(quantityUnit => quantityUnit.CharacteristicQuantityUnits).ThenInclude(characteristicQuantityUnit => characteristicQuantityUnit.Characteristic)
+                    .Include(quantityUnit => quantityUnit.CharacteristicQuantityUnits)
+                        .ThenInclude(characteristicQuantityUnit => characteristicQuantityUnit.Characteristic)
                     .AsNoTracking()
                     .SingleOrDefault(quantityUnit => quantityUnit.Id == id);
             }
@@ -88,15 +90,42 @@ namespace Electro.Model.Database.Repositories.EntityFramework
                 return _context.QuantityUnits
                     .Include(quantityUnit => quantityUnit.Unit)
                     .Include(quantityUnit => quantityUnit.Quantity)
-                    .Include(quantityUnit => quantityUnit.CharacteristicQuantityUnits).ThenInclude(characteristicQuantityUnit => characteristicQuantityUnit.Characteristic);
+                    .Include(quantityUnit => quantityUnit.CharacteristicQuantityUnits)
+                        .ThenInclude(characteristicQuantityUnit => characteristicQuantityUnit.Characteristic);
             }
             else
             {
                 return _context.QuantityUnits
                     .Include(quantityUnit => quantityUnit.Unit)
                     .Include(quantityUnit => quantityUnit.Quantity)
-                    .Include(quantityUnit => quantityUnit.CharacteristicQuantityUnits).ThenInclude(characteristicQuantityUnit => characteristicQuantityUnit.Characteristic)
+                    .Include(quantityUnit => quantityUnit.CharacteristicQuantityUnits)
+                        .ThenInclude(characteristicQuantityUnit => characteristicQuantityUnit.Characteristic)
                     .AsNoTracking();
+            }
+        }
+
+        public IQueryable<QuantityUnit> GetNotUsedQuantityUnitsForCharacteristic(Guid characteristicId, bool track = false)
+        {
+            if (track)
+            {
+                return _context.QuantityUnits
+                    .Include(quantityUnit => quantityUnit.Unit)
+                    .Include(quantityUnit => quantityUnit.Quantity)
+                    .Include(quantityUnit => quantityUnit.CharacteristicQuantityUnits)
+                        .ThenInclude(characteristicQuantityUnit => characteristicQuantityUnit.Characteristic)
+                    .Where(quantityUnit => quantityUnit.CharacteristicQuantityUnits.All(characteristicQuantityUnits =>
+                        characteristicQuantityUnits.CharacteristicId != characteristicId) == true);
+            }
+            else
+            {
+                return _context.QuantityUnits
+                    .Include(quantityUnit => quantityUnit.Unit)
+                    .Include(quantityUnit => quantityUnit.Quantity)
+                    .Include(quantityUnit => quantityUnit.CharacteristicQuantityUnits)
+                        .ThenInclude(characteristicQuantityUnit => characteristicQuantityUnit.Characteristic)
+                    .AsNoTracking()
+                    .Where(quantityUnit => quantityUnit.CharacteristicQuantityUnits.All(characteristicQuantityUnits =>
+                        characteristicQuantityUnits.CharacteristicId != characteristicId) == true);
             }
         }
 

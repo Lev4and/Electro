@@ -45,9 +45,12 @@ namespace Electro.WebApplication
             services.AddTransient<IQuantityUnitsRepository, EFQuantityUnitsRepository>();
             services.AddTransient<IManufacturersRepository, EFManufacturersRepository>();
             services.AddTransient<ICategoryPhotosRepository, EFCategoryPhotosRepository>();
+            services.AddTransient<ICharacteristicsRepository, EFCharacteristicsRepository>();
             services.AddTransient<IManufacturerLogosRepository, EFManufacturerLogosRepository>();
             services.AddTransient<ISectionsCharacteristicsRepository, EFSectionsCharacteristicsRepository>();
             services.AddTransient<IManufacturerInformationRepository, EFManufacturerInformationRepository>();
+            services.AddTransient<ICharacteristicCategoriesRepository, EFCharacteristicCategoriesRepository>();
+            services.AddTransient<ICharacteristicQuantityUnitsRepository, EFCharacteristicQuantityUnitsRepository>();
             services.AddTransient<ISectionCharacteristicCategoriesRepository, EFSectionCharacteristicCategoriesRepository>();
             services.AddTransient<DataManager>();
             services.AddDbContext<ElectroDbContext>((options) =>

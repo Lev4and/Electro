@@ -1,0 +1,127 @@
+﻿@model CharacteristicViewModel
+@section StylePage
+{
+    <link rel="stylesheet" type="text/css" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" asp-append-version="true" />
+    <link rel="stylesheet" type="text/css" href="~/plugins/select2/css/select2-bootstrap4.css" asp-append-version="true" />
+    <link rel="stylesheet" type="text/css" href="~/plugins/select2/css/select2.min.css" asp-append-version="true" />
+    <link rel="stylesheet" type="text/css" href="~/css/custom.css" asp-append-version="true" />
+}
+@{
+    ViewData["Title"] = "Сохранение характеристики";
+}
+<div class="page-wrapper">
+    <div class="page-content-wrapper">
+        <div class="page-content">
+            <div class="page-breadcrumb d-none d-md-flex align-items-center mb-3">
+                <div class="breadcrumb-title pr-3">База данных</div>
+                <div class="pl-3">
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb mb-0 p-0">
+                            <li class="breadcrumb-item">
+                                <a href="javascript:;"><i class='bx bx-home-alt'></i></a>
+                            </li>
+                            <li class="breadcrumb-item active" aria-current="page">Характеристики</li>
+                        </ol>
+                    </nav>
+                </div>
+            </div>
+            <div class="card radius-15">
+                <div class="card-body">
+                    <div class="card-title">
+                        <h4 class="mb-0">Форма</h4>
+                    </div>
+                    <hr />
+                    <div class="form-body">
+                        <form method="post" action="/Admin/Characteristics/Save">
+                            <input type="hidden" asp-for="Characteristic.Id" />
+                            @if (Model.UsedQuantityUnits != null)
+                            {
+                                @for (int i = 0; i < Model.UsedQuantityUnits.Count; i++)
+                                {
+                                    <input type="hidden" asp-for="@Model.UsedQuantityUnits[i].Id" />
+                                    <input type="hidden" asp-for="@Model.UsedQuantityUnits[i].UnitId" />
+                                    <input type="hidden" asp-for="@Model.UsedQuantityUnits[i].Unit.Id" />
+                                    <input type="hidden" asp-for="@Model.UsedQuantityUnits[i].Unit.Name" />
+                                    <input type="hidden" asp-for="@Model.UsedQuantityUnits[i].QuantityId" />
+                                    <input type="hidden" asp-for="@Model.UsedQuantityUnits[i].Quantity.Id" />
+                                    <input type="hidden" asp-for="@Model.UsedQuantityUnits[i].Quantity.Name" />
+                                }
+                            }
+                            @if (Model.NotUsedQuantityUnitsForCharacteristic != null)
+                            {
+                                @for (int i = 0; i < Model.NotUsedQuantityUnitsForCharacteristic.Count; i++)
+                                {
+                                    <input type="hidden" asp-for="@Model.NotUsedQuantityUnitsForCharacteristic[i].Id" />
+                                    <input type="hidden" asp-for="@Model.NotUsedQuantityUnitsForCharacteristic[i].UnitId" />
+                                    <input type="hidden" asp-for="@Model.NotUsedQuantityUnitsForCharacteristic[i].Unit.Id" />
+                                    <input type="hidden" asp-for="@Model.NotUsedQuantityUnitsForCharacteristic[i].Unit.Name" />
+                                    <input type="hidden" asp-for="@Model.NotUsedQuantityUnitsForCharacteristic[i].QuantityId" />
+                                    <input type="hidden" asp-for="@Model.NotUsedQuantityUnitsForCharacteristic[i].Quantity.Id" />
+                                    <input type="hidden" asp-for="@Model.NotUsedQuantityUnitsForCharacteristic[i].Quantity.Name" />
+                                }
+                            }
+                            @if (Model.Characteristic.QuantityUnits != null)
+                            {
+                                @for (int i = 0; i < Model.Characteristic.QuantityUnits.Count; i++)
+                                {
+                                    <input type="hidden" name="Characteristic.QuantityUnits[@i].Id" value="@Model.Characteristic.QuantityUnits.ElementAt(i).Id" />
+                                    <input type="hidden" name="Characteristic.QuantityUnits[@i].QuantityUnitId" value="@Model.Characteristic.QuantityUnits.ElementAt(i).QuantityUnitId" />
+                                }
+                            }
+                            <div class="form-group row">
+                                <label class="col-sm-2 col-form-label">Наименование</label>
+                                <div class="col-sm-10">
+                                    <input type="text" class="form-control" asp-for="Characteristic.Name" required>
+                                    <span class="invalid-feedback" style="display: block;" asp-validation-for="Characteristic.Name"></span>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-2 col-form-label">Величины и единицы измерения</label>
+                                <div class="col-sm-10">
+                                    <select id="multiple-select-quantity-unit" class="multiple-select w-100" data-placeholder="Выбирайте что угодно" asp-for="@Model.SelectedQuantityUnits" multiple="multiple">
+                                        @if (Model.UsedQuantityUnits != null)
+                                        {
+                                            @foreach (var quantityUnit in Model.UsedQuantityUnits)
+                                            {
+                                                <option value="@quantityUnit.Id" selected="selected">@quantityUnit.Quantity.Name - @quantityUnit.Unit.Name (@quantityUnit.Unit.Designation)</option>
+                                            }
+                                        }
+                                        @if (Model.NotUsedQuantityUnitsForCharacteristic != null)
+                                        {
+                                            @foreach (var quantityUnit in Model.NotUsedQuantityUnitsForCharacteristic)
+                                            {
+                                                <option value="@quantityUnit.Id">@quantityUnit.Quantity.Name - @quantityUnit.Unit.Name (@quantityUnit.Unit.Designation)</option>
+                                            }
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-2 col-form-label"></label>
+                                <div class="col-sm-10">
+                                    <input type="submit" class="btn btn-light px-4" value="Сохранить" />
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section ScriptPage
+{
+    <script src="~/plugins/select2/js/select2.min.js" asp-append-version="true"></script>
+    <script>
+        $('#multiple-select-categories').select2({
+            theme: 'bootstrap4',
+            placeholder: $(this).data('placeholder'),
+            allowClear: Boolean($(this).data('allow-clear')),
+        });
+        $('#multiple-select-quantity-unit').select2({
+            theme: 'bootstrap4',
+            placeholder: $(this).data('placeholder'),
+            allowClear: Boolean($(this).data('allow-clear')),
+        });
+    </script>
+}

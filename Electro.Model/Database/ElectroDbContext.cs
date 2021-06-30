@@ -127,7 +127,7 @@ namespace Electro.Model.Database
                 .HasForeignKey(category => category.CharacteristicId);
 
             builder.Entity<Characteristic>()
-                .HasMany(characteristic => characteristic.CharacteristicQuantityUnits)
+                .HasMany(characteristic => characteristic.QuantityUnits)
                 .WithOne(characteristicQuantityUnit => characteristicQuantityUnit.Characteristic)
                 .HasForeignKey(characteristicQuantityUnit => characteristicQuantityUnit.CharacteristicId);
 

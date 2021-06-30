@@ -15,6 +15,8 @@ namespace Electro.Model.Database.Repositories.Abstract
 
         IQueryable<QuantityUnit> GetQuantityUnits(bool track = false);
 
+        IQueryable<QuantityUnit> GetNotUsedQuantityUnitsForCharacteristic(Guid characteristicId, bool track = false);
+
         void DeleteQuantityUnitById(Guid id);
 
         void DeleteQuantityUnit(QuantityUnit entity);

@@ -4,6 +4,8 @@
     <link rel="stylesheet" type="text/css" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" asp-append-version="true" />
     <link rel="stylesheet" type="text/css" href="~/plugins/Drag-And-Drop/dist/imageuploadify.min.css" asp-append-version="true" />
     <link rel="stylesheet" type="text/css" href="~/plugins/fancy-file-uploader/fancy_fileupload.css" asp-append-version="true" />
+    <link rel="stylesheet" type="text/css" href="~/plugins/select2/css/select2.min.css" asp-append-version="true" />
+    <link rel="stylesheet" type="text/css" href="~/plugins/select2/css/select2-bootstrap4.css" asp-append-version="true" />
     <link rel="stylesheet" type="text/css" href="~/css/custom.css" asp-append-version="true" />
 }
 @{
@@ -18,9 +20,12 @@
                     <nav aria-label="breadcrumb">
                         <ol class="breadcrumb mb-0 p-0">
                             <li class="breadcrumb-item">
-                                <a href="javascript:;"><i class='bx bx-home-alt'></i></a>
+                                <a asp-area="Admin" asp-controller="Home" asp-action="Index"><i class='bx bx-home-alt'></i></a>
                             </li>
-                            <li class="breadcrumb-item active" aria-current="page">Категории</li>
+                            <li class="breadcrumb-item">
+                                <a asp-area="Admin" asp-controller="Categories" asp-action="Index">Категории</a>
+                            </li>
+                            <li class="breadcrumb-item active" aria-current="page">Сохранение категории</li>
                         </ol>
                     </nav>
                 </div>
@@ -60,14 +65,13 @@
                             <div class="form-group row">
                                 <label class="col-sm-2 col-form-label">Родительская категория</label>
                                 <div class="col-sm-10">
-                                    <select class="form-control" asp-for="Category.ParentId">
+                                    <select id="single-select-categories" class="single-select" asp-for="Category.ParentId">
                                         @if (Model.Categories != null)
                                         {
                                             @foreach (var category in Model.Categories)
                                             {
                                                 <option value="@category.Id">@category.Name</option>
                                             }
-                                            <option value="@null">Отсутствует</option>
                                         }
                                     </select>
                                     <span class="invalid-feedback" style="display: block;" asp-validation-for="Category.ParentId"></span>
@@ -109,7 +113,15 @@
     <script src="~/plugins/fancy-file-uploader/jquery.fancy-fileupload.js" asp-append-version="true"></script>
     <script src="~/plugins/Drag-And-Drop/dist/imageuploadify.min.js" asp-append-version="true"></script>
     <script src="~/js/bs-custom-file-input.min.js" asp-append-version="true"></script>
+    <script src="~/plugins/select2/js/select2.min.js" asp-append-version="true"></script>
     <script>
+        $('#single-select-categories').select2({
+            width: '100%',
+            theme: 'bootstrap4',
+            placeholder: $(this).data('placeholder'),
+            allowClear: Boolean($(this).data('allow-clear')),
+        });
+
         $(document).ready(function () {
             bsCustomFileInput.init()
         });

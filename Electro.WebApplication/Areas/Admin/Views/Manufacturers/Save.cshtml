@@ -18,9 +18,12 @@
                     <nav aria-label="breadcrumb">
                         <ol class="breadcrumb mb-0 p-0">
                             <li class="breadcrumb-item">
-                                <a href="javascript:;"><i class='bx bx-home-alt'></i></a>
+                                <a asp-area="Admin" asp-controller="Home" asp-action="Index"><i class='bx bx-home-alt'></i></a>
                             </li>
-                            <li class="breadcrumb-item active" aria-current="page">Производители</li>
+                            <li class="breadcrumb-item">
+                                <a asp-area="Admin" asp-controller="Manufacturers" asp-action="Index">Производители</a>
+                            </li>
+                            <li class="breadcrumb-item active" aria-current="page">Сохранение производителя</li>
                         </ol>
                     </nav>
                 </div>

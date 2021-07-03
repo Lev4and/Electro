@@ -18,9 +18,12 @@
                     <nav aria-label="breadcrumb">
                         <ol class="breadcrumb mb-0 p-0">
                             <li class="breadcrumb-item">
-                                <a href="javascript:;"><i class='bx bx-home-alt'></i></a>
+                                <a asp-area="Admin" asp-controller="Home" asp-action="Index"><i class='bx bx-home-alt'></i></a>
                             </li>
-                            <li class="breadcrumb-item active" aria-current="page">Разделы характеристик</li>
+                            <li class="breadcrumb-item">
+                                <a asp-area="Admin" asp-controller="SectionsCharacteristics" asp-action="Index">Разделы характеристик</a>
+                            </li>
+                            <li class="breadcrumb-item active" aria-current="page">Сохранение раздела характеристики</li>
                         </ol>
                     </nav>
                 </div>
@@ -104,7 +107,7 @@
 {
     <script src="~/plugins/select2/js/select2.min.js" asp-append-version="true"></script>
     <script>
-        $('.multiple-select-categories').select2({
+        $('#multiple-select-categories').select2({
             width: '100%',
             theme: 'bootstrap4',
             placeholder: $(this).data('placeholder'),

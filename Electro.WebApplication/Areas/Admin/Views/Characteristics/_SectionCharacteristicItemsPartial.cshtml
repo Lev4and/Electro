@@ -1,0 +1,5 @@
+﻿@model SectionsCharacteristicsViewModel
+@foreach (var sectionCharacteristic in Model.SectionCharacteristics)
+{
+    <option value="@sectionCharacteristic.Id">@sectionCharacteristic.Name</option>
+}

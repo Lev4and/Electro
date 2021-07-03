@@ -1,10 +1,10 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
 <head>
-    @await Html.PartialAsync("MetatagsPartial")
-    @await Html.PartialAsync("TitlePartial")
-    @await Html.PartialAsync("IconPartial")
-    @await Html.PartialAsync("CssPartial")
+    @await Html.PartialAsync("_MetatagsPartial")
+    @await Html.PartialAsync("_TitlePartial")
+    @await Html.PartialAsync("_IconPartial")
+    @await Html.PartialAsync("_CssPartial")
     @if (IsSectionDefined("StylePage"))
     {
         @await RenderSectionAsync("StylePage");
@@ -14,15 +14,15 @@
 </head>
 <body class="bg-theme bg-theme1">
     <div class="wrapper">
-        @await Html.PartialAsync("SidebarPartial")
-        @await Html.PartialAsync("HeaderPartial")
+        @await Html.PartialAsync("_SidebarPartial")
+        @await Html.PartialAsync("_HeaderPartial")
         @RenderBody()
-        @await Html.PartialAsync("OverlayPartial")
-        @await Html.PartialAsync("BackToTopButtonPartial")
-        @await Html.PartialAsync("FooterPartial")
+        @await Html.PartialAsync("_OverlayPartial")
+        @await Html.PartialAsync("_BackToTopButtonPartial")
+        @await Html.PartialAsync("_FooterPartial")
     </div>
-    @await Html.PartialAsync("SwitcherWrapperPartial")
-    @await Html.PartialAsync("ScriptsPartial")
+    @await Html.PartialAsync("_SwitcherWrapperPartial")
+    @await Html.PartialAsync("_ScriptsPartial")
     @if (IsSectionDefined("ScriptPage"))
     {
         @await RenderSectionAsync("ScriptPage")

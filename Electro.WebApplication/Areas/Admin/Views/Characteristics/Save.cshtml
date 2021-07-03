@@ -2,8 +2,10 @@
 @section StylePage
 {
     <link rel="stylesheet" type="text/css" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" asp-append-version="true" />
-    <link rel="stylesheet" type="text/css" href="~/plugins/select2/css/select2-bootstrap4.css" asp-append-version="true" />
+    <link rel="stylesheet" type="text/css" href="~/plugins/datatable/css/dataTables.bootstrap4.min.css" asp-append-version="true" />
+    <link rel="stylesheet" type="text/css" href="~/plugins/datatable/css/buttons.bootstrap4.min.css" asp-append-version="true" />
     <link rel="stylesheet" type="text/css" href="~/plugins/select2/css/select2.min.css" asp-append-version="true" />
+    <link rel="stylesheet" type="text/css" href="~/plugins/select2/css/select2-bootstrap4.css" asp-append-version="true" />
     <link rel="stylesheet" type="text/css" href="~/css/custom.css" asp-append-version="true" />
 }
 @{
@@ -78,7 +80,7 @@
                             <div class="form-group row">
                                 <label class="col-sm-2 col-form-label">Величины и единицы измерения</label>
                                 <div class="col-sm-10">
-                                    <select id="multiple-select-quantity-unit" class="multiple-select w-100" data-placeholder="Выбирайте что угодно" asp-for="@Model.SelectedQuantityUnits" multiple="multiple">
+                                    <select id="multiple-select-quantity-unit" class="multiple-select" data-placeholder="Выбирайте что угодно" asp-for="@Model.SelectedQuantityUnits" multiple="multiple">
                                         @if (Model.UsedQuantityUnits != null)
                                         {
                                             @foreach (var quantityUnit in Model.UsedQuantityUnits)
@@ -106,6 +108,24 @@
                     </div>
                 </div>
             </div>
+            @if (Model.Characteristic.Id != default)
+            {
+                <div class="card radius-15">
+                    <div class="card-body">
+                        <div class="card-title">
+                            <h4 class="mb-0">Категории и разделы</h4>
+                        </div>
+                        <hr />
+                        <div id="form-body-characteristic-category-section" class="form-body">
+                            @await Component.InvokeAsync("FormCharacteristicCategory", Model.Characteristic.Id)
+                        </div>
+                        <hr />
+                        <div id="table-responsive-table-сharacteristic-categories" class="table-responsive">
+                            @await Component.InvokeAsync("DataTableCharacteristicCategories", Model.Characteristic.Id)
+                        </div>
+                    </div>
+                </div>
+            }
         </div>
     </div>
 </div>
@@ -113,15 +133,147 @@
 {
     <script src="~/plugins/select2/js/select2.min.js" asp-append-version="true"></script>
     <script>
-        $('#multiple-select-categories').select2({
-            theme: 'bootstrap4',
-            placeholder: $(this).data('placeholder'),
-            allowClear: Boolean($(this).data('allow-clear')),
-        });
-        $('#multiple-select-quantity-unit').select2({
-            theme: 'bootstrap4',
-            placeholder: $(this).data('placeholder'),
-            allowClear: Boolean($(this).data('allow-clear')),
-        });
+        multipleSelectQuantityUnitInit();
+
+        function multipleSelectQuantityUnitInit() {
+            $('#multiple-select-quantity-unit').select2({
+                width: '100%',
+                theme: 'bootstrap4',
+                placeholder: $(this).data('placeholder'),
+                allowClear: Boolean($(this).data('allow-clear')),
+            });
+        }
     </script>
+    @if (Model.Characteristic.Id != default)
+    {
+        <script src="~/plugins/datatable/js/jquery.dataTables.min.js" asp-append-version="true"></script>
+        <script>
+            formCharacteristicCategorySectionInit();
+            dataTableCharacteristicCategoriesInit();
+            getSectionsCharacteristicByCategory();
+
+            function singleSelectCategoriesInit() {
+                $('#single-select-categories').select2({
+                    width: '100%',
+                    theme: 'bootstrap4',
+                    placeholder: $(this).data('placeholder'),
+                    allowClear: Boolean($(this).data('allow-clear')),
+                });
+            }
+
+            function singleSelectSectionsCharacteristicByCategoryInit() {
+                $('#single-select-sections-characteristic-by-category').select2({
+                    width: '100%',
+                    theme: 'bootstrap4',
+                    placeholder: $(this).data('placeholder'),
+                    allowClear: Boolean($(this).data('allow-clear')),
+                });
+            }
+
+            function dataTableCharacteristicCategoriesInit() {
+                $('#table-сharacteristic-categories').DataTable();
+            }
+
+            function updateDataTableCharacteristicCategories() {
+                $.ajax({
+                    url: '/Admin/Characteristics/CharacteristicCategories',
+                    method: 'POST',
+                    data: { characteristicId: "@Model.Characteristic.Id" },
+                    success: function (data) {
+                        $('#table-responsive-table-сharacteristic-categories').html();
+                        $('#table-responsive-table-сharacteristic-categories').html(data);
+
+                        dataTableCharacteristicCategoriesInit();
+
+                        console.log(data);
+                    }
+                });
+            }
+
+            function onClickToActionForCharacteristicCategory(element) {
+                let action = $(element).attr('data-action');
+                let characteristicCategoryId = $(element).attr('data-characteristic-category-id');
+
+                if (action === "edit") {
+                    $.ajax({
+                        url: '/Admin/Characteristics/SaveCharacteristicCategory?characteristicCategoryId=' + characteristicCategoryId,
+                        method: 'GET',
+                        success: function (data) {
+                            $('#form-body-characteristic-category-section').html();
+                            $('#form-body-characteristic-category-section').html(data);
+
+                            formCharacteristicCategorySectionInit();
+                            getSectionsCharacteristicByCategory();
+
+                            console.log(data);
+                        }
+                    });
+                }
+
+                if (action === "delete") {
+                    $.ajax({
+                        url: '/Admin/Characteristics/DeleteCharacteristicCategory?characteristicCategoryId=' + characteristicCategoryId,
+                        method: 'GET',
+                        success: function (data) {
+                            updateDataTableCharacteristicCategories();
+                        }
+                    });
+                }
+            }
+
+            function setEventListenerForSingleSelectCategories() {
+                $('#single-select-categories').on('change', function () {
+                    getSectionsCharacteristicByCategory();
+                });
+            }
+
+            function setEventListenerForButtonSubmitFormCharacteristicCategorySection() {
+                $('#button-submit-form-characteristic-category-section').on('click', function () {
+                    submitFormCharacteristicCategorySection();
+                });
+            }
+
+            function submitFormCharacteristicCategorySection() {
+                $.ajax({
+                    url: "/Admin/Characteristics/SaveCharacteristicCategory",
+                    method: "POST",
+                    data: $('#form-characteristic-category-section').serialize(),
+                    success: function (data) {
+                        $('#form-body-characteristic-category-section').html();
+                        $('#form-body-characteristic-category-section').html(data);
+
+                        formCharacteristicCategorySectionInit();
+                        updateDataTableCharacteristicCategories();
+
+                        console.log(data);
+                    }
+                });
+            }
+
+            function getSectionsCharacteristicByCategory() {
+                let categoryId = $('#single-select-categories').val();
+
+                $.ajax({
+                    url: "/Admin/Characteristics/SectionsCharacteristicByCategory",
+                    method: "POST",
+                    data: { categoryId: categoryId },
+                    success: function (data) {
+                        $('#single-select-sections-characteristic-by-category').html();
+                        $('#single-select-sections-characteristic-by-category').html(data);
+
+
+                        console.log(data);
+                    }
+                });
+            }
+
+            function formCharacteristicCategorySectionInit() {
+                singleSelectCategoriesInit();
+                singleSelectSectionsCharacteristicByCategoryInit();
+
+                setEventListenerForSingleSelectCategories();
+                setEventListenerForButtonSubmitFormCharacteristicCategorySection();
+            }
+        </script>
+    }
 }

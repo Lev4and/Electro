@@ -105,6 +105,86 @@ namespace Electro.WebApplication.Areas.Admin.Controllers
             return View(viewModel);
         }
 
+        [HttpGet]
+        public IActionResult SaveCharacteristicCategory(Guid characteristicCategoryId)
+        {
+            var viewModel = new CharacteristicCategoryViewModel()
+            {
+                SectionsCharacteristics = new List<SectionCharacteristic>(),
+                Categories = _dataManager.Categories.GetCategories().ToList(),
+                CharacteristicCategory = _dataManager.CharacteristicCategories
+                    .GetCharacteristicCategoryById(characteristicCategoryId)
+            };
+
+            return PartialView("_FormCharacteristicCategoryPartial", viewModel);
+        }
+
+        [HttpPost]
+        public IActionResult SaveCharacteristicCategory(CharacteristicCategoryViewModel viewModel)
+        {
+            if ((viewModel.CharacteristicCategory.CategoryId != null ? viewModel.CharacteristicCategory.CategoryId != default : false) 
+                 && (viewModel.CharacteristicCategory.SectionId != null ? viewModel.CharacteristicCategory.SectionId != default : false))
+            {
+                if (_dataManager.CharacteristicCategories.SaveCharacteristicCategory(viewModel.CharacteristicCategory))
+                {
+                    viewModel.Categories = _dataManager.Categories.GetCategories().ToList();
+                    viewModel.SectionsCharacteristics = new List<SectionCharacteristic>();
+                    viewModel.CharacteristicCategory = new CharacteristicCategory();
+                }
+                else
+                {
+                    ModelState.AddModelError("CharacteristicCategory.CategoryId", "Характеристика для категории товара с такими данными уже существует");
+                    ModelState.AddModelError("CharacteristicCategory.SectionId", "Характеристика для категории товара с такими данными уже существует");
+                }
+            }
+            else
+            {
+                if (viewModel.CharacteristicCategory.CategoryId == null ? true : viewModel.CharacteristicCategory.CategoryId == default)
+                {
+                    ModelState.AddModelError("CharacteristicCategory.CategoryId", "Категория товара должна быть указана");
+                }
+
+                if (viewModel.CharacteristicCategory.SectionId == null ? true : viewModel.CharacteristicCategory.SectionId == default)
+                {
+                    ModelState.AddModelError("CharacteristicCategory.SectionId", "Раздел характеристики должен быть указан");
+                }
+            }
+
+            return PartialView("_FormCharacteristicCategoryPartial", viewModel);
+        }
+
+        [HttpGet]
+        public IActionResult DeleteCharacteristicCategory(Guid characteristicCategoryId)
+        {
+            _dataManager.CharacteristicCategories.DeleteCharacteristicCategoryById(characteristicCategoryId);
+
+            return Ok();
+        }
+
+        [HttpPost]
+        public IActionResult SectionsCharacteristicByCategory(Guid categoryId)
+        {
+            var viewModel = new SectionsCharacteristicsViewModel()
+            {
+                SectionCharacteristics = _dataManager.SectionsCharacteristics
+                .GetSectionsCharacteristicsByCategoryId(categoryId).ToList()
+            };
+
+            return PartialView("_SectionCharacteristicItemsPartial", viewModel);
+        }
+
+        [HttpPost]
+        public IActionResult CharacteristicCategories(Guid characteristicId)
+        {
+            var viewModel = new CharacteristicCategoriesViewModel()
+            {
+                CharacteristicCategories = _dataManager.CharacteristicCategories
+                    .GetCharacteristicCategoriesByCharacteristicId(characteristicId).ToList()
+            };
+
+            return PartialView("_DataTableCharacteristicCategoriesPartial", viewModel);
+        }
+
         [Route("~/Admin/Characteristics/Delete/{id}")]
         public IActionResult Delete(Guid id)
         {

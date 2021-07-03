@@ -91,6 +91,27 @@ namespace Electro.Model.Database.Repositories.EntityFramework
             }
         }
 
+        public IQueryable<SectionCharacteristic> GetSectionsCharacteristicsByCategoryId(Guid categoryId, bool track = false)
+        {
+            if (track)
+            {
+                return _context.SectionsCharacteristics
+                    .Include(sectionCharacteristic => sectionCharacteristic.Categories)
+                        .ThenInclude(sectionCharacteristicCategory => sectionCharacteristicCategory.Category)
+                    .Where(sectionCharacteristic => sectionCharacteristic.Categories.Any(sectionCharacteristicCategory =>
+                        sectionCharacteristicCategory.CategoryId == categoryId) == true);
+            }
+            else
+            {
+                return _context.SectionsCharacteristics
+                    .Include(sectionCharacteristic => sectionCharacteristic.Categories)
+                        .ThenInclude(sectionCharacteristicCategory => sectionCharacteristicCategory.Category)
+                    .AsNoTracking()
+                    .Where(sectionCharacteristic => sectionCharacteristic.Categories.Any(sectionCharacteristicCategory => 
+                        sectionCharacteristicCategory.CategoryId == categoryId) == true);
+            }
+        }
+
         public void DeleteSectionCharacteristicById(Guid id)
         {
             _context.SectionsCharacteristics.Remove(GetSectionCharacteristicById(id));

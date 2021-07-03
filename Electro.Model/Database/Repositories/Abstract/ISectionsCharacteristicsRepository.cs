@@ -14,6 +14,8 @@ namespace Electro.Model.Database.Repositories.Abstract
 
         IQueryable<SectionCharacteristic> GetSectionsCharacteristics(bool track = false);
 
+        IQueryable<SectionCharacteristic> GetSectionsCharacteristicsByCategoryId(Guid categoryId, bool track = false);
+
         void DeleteSectionCharacteristicById(Guid id);
 
         void Detach(SectionCharacteristic entity);

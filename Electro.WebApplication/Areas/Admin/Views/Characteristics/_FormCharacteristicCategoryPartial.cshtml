@@ -1,0 +1,79 @@
+﻿@model CharacteristicCategoryViewModel
+<form id="form-characteristic-category-section" method="post">
+    <input type="hidden" asp-for="CharacteristicCategory.CharacteristicId" />
+    @if (Model.Categories != null)
+    {
+        @for (int i = 0; i < Model.Categories.Count; i++)
+        {
+            <input type="hidden" asp-for="@Model.Categories[i].Id" />
+            <input type="hidden" asp-for="@Model.Categories[i].Name" />
+            <input type="hidden" asp-for="@Model.Categories[i].ParentId" />
+            @if (Model.Categories[i].Parent != null)
+            {
+                <input type="hidden" asp-for="@Model.Categories[i].Parent.Id" />
+                <input type="hidden" asp-for="@Model.Categories[i].Parent.Name" />
+            }
+        }
+    }
+    @if (Model.SectionsCharacteristics != null)
+    {
+        @for (int i = 0; i < Model.SectionsCharacteristics.Count; i++)
+        {
+            <input type="hidden" asp-for="@Model.SectionsCharacteristics[i].Id" />
+            <input type="hidden" asp-for="@Model.SectionsCharacteristics[i].Name" />
+        }
+    }
+    <div class="form-group row">
+        <label class="col-sm-2 col-form-label">Категория товара</label>
+        <div class="col-sm-10">
+            <select id="single-select-categories" class="single-select" asp-for="CharacteristicCategory.CategoryId" required>
+                @if (Model.Categories != null)
+                {
+                    @foreach (var category in Model.Categories)
+                    {
+                        <option value="@category.Id">@category.Name</option>
+                    }
+                }
+            </select>
+            <span class="invalid-feedback" style="display: block;" asp-validation-for="CharacteristicCategory.CategoryId"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-sm-2 col-form-label">Раздел характеристики</label>
+        <div class="col-sm-10">
+            <select id="single-select-sections-characteristic-by-category" class="single-select" asp-for="CharacteristicCategory.SectionId" required>
+                @if (Model.SectionsCharacteristics != null)
+                    @foreach (var sectionCharacteristic in Model.SectionsCharacteristics)
+                    {
+                        <option value="@sectionCharacteristic.Id">@sectionCharacteristic.Name</option>
+                    }
+                }
+            </select>
+            <span class="invalid-feedback" style="display: block;" asp-validation-for="CharacteristicCategory.SectionId"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-sm-2 col-form-label">Использовать для фильтрации</label>
+        <div class="col-sm-10 d-flex flex-row justify-content-start align-items-center">
+            <div class="custom-control custom-switch">
+                <input type="checkbox" class="custom-control-input" id="custom-switch-use-when-filtering" asp-for="CharacteristicCategory.UseWhenFiltering">
+                <label class="custom-control-label" for="custom-switch-use-when-filtering">Да/Нет</label>
+            </div>
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-sm-2 col-form-label">Использовать для отображения в качестве основной информации</label>
+        <div class="col-sm-10 d-flex flex-row justify-content-start align-items-center">
+            <div class="custom-control custom-switch">
+                <input type="checkbox" class="custom-control-input" id="custom-switch-use-when-displaying-as-basic-information" asp-for="CharacteristicCategory.UseWhenDisplayingAsBasicInformation">
+                <label class="custom-control-label" for="custom-switch-use-when-displaying-as-basic-information">Да/Нет</label>
+            </div>
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-sm-2 col-form-label"></label>
+        <div class="col-sm-10">
+            <input type="button" id="button-submit-form-characteristic-category-section" class="btn btn-light px-4" value="Сохранить" />
+        </div>
+    </div>
+</form>

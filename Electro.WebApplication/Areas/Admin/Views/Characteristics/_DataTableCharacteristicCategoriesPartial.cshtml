@@ -1,0 +1,50 @@
+﻿@model CharacteristicCategoriesViewModel
+<table id="table-сharacteristic-categories" class="table table-striped table-bordered" style="width:100%">
+    <thead>
+        <tr>
+            <th>Категория товара</th>
+            <th>Раздел характеристики</th>
+            <th>Используется для фильтрации?</th>
+            <th>Используется для отображения в качестве основной информации?</th>
+            <th>Действия</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var characteristicCategory in Model.CharacteristicCategories)
+        {
+            <tr>
+                <td>@characteristicCategory.Category.Name</td>
+                <td>@characteristicCategory.Section.Name</td>
+                <td>@(characteristicCategory.UseWhenFiltering ? "Да" : "Нет")</td>
+                <td>@(characteristicCategory.UseWhenDisplayingAsBasicInformation ? "Да" : "Нет")</td>
+                <td>
+                    <div class="btn-group pull-right">
+                        <a data-action="edit" data-characteristic-category-id="@characteristicCategory.Id" onclick="onClickToActionForCharacteristicCategory(this);">
+                            <button class="btn btn-sm btn-default">
+                                <span class="fa fa-edit">
+
+                                </span>
+                            </button>
+                        </a>
+                        <a data-action="delete" data-characteristic-category-id="@characteristicCategory.Id" onclick="onClickToActionForCharacteristicCategory(this);">
+                            <button class="btn btn-sm btn-default">
+                                <span class="fa fa-trash">
+
+                                </span>
+                            </button>
+                        </a>
+                    </div>
+                </td>
+            </tr>
+        }
+    </tbody>
+    <tfoot>
+        <tr>
+            <th>Категория товара</th>
+            <th>Раздел характеристики</th>
+            <th>Используется для фильтрации?</th>
+            <th>Используется для отображения в качестве основной информации?</th>
+            <th>Действия</th>
+        </tr>
+    </tfoot>
+</table>

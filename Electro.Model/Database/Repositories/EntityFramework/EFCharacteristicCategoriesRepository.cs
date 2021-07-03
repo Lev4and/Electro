@@ -16,17 +16,18 @@ namespace Electro.Model.Database.Repositories.EntityFramework
             _context = context;
         }
 
-        public bool ContainsCharacteristicCategoryByCharacteristicIdAndCategoryId(Guid characteristicId, Guid categoryId)
+        public bool ContainsCharacteristicCategoryByCharacteristicIdAndCategoryIdAndSectionId(Guid characteristicId, Guid categoryId, Guid sectionId)
         {
             return _context.CharacteristicCategories.SingleOrDefault(characteristicCategory => characteristicCategory.CharacteristicId == characteristicId 
-                && characteristicCategory.CategoryId == categoryId) != null;
+                && characteristicCategory.CategoryId == categoryId && characteristicCategory.SectionId == sectionId) != null;
         }
 
         public bool SaveCharacteristicCategory(CharacteristicCategory entity)
         {
             if(entity.Id == default)
             {
-                if(!ContainsCharacteristicCategoryByCharacteristicIdAndCategoryId(entity.CharacteristicId, entity.CategoryId))
+                if(!ContainsCharacteristicCategoryByCharacteristicIdAndCategoryIdAndSectionId(entity.CharacteristicId, 
+                        entity.CategoryId, entity.SectionId))
                 {
                     _context.Entry(entity).State = EntityState.Added;
                     _context.SaveChanges();
@@ -38,9 +39,11 @@ namespace Electro.Model.Database.Repositories.EntityFramework
             {
                 var oldVersionEntity = GetCharacteristicCategoryById(entity.Id);
 
-                if(oldVersionEntity.CharacteristicId != entity.CharacteristicId || oldVersionEntity.CategoryId != entity.CategoryId)
+                if(oldVersionEntity.CharacteristicId != entity.CharacteristicId || oldVersionEntity.CategoryId != entity.CategoryId 
+                        || oldVersionEntity.SectionId != entity.SectionId)
                 {
-                    if (!ContainsCharacteristicCategoryByCharacteristicIdAndCategoryId(entity.CharacteristicId, entity.CategoryId))
+                    if (!ContainsCharacteristicCategoryByCharacteristicIdAndCategoryIdAndSectionId(entity.CharacteristicId, 
+                            entity.CategoryId, entity.SectionId))
                     {
                         _context.Entry(entity).State = EntityState.Modified;
                         _context.SaveChanges();
@@ -67,6 +70,7 @@ namespace Electro.Model.Database.Repositories.EntityFramework
                 return _context.CharacteristicCategories
                     .Include(characteristicCategory => characteristicCategory.Characteristic)
                     .Include(characteristicCategory => characteristicCategory.Category)
+                    .Include(characteristicCategory => characteristicCategory.Section)
                     .SingleOrDefault(characteristicCategory => characteristicCategory.Id == id);
             }
             else
@@ -74,9 +78,37 @@ namespace Electro.Model.Database.Repositories.EntityFramework
                 return _context.CharacteristicCategories
                     .Include(characteristicCategory => characteristicCategory.Characteristic)
                     .Include(characteristicCategory => characteristicCategory.Category)
+                    .Include(characteristicCategory => characteristicCategory.Section)
                     .AsNoTracking()
                     .SingleOrDefault(characteristicCategory => characteristicCategory.Id == id);
             }
+        }
+
+        public IQueryable<CharacteristicCategory> GetCharacteristicCategoriesByCharacteristicId(Guid characteristicId, bool track = false)
+        {
+            if (track)
+            {
+                return _context.CharacteristicCategories
+                    .Include(characteristicCategory => characteristicCategory.Characteristic)
+                    .Include(characteristicCategory => characteristicCategory.Category)
+                    .Include(characteristicCategory => characteristicCategory.Section)
+                    .Where(characteristicCategory => characteristicCategory.CharacteristicId == characteristicId);
+            }
+            else
+            {
+                return _context.CharacteristicCategories
+                    .Include(characteristicCategory => characteristicCategory.Characteristic)
+                    .Include(characteristicCategory => characteristicCategory.Category)
+                    .Include(characteristicCategory => characteristicCategory.Section)
+                    .AsNoTracking()
+                    .Where(characteristicCategory => characteristicCategory.CharacteristicId == characteristicId);
+            }
+        }
+
+        public void DeleteCharacteristicCategoryById(Guid id)
+        {
+            _context.CharacteristicCategories.Remove(GetCharacteristicCategoryById(id));
+            _context.SaveChanges();
         }
 
         public void DeleteRangeCharacteristicCategories(List<CharacteristicCategory> characteristicCategories)

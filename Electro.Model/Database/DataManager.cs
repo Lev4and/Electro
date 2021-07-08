@@ -10,7 +10,7 @@ namespace Electro.Model.Database
 
         public ICharacteristicCategoriesRepository CharacteristicCategories { get; private set; }
 
-        public ICharacteristicQuantityUnitsRepository CharacteristicQuantityUnits { get; private set; }
+        public ICharacteristicCategoryValuesRepository CharacteristicCategoryValues { get; private set; }
 
         public ICharacteristicsRepository Characteristics { get; private set; }
 
@@ -20,9 +20,15 @@ namespace Electro.Model.Database
 
         public IManufacturersRepository Manufacturers { get; private set; }
 
-        public IQuantitiesRepository Quantities { get; private set; }
+        public IProductCharacteristicCategoryValuesRepository ProductCharacteristicCategoryValues { get; private set; }
 
-        public IQuantityUnitsRepository QuantityUnits { get; private set; }
+        public IProductInformationRepository ProductInformation { get; private set; }
+
+        public IProductMainPhotosRepository ProductMainPhotos { get; private set; }
+
+        public IProductPhotosRepository ProductPhotos { get; private set; }
+
+        public IProductsRepository Products { get; private set; }
 
         public IRolesRepository Roles { get; private set; }
 
@@ -30,33 +36,35 @@ namespace Electro.Model.Database
 
         public ISectionsCharacteristicsRepository SectionsCharacteristics { get; private set; }
 
-        public IUnitsRepository Units { get; private set; }
-
         public IUsersRepository Users { get; private set; }
 
         public DataManager(ICategoriesRepository categories, ICategoryPhotosRepository categoryPhotos, 
             ICharacteristicCategoriesRepository characteristicCategories, 
-            ICharacteristicQuantityUnitsRepository characteristicQuantityUnits, ICharacteristicsRepository characteristics, 
+            ICharacteristicCategoryValuesRepository characteristicCategoryValues, ICharacteristicsRepository characteristics, 
             IManufacturersRepository manufacturers, IManufacturerInformationRepository manufacturerInformation, 
-            IManufacturerLogosRepository manufacturerLogos, IQuantitiesRepository quantities, 
-            IQuantityUnitsRepository quantityUnits, IRolesRepository roles, 
+            IManufacturerLogosRepository manufacturerLogos, 
+            IProductCharacteristicCategoryValuesRepository productCharacteristicCategoryValues,
+            IProductInformationRepository productInformation, IProductMainPhotosRepository productMainPhotos, 
+            IProductPhotosRepository productPhotos, IProductsRepository products, IRolesRepository roles, 
             ISectionCharacteristicCategoriesRepository sectionCharacteristicCategories,
-            ISectionsCharacteristicsRepository sectionsCharacteristics, IUnitsRepository units, IUsersRepository users)
+            ISectionsCharacteristicsRepository sectionsCharacteristics, IUsersRepository users)
         {
             Categories = categories;
             CategoryPhotos = categoryPhotos;
             CharacteristicCategories = characteristicCategories;
-            CharacteristicQuantityUnits = characteristicQuantityUnits;
+            CharacteristicCategoryValues = characteristicCategoryValues;
             Characteristics = characteristics;
             ManufacturerInformation = manufacturerInformation;
             ManufacturerLogos = manufacturerLogos;
             Manufacturers = manufacturers;
-            Quantities = quantities;
-            QuantityUnits = quantityUnits;
+            ProductCharacteristicCategoryValues = productCharacteristicCategoryValues;
+            ProductInformation = productInformation;
+            ProductMainPhotos = productMainPhotos;
+            ProductPhotos = productPhotos;
+            Products = products;
             Roles = roles;
             SectionCharacteristicCategories = sectionCharacteristicCategories;
             SectionsCharacteristics = sectionsCharacteristics;
-            Units = units;
             Users = users;
         }
     }

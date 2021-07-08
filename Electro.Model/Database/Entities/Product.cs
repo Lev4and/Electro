@@ -27,6 +27,6 @@ namespace Electro.Model.Database.Entities
 
         public virtual ICollection<ProductPhoto> Photos { get; set; }
 
-        public virtual ICollection<ProductCharacteristicQuantityUnitValue> CharacteristicQuantityUnitValues { get; set; }
+        public virtual ICollection<ProductCharacteristicCategoryValue> CharacteristicsValues { get; set; }
     }
 }

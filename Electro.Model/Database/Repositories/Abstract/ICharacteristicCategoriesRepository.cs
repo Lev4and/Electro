@@ -13,6 +13,8 @@ namespace Electro.Model.Database.Repositories.Abstract
 
         CharacteristicCategory GetCharacteristicCategoryById(Guid id, bool track = false);
 
+        CharacteristicCategory GetCharacteristicCategoryByCharacteristicIdAndCategoryId(Guid characteristicId, Guid categoryId, bool track = false);
+
         IQueryable<CharacteristicCategory> GetCharacteristicCategoriesByCharacteristicId(Guid characteristicId, bool track = false);
 
         void DeleteCharacteristicCategoryById(Guid id);

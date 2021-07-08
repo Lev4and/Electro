@@ -1,0 +1,473 @@
+﻿@model ProductViewModel
+@section StylePage
+{
+    <link rel="stylesheet" type="text/css" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" asp-append-version="true" />
+    <link rel="stylesheet" type="text/css" href="~/plugins/Drag-And-Drop/dist/imageuploadify.min.css" asp-append-version="true" />
+    <link rel="stylesheet" type="text/css" href="~/plugins/fancy-file-uploader/fancy_fileupload.css" asp-append-version="true" />
+    <link rel="stylesheet" type="text/css" href="~/plugins/datatable/css/dataTables.bootstrap4.min.css" asp-append-version="true" />
+    <link rel="stylesheet" type="text/css" href="~/plugins/datatable/css/buttons.bootstrap4.min.css" asp-append-version="true" />
+    <link rel="stylesheet" type="text/css" href="~/plugins/select2/css/select2.min.css" asp-append-version="true" />
+    <link rel="stylesheet" type="text/css" href="~/plugins/select2/css/select2-bootstrap4.css" asp-append-version="true" />
+    <link rel="stylesheet" type="text/css" href="~/css/custom.css" asp-append-version="true" />
+}
+@{
+    ViewData["Title"] = "Сохранение товара";
+}
+<div class="page-wrapper">
+    <div class="page-content-wrapper">
+        <div class="page-content">
+            <div class="page-breadcrumb d-none d-md-flex align-items-center mb-3">
+                <div class="breadcrumb-title pr-3">База данных</div>
+                <div class="pl-3">
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb mb-0 p-0">
+                            <li class="breadcrumb-item">
+                                <a asp-area="Admin" asp-controller="Home" asp-action="Index"><i class='bx bx-home-alt'></i></a>
+                            </li>
+                            <li class="breadcrumb-item">
+                                <a asp-area="Admin" asp-controller="Products" asp-action="Index">Товары</a>
+                            </li>
+                            <li class="breadcrumb-item active" aria-current="page">Сохранение товара</li>
+                        </ol>
+                    </nav>
+                </div>
+            </div>
+            <div class="card radius-15">
+                <div class="card-body">
+                    <div class="card-title">
+                        <h4 class="mb-0">Форма</h4>
+                    </div>
+                    <hr />
+                    <div class="form-body">
+                        <form method="post" action="/Admin/Products/Save" enctype="multipart/form-data">
+                            <input type="hidden" asp-for="Product.Id" />
+                            <input type="hidden" asp-for="Product.MainPhoto.Id" />
+                            <input type="hidden" asp-for="Product.Information.Id" />
+                            <input type="hidden" asp-for="Product.Information.ProductId" />
+                            <input id="input-hidden-photo-url" type="hidden" asp-for="Product.MainPhoto.Url" />
+                            @if (Model.Categories != null)
+                            {
+                                @for (int i = 0; i < Model.Categories.Count; i++)
+                                {
+                                    <input type="hidden" asp-for="@Model.Categories[i].Id" />
+                                    <input type="hidden" asp-for="@Model.Categories[i].Name" />
+                                }
+                            }
+                            @if (Model.Manufacturers != null)
+                            {
+                                @for (int i = 0; i < Model.Manufacturers.Count; i++)
+                                {
+                                    <input type="hidden" asp-for="@Model.Manufacturers[i].Id" />
+                                    <input type="hidden" asp-for="@Model.Manufacturers[i].Name" />
+                                }
+                            }
+                            <div class="form-group row">
+                                <label class="col-sm-2 col-form-label">Фотография</label>
+                                <div class="col-sm-10 form-group-row-container-image">
+                                    <img id="current-photo-image" src="~/@(Model.Product.MainPhoto != null ? Model.Product.MainPhoto.Url : "")" />
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-2 col-form-label">Категория товара</label>
+                                <div class="col-sm-10">
+                                    <select id="single-select-categories" class="single-select" asp-for="Product.CategoryId" required>
+                                        @if (Model.Categories != null)
+                                        {
+                                            @foreach (var category in Model.Categories)
+                                            {
+                                                <option value="@category.Id">@category.Name</option>
+                                            }
+                                        }
+                                    </select>
+                                    <span class="invalid-feedback" style="display: block;" asp-validation-for="Product.CategoryId"></span>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-2 col-form-label">Производитель</label>
+                                <div class="col-sm-10">
+                                    <select id="single-select-manufacturers" class="single-select" asp-for="Product.ManufacturerId" required>
+                                        @if (Model.Manufacturers != null)
+                                        {
+                                            @foreach (var manufacturer in Model.Manufacturers)
+                                            {
+                                                <option value="@manufacturer.Id">@manufacturer.Name</option>
+                                            }
+                                        }
+                                    </select>
+                                    <span class="invalid-feedback" style="display: block;" asp-validation-for="Product.ManufacturerId"></span>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-2 col-form-label">Модель</label>
+                                <div class="col-sm-10">
+                                    <input type="text" class="form-control" asp-for="Product.Model" required>
+                                    <span class="invalid-feedback" style="display: block;" asp-validation-for="Product.Model"></span>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-2 col-form-label">Описание</label>
+                                <div class="col-sm-10">
+                                    <textarea id="text-area-description" asp-for="Product.Information.Description"></textarea>
+                                    <span class="invalid-feedback" style="display: block;" asp-validation-for="Product.Information.Description"></span>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-2 col-form-label">Стоимость</label>
+                                <div class="col-sm-10">
+                                    <input type="number" class="form-control" min="0" step="0.01" asp-for="Product.Price" required>
+                                    <span class="invalid-feedback" style="display: block;" asp-validation-for="Product.Price"></span>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-2 col-form-label">Загрузка фотографии</label>
+                                <div class="col-sm-10">
+                                    <div class="input-group mb-3">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text" id="inputGroupFileAddon01">Загрузить</span>
+                                        </div>
+                                        <div class="custom-file">
+                                            <input name="uploadedFile" type="file" accept=".jpg, .png, image/jpeg, image/png" class="custom-file-input" id="inputGroupFile01" aria-describedby="inputGroupFileAddon01">
+                                            <label class="custom-file-label" for="inputGroupFile01">Выбрать файл</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-2 col-form-label">Фотографии</label>
+                                <div class="col-sm-10">
+                                    <div class="table-responsive">
+                                        <table id="table-photos" class="table table-striped table-bordered" style="width:100%">
+                                            <thead>
+                                                <tr>
+                                                    <th>Фото</th>
+                                                    <th>Действия</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @if (Model.Product.Photos != null)
+                                                {
+                                                    for (int i = 0; i < Model.Product.Photos.Count; i++)
+                                                    {
+                                                        <tr>
+                                                            <td>
+                                                                <div class="container-image">
+                                                                    <img src="~/@(Model.Product.Photos != null ? Model.Product.Photos.ElementAt(i).Url : "")" />
+                                                                </div>
+                                                            </td>
+                                                            <td>
+                                                                <a>
+                                                                    <button class="btn btn-sm btn-default" onclick="onClickRemovePhoto(this);">
+                                                                        <span class="fa fa-trash">
+                                                                            <input type="hidden" data-photos-index="@i" name="Product.Photos[@i].Id" value="@Model.Product.Photos.ElementAt(i).Id" />
+                                                                            <input type="hidden" data-photos-index="@i" name="Product.Photos[@i].ProductId" value="@Model.Product.Photos.ElementAt(i).ProductId" />
+                                                                            <input type="hidden" data-photos-index="@i" name="Product.Photos[@i].Url" value="@Model.Product.Photos.ElementAt(i).Url" />
+                                                                        </span>
+                                                                    </button>
+                                                                </a>
+                                                            </td>
+                                                        </tr>
+                                                    }
+                                                }
+                                            </tbody>
+                                            <tfoot>
+                                                <tr>
+                                                    <th>Фото</th>
+                                                    <th>Действия</th>
+                                                </tr>
+                                            </tfoot>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-2 col-form-label">Загрузка фотографий</label>
+                                <div class="col-sm-10">
+                                    <input id="image-uploadify-2" type="file" name="uploadedFile" accept="image/*">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-2 col-form-label">Загрузка фотографий</label>
+                                <div class="col-sm-10">
+                                    <input id="image-uploadify" type="file" name="uploadedFiles" accept="image/*" multiple>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-2 col-form-label"></label>
+                                <div class="col-sm-10">
+                                    <input type="submit" class="btn btn-light px-4" value="Сохранить" />
+                                    <button id="remove-current-photo-button" type="button" class="btn btn-light px-4">Удалить текущую фотографию</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            @if (Model.Product.Id != default)
+            {
+                <div class="card radius-15">
+                    <div class="card-body">
+                        <div class="card-title">
+                            <h4 class="mb-0">Характеристики</h4>
+                        </div>
+                        <hr />
+                        <div id="form-body-product-characteristic-value" class="form-body">
+                            @await Component.InvokeAsync("FormProductCharacteristicValue", new { productId = Model.Product.Id, categoryId = Model.Product.CategoryId })
+                        </div>
+                        <hr />
+                        <div id="table-responsive-table-product-characteristic-values" class="table-responsive">
+                            @await Component.InvokeAsync("DataTableProductCharacteristicValues", Model.Product.Id)
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+@section ScriptPage
+{
+    <script src="~/js/bs-custom-file-input.min.js" asp-append-version="true"></script>
+    <script src="~/plugins/fancy-file-uploader/jquery.ui.widget.js" asp-append-version="true"></script>
+    <script src="~/plugins/fancy-file-uploader/jquery.fileupload.js" asp-append-version="true"></script>
+    <script src="~/plugins/fancy-file-uploader/jquery.iframe-transport.js" asp-append-version="true"></script>
+    <script src="~/plugins/fancy-file-uploader/jquery.fancy-fileupload.js" asp-append-version="true"></script>
+    <script src="~/plugins/Drag-And-Drop/dist/imageuploadify.min.js" asp-append-version="true"></script>
+    <script src="~/plugins/ckeditor/ckeditor.js" asp-append-version="true"></script>
+    <script src="~/plugins/select2/js/select2.min.js" asp-append-version="true"></script>
+    <script src="~/plugins/datatable/js/jquery.dataTables.min.js" asp-append-version="true"></script>
+    <script>
+        customFileInputInit();
+        imageUploadifyInit();
+
+        singleSelectCategoriesInit();
+        singleSelectManufacturersInit();
+
+        textAreaDescriptionInit();
+
+        dataTablePhotosInit();
+
+        setEventListenerForRemoveCurrentPhotoButton();
+
+        function customFileInputInit() {
+            bsCustomFileInput.init();
+        }
+
+        function imageUploadifyInit() {
+            $('#image-uploadify-2').imageuploadify();
+            $('#image-uploadify').imageuploadify();
+        }
+
+        function textAreaDescriptionInit() {
+            CKEDITOR.replace("Product.Information.Description");
+        }
+
+        function singleSelectCategoriesInit() {
+            $('#single-select-categories').select2({
+                width: '100%',
+                theme: 'bootstrap4',
+                placeholder: $(this).data('placeholder'),
+                allowClear: Boolean($(this).data('allow-clear')),
+            });
+        }
+
+        function singleSelectManufacturersInit() {
+            $('#single-select-manufacturers').select2({
+                width: '100%',
+                theme: 'bootstrap4',
+                placeholder: $(this).data('placeholder'),
+                allowClear: Boolean($(this).data('allow-clear')),
+            });
+        }
+
+        function dataTablePhotosInit() {
+            $('#table-photos').DataTable();
+        }
+
+        function onClickRemovePhoto(element) {
+            $($($($(element).parent()).parent()).parent()).remove();
+
+            let table = $('#table-photos');
+            let tbody = $(table).children('tbody');
+            $(tbody).find('tr').each(function (i, trow) {
+                $(trow).find('input[type=hidden]').each(function (j, input) {
+                    $(input).attr('data-photos-index', i);
+                    $(input).attr('name', $(input).attr('name').replace(new RegExp("[0-9]", "g"), i));
+                });
+            });
+        }
+
+        function setEventListenerForRemoveCurrentPhotoButton() {
+            $('#remove-current-photo-button').on('click', function () {
+                $('#current-photo-image').attr('src', '');
+                $('#input-hidden-photo-url').attr('value', '');
+            });
+        }
+    </script>
+    @if (Model.Product.Id != default)
+    {
+        <script>
+            disabledSingleSelectCategories();
+            formProductCharacteristicValueInit();
+            dataTableProductCharacteristicValuesInit();
+
+            function disabledSingleSelectCategories() {
+                $('#single-select-categories').prop('disabled', true);
+            }
+
+            function singleSelectCharacteristicsInit() {
+                $('#single-select-characteristics').select2({
+                    width: '100%',
+                    theme: 'bootstrap4',
+                    placeholder: $(this).data('placeholder'),
+                    allowClear: Boolean($(this).data('allow-clear')),
+                });
+            }
+
+            function singleSelectCharacteristicValuesInit() {
+                $('#single-select-characteristic-values').select2({
+                    width: '100%',
+                    theme: 'bootstrap4',
+                    placeholder: $(this).data('placeholder'),
+                    allowClear: Boolean($(this).data('allow-clear')),
+                });
+            }
+
+            function singleSelectCharacteristicQuantityUnitsInit() {
+                $('#single-select-characteristic-quantity-units').select2({
+                    width: '100%',
+                    theme: 'bootstrap4',
+                    placeholder: $(this).data('placeholder'),
+                    allowClear: Boolean($(this).data('allow-clear')),
+                });
+            }
+
+            function dataTableProductCharacteristicValuesInit() {
+                $('#table-product-characteristic-values').DataTable();
+            }
+
+            function updateDataTableProductCharacteristicValues() {
+                $.ajax({
+                    url: '/Admin/Products/ProductCharacteristicValues',
+                    method: 'POST',
+                    data: { productId: "@Model.Product.Id" },
+                    success: function (data) {
+                        $('#table-responsive-table-product-characteristic-values').html();
+                        $('#table-responsive-table-product-characteristic-values').html(data);
+
+                        dataTableProductCharacteristicValuesInit();
+
+                        console.log(data);
+                    }
+                });
+            }
+
+            function onClickToActionForProductCharacteristicValue(element) {
+                let action = $(element).attr('data-action');
+                let productCharacteristicValueId = $(element).attr('data-product-characteristic-value-id');
+
+                if (action === "edit") {
+                    $.ajax({
+                        url: '/Admin/Products/SaveProductCharacteristicValue?productCharacteristicValueId=' + productCharacteristicValueId + '&categoryId=@Model.Product.CategoryId',
+                        method: 'GET',
+                        success: function (data) {
+                            $('#form-body-product-characteristic-value').html();
+                            $('#form-body-product-characteristic-value').html(data);
+
+                            formProductCharacteristicValueInit();
+
+                            console.log(data);
+                        }
+                    });
+                }
+
+                if (action === "delete") {
+                    $.ajax({
+                        url: '/Admin/Products/DeleteProductCharacteristicValue?productCharacteristicValueId=' + productCharacteristicValueId,
+                        method: 'GET',
+                        success: function (data) {
+                            updateDataTableProductCharacteristicValues();
+                            formProductCharacteristicValueInit();
+                        }
+                    });
+                }
+            }
+
+            function setEventListenerForSingleSelectCharacteristics() {
+                $('#single-select-characteristics').on('change', function () {
+                    getCharacteristicValuesByCharacteristicId();
+                });
+            }
+
+            function setEventListenerForCustomSwitchUseNewValue() {
+                $('#custom-switch-use-new-value').on('change', function () {
+                    turnOnOrOffElements();
+                });
+            }
+
+            function turnOnOrOffElements() {
+                let useNewValue = $('#custom-switch-use-new-value').prop('checked');
+
+                let isEnabledForOldValue = useNewValue;
+                let isEnabledForNewValue = !useNewValue;
+
+                $('#single-select-characteristic-values').prop('disabled', isEnabledForOldValue);
+
+                $('#input-text-new-characteristic-value').prop('disabled', isEnabledForNewValue);
+                $('#single-select-characteristic-quantity-units').prop('disabled', isEnabledForNewValue);
+            }
+
+            function setEventListenerForButtonSubmitFormProductCharacteristicValue() {
+                $('#button-submit-form-product-characteristic-value').on('click', function () {
+                    submitFormProductCharacteristicValue();
+                });
+            }
+
+            function submitFormProductCharacteristicValue() {
+                $.ajax({
+                    url: "/Admin/Products/SaveProductCharacteristicValue",
+                    method: "POST",
+                    data: $('#form-product-characteristic-value').serialize(),
+                    success: function (data) {
+                        $('#form-body-product-characteristic-value').html();
+                        $('#form-body-product-characteristic-value').html(data);
+
+                        formProductCharacteristicValueInit();
+
+                        updateDataTableProductCharacteristicValues();
+
+                        console.log(data);
+                    }
+                });
+            }
+
+            function getCharacteristicValuesByCharacteristicId() {
+                let characteristicId = $('#single-select-characteristics').val();
+
+                $.ajax({
+                    url: "/Admin/Products/CharacteristicValuesByCharacteristicId",
+                    method: "POST",
+                    data: { characteristicId: characteristicId },
+                    success: function (data) {
+                        $('#single-select-characteristic-values').html();
+                        $('#single-select-characteristic-values').html(data);
+
+                        console.log(data);
+                    }
+                });
+            }
+
+            function formProductCharacteristicValueInit() {
+                singleSelectCharacteristicsInit();
+                singleSelectCharacteristicValuesInit();
+                singleSelectCharacteristicQuantityUnitsInit();
+
+                turnOnOrOffElements();
+
+                setEventListenerForCustomSwitchUseNewValue();
+                setEventListenerForSingleSelectCharacteristics();
+                setEventListenerForButtonSubmitFormProductCharacteristicValue();
+
+                getCharacteristicValuesByCharacteristicId();
+            }
+        </script>
+    }
+}

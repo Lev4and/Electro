@@ -64,24 +64,12 @@ namespace Electro.Model.Database.Repositories.EntityFramework
             {
                 return _context.Characteristics
                     .Include(characteristic => characteristic.Categories)
-                    .Include(characteristic => characteristic.QuantityUnits)
-                        .ThenInclude(characteristicQuantityUnit => characteristicQuantityUnit.QuantityUnit)
-                            .ThenInclude(quantityUnit => quantityUnit.Quantity)
-                    .Include(characteristic => characteristic.QuantityUnits)
-                        .ThenInclude(characteristicQuantityUnit => characteristicQuantityUnit.QuantityUnit)
-                            .ThenInclude(quantityUnit => quantityUnit.Unit)
                     .SingleOrDefault(characteristic => characteristic.Id == id);
             }
             else
             {
                 return _context.Characteristics
                     .Include(characteristic => characteristic.Categories)
-                    .Include(characteristic => characteristic.QuantityUnits)
-                        .ThenInclude(characteristicQuantityUnit => characteristicQuantityUnit.QuantityUnit)
-                            .ThenInclude(quantityUnit => quantityUnit.Quantity)
-                    .Include(characteristic => characteristic.QuantityUnits)
-                        .ThenInclude(characteristicQuantityUnit => characteristicQuantityUnit.QuantityUnit)
-                            .ThenInclude(quantityUnit => quantityUnit.Unit)
                     .AsNoTracking()
                     .SingleOrDefault(characteristic => characteristic.Id == id);
             }
@@ -92,25 +80,63 @@ namespace Electro.Model.Database.Repositories.EntityFramework
             if (track)
             {
                 return _context.Characteristics
-                    .Include(characteristic => characteristic.Categories)
-                    .Include(characteristic => characteristic.QuantityUnits)
-                        .ThenInclude(characteristicQuantityUnit => characteristicQuantityUnit.QuantityUnit)
-                            .ThenInclude(quantityUnit => quantityUnit.Quantity)
-                    .Include(characteristic => characteristic.QuantityUnits)
-                        .ThenInclude(characteristicQuantityUnit => characteristicQuantityUnit.QuantityUnit)
-                            .ThenInclude(quantityUnit => quantityUnit.Unit);
+                    .Include(characteristic => characteristic.Categories);
             }
             else
             {
                 return _context.Characteristics
                     .Include(characteristic => characteristic.Categories)
-                    .Include(characteristic => characteristic.QuantityUnits)
-                        .ThenInclude(characteristicQuantityUnit => characteristicQuantityUnit.QuantityUnit)
-                            .ThenInclude(quantityUnit => quantityUnit.Quantity)
-                    .Include(characteristic => characteristic.QuantityUnits)
-                        .ThenInclude(characteristicQuantityUnit => characteristicQuantityUnit.QuantityUnit)
-                            .ThenInclude(quantityUnit => quantityUnit.Unit)
                     .AsNoTracking();
+            }
+        }
+
+        public IQueryable<Characteristic> GetCharacteristicsByCategoryId(Guid categoryId, bool track = false)
+        {
+            if (track)
+            {
+                return _context.Characteristics
+                    .Include(characteristic => characteristic.Categories)
+                    .Where(characteristic => characteristic.Categories.Any(characteristicCategory => 
+                        characteristicCategory.CategoryId == categoryId));
+            }
+            else
+            {
+                return _context.Characteristics
+                    .Include(characteristic => characteristic.Categories)
+                    .AsNoTracking()
+                    .Where(characteristic => characteristic.Categories.Any(characteristicCategory => 
+                        characteristicCategory.CategoryId == categoryId));
+            }
+        }
+
+        public IQueryable<Characteristic> GetNotUsedCharacteristicsForProductByProductIdAndCategoryId(Guid productId, Guid categoryId, bool track = false)
+        {
+            if (track)
+            {
+                return _context.Characteristics
+                    .Include(characteristic => characteristic.Categories)
+                        .ThenInclude(characteristicCategory => characteristicCategory.Values)
+                            .ThenInclude(characteristicCategoryValue => characteristicCategoryValue.Products)
+                    .Where(characteristic => !characteristic.Categories.Any(characteristicCategory =>
+                        characteristicCategory.Values.Any(characteristicCategoryValue =>
+                            characteristicCategoryValue.Products.Any(productCharacteristicCategoryValue =>
+                                productCharacteristicCategoryValue.ProductId == productId))) &&
+                                    characteristic.Categories.Any(characteristicCategory =>
+                                        characteristicCategory.CategoryId == categoryId));
+            }
+            else
+            {
+                return _context.Characteristics
+                    .Include(characteristic => characteristic.Categories)
+                        .ThenInclude(characteristicCategory => characteristicCategory.Values)
+                            .ThenInclude(characteristicCategoryValue => characteristicCategoryValue.Products)
+                    .AsNoTracking()
+                    .Where(characteristic => !characteristic.Categories.Any(characteristicCategory =>
+                        characteristicCategory.Values.Any(characteristicCategoryValue =>
+                            characteristicCategoryValue.Products.Any(productCharacteristicCategoryValue =>
+                                productCharacteristicCategoryValue.ProductId == productId))) &&
+                                    characteristic.Categories.Any(characteristicCategory =>
+                                        characteristicCategory.CategoryId == categoryId));
             }
         }
 

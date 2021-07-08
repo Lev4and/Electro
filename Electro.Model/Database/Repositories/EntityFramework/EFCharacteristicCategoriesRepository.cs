@@ -84,6 +84,31 @@ namespace Electro.Model.Database.Repositories.EntityFramework
             }
         }
 
+        public CharacteristicCategory GetCharacteristicCategoryByCharacteristicIdAndCategoryId(Guid characteristicId, Guid categoryId, bool track = false)
+        {
+            if (track)
+            {
+                return _context.CharacteristicCategories
+                    .Include(characteristicCategory => characteristicCategory.Characteristic)
+                    .Include(characteristicCategory => characteristicCategory.Category)
+                    .Include(characteristicCategory => characteristicCategory.Section)
+                    .SingleOrDefault(characteristicCategory => 
+                        characteristicCategory.CharacteristicId == characteristicId && 
+                            characteristicCategory.CategoryId == categoryId);
+            }
+            else
+            {
+                return _context.CharacteristicCategories
+                    .Include(characteristicCategory => characteristicCategory.Characteristic)
+                    .Include(characteristicCategory => characteristicCategory.Category)
+                    .Include(characteristicCategory => characteristicCategory.Section)
+                    .AsNoTracking()
+                    .SingleOrDefault(characteristicCategory =>
+                        characteristicCategory.CharacteristicId == characteristicId &&
+                            characteristicCategory.CategoryId == categoryId);
+            }
+        }
+
         public IQueryable<CharacteristicCategory> GetCharacteristicCategoriesByCharacteristicId(Guid characteristicId, bool track = false)
         {
             if (track)

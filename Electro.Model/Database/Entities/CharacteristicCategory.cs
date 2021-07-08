@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Electro.Model.Database.Entities
 {
@@ -16,10 +17,12 @@ namespace Electro.Model.Database.Entities
 
         public bool UseWhenDisplayingAsBasicInformation { get; set; }
 
-        public virtual SectionCharacteristic Section { get; set; }
+        public virtual Category Category { get; set; }
 
         public virtual Characteristic Characteristic { get; set; }
 
-        public virtual Category Category { get; set; }
+        public virtual SectionCharacteristic Section { get; set; }
+
+        public virtual ICollection<CharacteristicCategoryValue> Values { get; set; }
     }
 }

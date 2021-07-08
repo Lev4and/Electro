@@ -39,19 +39,21 @@ namespace Electro.WebApplication
             services.AddTransient<UserManager<ApplicationUser>>();
             services.AddTransient<IRolesRepository, EFRolesRepository>();
             services.AddTransient<IUsersRepository, EFUsersRepository>();
-            services.AddTransient<IUnitsRepository, EFUnitsRepository>();
-            services.AddTransient<IQuantitiesRepository, EFQuantitiesRepository>();
+            services.AddTransient<IProductsRepository, EFProductsRepository>();
             services.AddTransient<ICategoriesRepository, EFCategoriesRepository>();
-            services.AddTransient<IQuantityUnitsRepository, EFQuantityUnitsRepository>();
+            services.AddTransient<IProductPhotosRepository, EFProductPhotosRepository>();
             services.AddTransient<IManufacturersRepository, EFManufacturersRepository>();
             services.AddTransient<ICategoryPhotosRepository, EFCategoryPhotosRepository>();
             services.AddTransient<ICharacteristicsRepository, EFCharacteristicsRepository>();
+            services.AddTransient<IProductMainPhotosRepository, EFProductMainPhotosRepository>();
             services.AddTransient<IManufacturerLogosRepository, EFManufacturerLogosRepository>();
+            services.AddTransient<IProductInformationRepository, EFProductInformationRepository>();
             services.AddTransient<ISectionsCharacteristicsRepository, EFSectionsCharacteristicsRepository>();
             services.AddTransient<IManufacturerInformationRepository, EFManufacturerInformationRepository>();
             services.AddTransient<ICharacteristicCategoriesRepository, EFCharacteristicCategoriesRepository>();
-            services.AddTransient<ICharacteristicQuantityUnitsRepository, EFCharacteristicQuantityUnitsRepository>();
+            services.AddTransient<ICharacteristicCategoryValuesRepository, EFCharacteristicCategoryValuesRepository>();
             services.AddTransient<ISectionCharacteristicCategoriesRepository, EFSectionCharacteristicCategoriesRepository>();
+            services.AddTransient<IProductCharacteristicCategoryValuesRepository, EFProductCharacteristicCategoryValuesRepository>();
             services.AddTransient<DataManager>();
             services.AddDbContext<ElectroDbContext>((options) =>
             {

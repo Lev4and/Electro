@@ -1,0 +1,5 @@
+﻿@model CharacteristicValuesViewModel
+@foreach (var characteristicValue in Model.CharacteristicValues)
+{
+    <option value="@characteristicValue.Id">@characteristicValue.Value</option>
+}

@@ -126,7 +126,7 @@ namespace Electro.WebApplication.Services.ImageResizable
             Resize(image, imageProfile);
             Crop(image, imageProfile);
 
-            image.Save(filePath, new JpegEncoder { Quality = 75 });
+            image.Save(filePath, new JpegEncoder { Quality = 100 });
 
             return PathToUrl(Path.Combine($"{imageProfile.Folder}/{directoryPath}", fileName));
         }

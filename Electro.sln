@@ -5,7 +5,7 @@ VisualStudioVersion = 16.0.31410.357
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Electro.WebApplication", "Electro.WebApplication\Electro.WebApplication.csproj", "{5FB59DA2-8111-499F-9B56-880F426E3673}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Electro.Model", "Electro.Model\Electro.Model.csproj", "{026B6167-3A7D-48AB-85CA-CD1B14FAE901}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Electro.Model", "Electro.Model\Electro.Model.csproj", "{026B6167-3A7D-48AB-85CA-CD1B14FAE901}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

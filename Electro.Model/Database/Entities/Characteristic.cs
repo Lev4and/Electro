@@ -14,7 +14,5 @@ namespace Electro.Model.Database.Entities
         public string Description { get; set; }
 
         public virtual ICollection<CharacteristicCategory> Categories { get; set; }
-
-        public virtual ICollection<CharacteristicQuantityUnit> QuantityUnits { get; set; }
     }
 }

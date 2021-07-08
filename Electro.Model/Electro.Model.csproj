@@ -9,6 +9,12 @@
     <Compile Remove="Database\Migrations\20210625125506_InitDatabase.Designer.cs" />
     <Compile Remove="Database\Migrations\20210627035921_ChangeDeleteRuleForRelationCategoryAndCategory.cs" />
     <Compile Remove="Database\Migrations\20210627035921_ChangeDeleteRuleForRelationCategoryAndCategory.Designer.cs" />
+    <Compile Remove="Database\Migrations\20210708123157_DeletingSomeEntities.cs" />
+    <Compile Remove="Database\Migrations\20210708123157_DeletingSomeEntities.Designer.cs" />
+    <Compile Remove="Database\Migrations\20210708123433_InitDatabase.cs" />
+    <Compile Remove="Database\Migrations\20210708123433_InitDatabase.Designer.cs" />
+    <Compile Remove="Database\Migrations\20210708123940_InitDatabase.cs" />
+    <Compile Remove="Database\Migrations\20210708123940_InitDatabase.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

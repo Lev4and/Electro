@@ -18,9 +18,7 @@ namespace Electro.Model.Database
 
         public DbSet<CharacteristicCategory> CharacteristicCategories { get; set; }
 
-        public DbSet<CharacteristicQuantityUnit> CharacteristicQuantityUnits { get; set; }
-
-        public DbSet<CharacteristicQuantityUnitValue> CharacteristicQuantityUnitValues { get; set; }
+        public DbSet<CharacteristicCategoryValue> CharacteristicCategoryValues { get; set; }
 
         public DbSet<Manufacturer> Manufacturers { get; set; }
 
@@ -30,7 +28,7 @@ namespace Electro.Model.Database
 
         public DbSet<Product> Products { get; set; }
 
-        public DbSet<ProductCharacteristicQuantityUnitValue> ProductCharacteristicQuantityUnitValues { get; set; }
+        public DbSet<ProductCharacteristicCategoryValue> ProductCharacteristicCategoryValues { get; set; }
 
         public DbSet<ProductInformation> ProductInformation { get; set; }
 
@@ -38,15 +36,9 @@ namespace Electro.Model.Database
 
         public DbSet<ProductPhoto> ProductPhotos { get; set; }
 
-        public DbSet<Quantity> Quantities { get; set; }
-
-        public DbSet<QuantityUnit> QuantityUnits { get; set; }
-
         public DbSet<SectionCharacteristic> SectionsCharacteristics { get; set; }
 
         public DbSet<SectionCharacteristicCategory> SectionCharacteristicCategories { get; set; }
-
-        public DbSet<Unit> Units { get; set; }
 
         public ElectroDbContext(DbContextOptions<ElectroDbContext> options) : base(options)
         {
@@ -126,20 +118,15 @@ namespace Electro.Model.Database
                 .WithOne(category => category.Characteristic)
                 .HasForeignKey(category => category.CharacteristicId);
 
-            builder.Entity<Characteristic>()
-                .HasMany(characteristic => characteristic.QuantityUnits)
-                .WithOne(characteristicQuantityUnit => characteristicQuantityUnit.Characteristic)
-                .HasForeignKey(characteristicQuantityUnit => characteristicQuantityUnit.CharacteristicId);
+            builder.Entity<CharacteristicCategory>()
+                .HasMany(characteristicCategory => characteristicCategory.Values)
+                .WithOne(characteristicCategoryValue => characteristicCategoryValue.CharacteristicCategory)
+                .HasForeignKey(characteristicCategoryValue => characteristicCategoryValue.CharacteristicCategoryId);
 
-            builder.Entity<CharacteristicQuantityUnit>()
-                .HasMany(characteristicQuantityUnit => characteristicQuantityUnit.Values)
-                .WithOne(characteristicQuantityUnitValue => characteristicQuantityUnitValue.CharacteristicQuantityUnit)
-                .HasForeignKey(characteristicQuantityUnitValue => characteristicQuantityUnitValue.CharacteristicQuantityUnitId);
-
-            builder.Entity<CharacteristicQuantityUnitValue>()
-                .HasMany(characteristicQuantityUnitValue => characteristicQuantityUnitValue.Products)
-                .WithOne(product => product.CharacteristicQuantityUnitValue)
-                .HasForeignKey(product => product.CharacteristicQuantityUnitValueId);
+            builder.Entity<CharacteristicCategoryValue>()
+                .HasMany(characteristicCategoryValue => characteristicCategoryValue.Products)
+                .WithOne(productCharacteristicCategoryValue => productCharacteristicCategoryValue.CharacteristicCategoryValue)
+                .HasForeignKey(productCharacteristicCategoryValue => productCharacteristicCategoryValue.CharacteristicCategoryValueId);
 
             builder.Entity<Manufacturer>()
                 .HasOne(manufacturer => manufacturer.Logo)
@@ -172,19 +159,10 @@ namespace Electro.Model.Database
                 .HasForeignKey(photo => photo.ProductId);
 
             builder.Entity<Product>()
-                .HasMany(product => product.CharacteristicQuantityUnitValues)
-                .WithOne(characteristicQuantityUnitValue => characteristicQuantityUnitValue.Product)
-                .HasForeignKey(characteristicQuantityUnitValue => characteristicQuantityUnitValue.ProductId);
-
-            builder.Entity<Quantity>()
-                .HasMany(quantity => quantity.QuantityUnits)
-                .WithOne(quantityUnit => quantityUnit.Quantity)
-                .HasForeignKey(quantityUnit => quantityUnit.QuantityId);
-
-            builder.Entity<QuantityUnit>()
-                .HasMany(quantityUnit => quantityUnit.CharacteristicQuantityUnits)
-                .WithOne(characteristicQuantityUnit => characteristicQuantityUnit.QuantityUnit)
-                .HasForeignKey(characteristicQuantityUnit => characteristicQuantityUnit.QuantityUnitId);
+                .HasMany(product => product.CharacteristicsValues)
+                .WithOne(characteristicCategoryValue => characteristicCategoryValue.Product)
+                .HasForeignKey(characteristicCategoryValue => characteristicCategoryValue.ProductId)
+                .OnDelete(DeleteBehavior.Restrict);
 
             builder.Entity<SectionCharacteristic>()
                 .HasMany(sectionCharacteristic => sectionCharacteristic.Categories)
@@ -195,11 +173,6 @@ namespace Electro.Model.Database
                 .HasMany(sectionCharacteristic => sectionCharacteristic.Characteristics)
                 .WithOne(characteristics => characteristics.Section)
                 .HasForeignKey(characteristics => characteristics.SectionId);
-
-            builder.Entity<Unit>()
-                .HasMany(unit => unit.QuantityUnits)
-                .WithOne(quantityUnit => quantityUnit.Unit)
-                .HasForeignKey(quantityUnit => quantityUnit.UnitId);
         }
     }
 }

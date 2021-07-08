@@ -12,6 +12,19 @@ namespace Electro.WebApplication.Services
             _webHostEnvironment = webHostEnvironment;
         }
 
+        public void DeleteFile(string filePath)
+        {
+            if (!string.IsNullOrEmpty(filePath))
+            {
+                var path = Path.Combine(_webHostEnvironment.WebRootPath, filePath);
+
+                if (File.Exists(path))
+                {
+                    File.Delete(path);
+                }
+            }
+        }
+
         public void DeleteDirectory(string directoryPath)
         {
             if (!string.IsNullOrEmpty(directoryPath))

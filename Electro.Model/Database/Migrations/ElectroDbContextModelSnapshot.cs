@@ -89,13 +89,13 @@ namespace Electro.Model.Database.Migrations
                         {
                             Id = new Guid("21f7b496-c675-4e8a-a34c-fc5ec0762fdb"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "dfd2cba6-1026-4878-834c-fb20c554b33c",
+                            ConcurrencyStamp = "fea1b044-2b64-41eb-8969-744a0a5d37b8",
                             Email = "andrey.levchenko.2001@gmail.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "ANDREY.LEVCHENKO.2001@GMAIL.COM",
                             NormalizedUserName = "ADMIN",
-                            PasswordHash = "AQAAAAEAACcQAAAAENMYOFLtH/tv/LvQpVGnjAThL6mWJ0sZ3br/cJyAQtFELpy/o7vNsjcIRR2uA+7nmg==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEEQBUuc6/1TJgzhYhVNaks9JsBdfR0lIymsWNAiqH02q9OTtwJXdSRwU2VmPguNoZQ==",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "",
                             TwoFactorEnabled = false,
@@ -134,7 +134,7 @@ namespace Electro.Model.Database.Migrations
                         new
                         {
                             Id = new Guid("b867520a-92db-4658-be39-84da53a601c0"),
-                            ConcurrencyStamp = "38d45750-dbc6-47b8-9329-169d1a78fd28",
+                            ConcurrencyStamp = "b83ee853-ed90-437a-a4a3-bc04bd7d9f3a",
                             Name = "Администратор",
                             NormalizedName = "АДМИНИСТРАТОР"
                         });
@@ -167,6 +167,9 @@ namespace Electro.Model.Database.Migrations
 
                     b.Property<Guid>("CategoryId")
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("IsAbsolute")
+                        .HasColumnType("bit");
 
                     b.Property<string>("Url")
                         .IsRequired()
@@ -309,6 +312,9 @@ namespace Electro.Model.Database.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<bool>("IsAbsolute")
+                        .HasColumnType("bit");
+
                     b.Property<Guid>("ManufacturerId")
                         .HasColumnType("uniqueidentifier");
 
@@ -332,6 +338,9 @@ namespace Electro.Model.Database.Migrations
 
                     b.Property<Guid>("CategoryId")
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
 
                     b.Property<Guid>("ManufacturerId")
                         .HasColumnType("uniqueidentifier");
@@ -400,6 +409,9 @@ namespace Electro.Model.Database.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<bool>("IsAbsolute")
+                        .HasColumnType("bit");
+
                     b.Property<Guid>("ProductId")
                         .HasColumnType("uniqueidentifier");
 
@@ -420,6 +432,9 @@ namespace Electro.Model.Database.Migrations
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("IsAbsolute")
+                        .HasColumnType("bit");
 
                     b.Property<Guid>("ProductId")
                         .HasColumnType("uniqueidentifier");

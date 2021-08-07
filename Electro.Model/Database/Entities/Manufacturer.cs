@@ -16,5 +16,16 @@ namespace Electro.Model.Database.Entities
         public virtual ManufacturerInformation Information { get; set; }
 
         public virtual ICollection<Product> Products { get; set; }
+
+        public Manufacturer()
+        {
+
+        }
+
+        public Manufacturer(Guid id, string name)
+        {
+            Id = id;
+            Name = name;
+        }
     }
 }

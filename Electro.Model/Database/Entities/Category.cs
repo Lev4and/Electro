@@ -22,5 +22,16 @@ namespace Electro.Model.Database.Entities
         public virtual ICollection<CharacteristicCategory> Characteristics { get; set; }
 
         public virtual ICollection<SectionCharacteristicCategory> SectionsCharacteristics { get; set; }
+
+        public Category()
+        {
+
+        }
+
+        public Category(Guid id, string name)
+        {
+            Id = id;
+            Name = name;
+        }
     }
 }

@@ -66,40 +66,52 @@ namespace Electro.Model.Database.Repositories.EntityFramework
 
         public CharacteristicCategoryValue GetCharacteristicCategoryValueById(Guid id, bool track = false)
         {
-            if (track)
+            IQueryable<CharacteristicCategoryValue> characteristicCategoryValues = _context.CharacteristicCategoryValues;
+
+            if (!track)
             {
-                return _context.CharacteristicCategoryValues
-                    .SingleOrDefault(characteristicCategoryValue =>
-                        characteristicCategoryValue.Id == id);
+                characteristicCategoryValues = characteristicCategoryValues.AsNoTracking();
             }
-            else
+
+            return characteristicCategoryValues.SingleOrDefault(characteristicCategoryValue =>
+                    characteristicCategoryValue.Id == id);
+        }
+
+        public CharacteristicCategoryValue GetCharacteristicCategoryValueByCharacteristicNameAndCategoryNameAndSectionNameAndValue(string characteristicName, string categoryName, string sectionName, string value, bool track = false)
+        {
+            IQueryable<CharacteristicCategoryValue> characteristicCategoryValues = _context.CharacteristicCategoryValues
+                .Include(characteristicCategoryValue => characteristicCategoryValue.CharacteristicCategory)
+                    .ThenInclude(characteristicCategory => characteristicCategory.Section)
+                .Include(characteristicCategoryValue => characteristicCategoryValue.CharacteristicCategory)
+                    .ThenInclude(characteristicCategory => characteristicCategory.Category)
+                .Include(characteristicCategoryValue => characteristicCategoryValue.CharacteristicCategory)
+                    .ThenInclude(characteristicCategory => characteristicCategory.Characteristic);
+
+            if (!track)
             {
-                return _context.CharacteristicCategoryValues
-                    .AsNoTracking()
-                    .SingleOrDefault(characteristicCategoryValue =>
-                        characteristicCategoryValue.Id == id);
+                characteristicCategoryValues = characteristicCategoryValues.AsNoTracking();
             }
+
+            return characteristicCategoryValues.SingleOrDefault(characteristicCategoryValue =>
+                characteristicCategoryValue.CharacteristicCategory.Section.Name == sectionName &&
+                    characteristicCategoryValue.CharacteristicCategory.Category.Name == categoryName &&
+                        characteristicCategoryValue.CharacteristicCategory.Characteristic.Name == characteristicName &&
+                            characteristicCategoryValue.Value == value);
         }
 
         public IQueryable<CharacteristicCategoryValue> GetCharacteristicCategoryValuesByCharacteristicId(Guid characteristicId, bool track = false)
         {
-            if (track)
+            IQueryable<CharacteristicCategoryValue> characteristicCategoryValues = _context.CharacteristicCategoryValues
+                .Include(characteristicCategoryValue => characteristicCategoryValue.CharacteristicCategory)
+                    .ThenInclude(characteristicCategory => characteristicCategory.Characteristic);
+
+            if (!track)
             {
-                return _context.CharacteristicCategoryValues
-                    .Include(characteristicCategoryValue => characteristicCategoryValue.CharacteristicCategory)
-                        .ThenInclude(characteristicCategory => characteristicCategory.Characteristic)
-                    .Where(characteristicCategoryValue =>
-                        characteristicCategoryValue.CharacteristicCategory.CharacteristicId == characteristicId);
+                characteristicCategoryValues = characteristicCategoryValues.AsNoTracking();
             }
-            else
-            {
-                return _context.CharacteristicCategoryValues
-                    .Include(characteristicCategoryValue => characteristicCategoryValue.CharacteristicCategory)
-                        .ThenInclude(characteristicCategory => characteristicCategory.Characteristic)
-                    .AsNoTracking()
-                    .Where(characteristicCategoryValue =>
-                        characteristicCategoryValue.CharacteristicCategory.CharacteristicId == characteristicId);
-            }
+
+            return characteristicCategoryValues.Where(characteristicCategoryValue =>
+                    characteristicCategoryValue.CharacteristicCategory.CharacteristicId == characteristicId);
         }
 
         public void DeleteRangeCharacteristicCategoryValues(List<CharacteristicCategoryValue> characteristicCategoryValues)

@@ -1,0 +1,7 @@
+﻿@model List<Product>
+<ul class="d-block list-unstyled products-group prodcut-list-view">
+    @foreach (var product in Model)
+    {
+        @await Html.PartialAsync("_ProductRowSmallPartial", product)
+    }
+</ul>

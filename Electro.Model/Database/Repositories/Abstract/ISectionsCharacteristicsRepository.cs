@@ -12,6 +12,8 @@ namespace Electro.Model.Database.Repositories.Abstract
 
         SectionCharacteristic GetSectionCharacteristicById(Guid id, bool track = false);
 
+        SectionCharacteristic GetSectionCharacteristicByName(string name, bool track = false);
+
         IQueryable<SectionCharacteristic> GetSectionsCharacteristics(bool track = false);
 
         IQueryable<SectionCharacteristic> GetSectionsCharacteristicsByCategoryId(Guid categoryId, bool track = false);

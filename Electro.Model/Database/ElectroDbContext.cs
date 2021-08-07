@@ -1,13 +1,19 @@
 ﻿using Electro.Model.Database.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections.Generic;
+using System.Data;
 
 namespace Electro.Model.Database
 {
     public class ElectroDbContext : IdentityDbContext<ApplicationUser, ApplicatonRole, Guid>
     {
+        private readonly SqlConnection _connection;
+        private SqlDataAdapter _dataAdapter;
+
         public DbSet<Category> Categories { get; set; }
 
         public DbSet<Client> Clients { get; set; }
@@ -42,7 +48,76 @@ namespace Electro.Model.Database
 
         public ElectroDbContext(DbContextOptions<ElectroDbContext> options) : base(options)
         {
+            _connection = new SqlConnection("Data Source=electro-asp-net-core.ru;Initial Catalog=u1321851_Electro;User ID=u1321851_Lev4and;Password=Andrey06032001!1973268450*;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False");
+            _dataAdapter = new SqlDataAdapter();
+        }
 
+        public object ExecuteScalar(string query)
+        {
+            var id = new object();
+            var sqlCommand = new SqlCommand();
+
+            _connection.Open();
+
+            sqlCommand.Connection = _connection;
+            sqlCommand.CommandType = CommandType.Text;
+            sqlCommand.CommandText = query;
+
+            id = sqlCommand.ExecuteScalar();
+
+            _connection.Close();
+
+            return id;
+        }
+
+        public DataTable ExecuteQuery(string query, List<SqlParameter> sqlParameters)
+        {
+            var dataTable = new DataTable();
+            var sqlCommand = new SqlCommand();
+
+            _connection.Open();
+
+            sqlCommand.Connection = _connection;
+            sqlCommand.CommandType = CommandType.Text;
+            sqlCommand.CommandText = query;
+
+            foreach(var sqlParameter in sqlParameters)
+            {
+                sqlCommand.Parameters.Add(sqlParameter);
+            }
+
+            dataTable.Load(sqlCommand.ExecuteReader());
+
+            _connection.Close();
+
+            return dataTable;
+        }
+
+        public DataTable ExecuteQuery(string query)
+        {
+            var result = new DataTable();
+
+            _dataAdapter = new SqlDataAdapter(query, _connection);
+            _dataAdapter.Fill(result);
+
+            return result;
+        }
+
+        public T ConvertToObject<T>(DataTable queryResult)
+        {
+            return (T)Activator.CreateInstance(typeof(T), queryResult.Rows[0]);
+        }
+
+        public List<T> ConvertToCollection<T>(DataTable queryResult)
+        {
+            var items = new List<T>();
+
+            foreach(var row in queryResult.Rows)
+            {
+                items.Add((T)Activator.CreateInstance(typeof(T), row));
+            }
+
+            return items;
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

@@ -61,55 +61,58 @@ namespace Electro.Model.Database.Repositories.EntityFramework
 
         public SectionCharacteristic GetSectionCharacteristicById(Guid id, bool track = false)
         {
-            if (track)
+            IQueryable<SectionCharacteristic> sectionCharacteristics = _context.SectionsCharacteristics
+                .Include(sectionCharacteristic => sectionCharacteristic.Categories)
+                    .ThenInclude(sectionCharacteristicCategory => sectionCharacteristicCategory.Category);
+
+            if (!track)
             {
-                return _context.SectionsCharacteristics
-                    .Include(sectionCharacteristic => sectionCharacteristic.Categories).ThenInclude(sectionCharacteristicCategory => sectionCharacteristicCategory.Category)
-                    .SingleOrDefault(sectionsCharacteristic => sectionsCharacteristic.Id == id);
+                sectionCharacteristics = sectionCharacteristics.AsNoTracking();
             }
-            else
+
+            return sectionCharacteristics.SingleOrDefault(sectionsCharacteristic => sectionsCharacteristic.Id == id);
+        }
+
+        public SectionCharacteristic GetSectionCharacteristicByName(string name, bool track = false)
+        {
+            IQueryable<SectionCharacteristic> sectionCharacteristics = _context.SectionsCharacteristics;
+
+            if (!track)
             {
-                return _context.SectionsCharacteristics
-                    .Include(sectionCharacteristic => sectionCharacteristic.Categories).ThenInclude(sectionCharacteristicCategory => sectionCharacteristicCategory.Category)
-                    .AsNoTracking()
-                    .SingleOrDefault(sectionCharacteristic => sectionCharacteristic.Id == id);
+                sectionCharacteristics = sectionCharacteristics.AsNoTracking();
             }
+
+            return sectionCharacteristics.SingleOrDefault(sectionCharacteristic => sectionCharacteristic.Name == name);
         }
 
         public IQueryable<SectionCharacteristic> GetSectionsCharacteristics(bool track = false)
         {
-            if (track)
+            IQueryable<SectionCharacteristic> sectionCharacteristics = _context.SectionsCharacteristics
+                .Include(sectionCharacteristic => sectionCharacteristic.Categories)
+                    .ThenInclude(sectionCharacteristicCategory => sectionCharacteristicCategory.Category);
+
+            if (!track)
             {
-                return _context.SectionsCharacteristics
-                    .Include(sectionCharacteristic => sectionCharacteristic.Categories).ThenInclude(sectionCharacteristicCategory => sectionCharacteristicCategory.Category);
+                sectionCharacteristics = sectionCharacteristics.AsNoTracking();
             }
-            else
-            {
-                return _context.SectionsCharacteristics
-                    .Include(sectionCharacteristic => sectionCharacteristic.Categories).ThenInclude(sectionCharacteristicCategory => sectionCharacteristicCategory.Category)
-                    .AsNoTracking();
-            }
+
+            return sectionCharacteristics;
         }
 
         public IQueryable<SectionCharacteristic> GetSectionsCharacteristicsByCategoryId(Guid categoryId, bool track = false)
         {
-            if (track)
+            IQueryable<SectionCharacteristic> sectionCharacteristics = _context.SectionsCharacteristics
+                .Include(sectionCharacteristic => sectionCharacteristic.Categories)
+                    .ThenInclude(sectionCharacteristicCategory => sectionCharacteristicCategory.Category);
+
+            if (!track)
             {
-                return _context.SectionsCharacteristics
-                    .Include(sectionCharacteristic => sectionCharacteristic.Categories)
-                        .ThenInclude(sectionCharacteristicCategory => sectionCharacteristicCategory.Category)
-                    .Where(sectionCharacteristic => sectionCharacteristic.Categories.Any(sectionCharacteristicCategory =>
-                        sectionCharacteristicCategory.CategoryId == categoryId) == true);
+                sectionCharacteristics = sectionCharacteristics.AsNoTracking();
             }
-            else
-            {
-                return _context.SectionsCharacteristics
-                    .Include(sectionCharacteristic => sectionCharacteristic.Categories)
-                        .ThenInclude(sectionCharacteristicCategory => sectionCharacteristicCategory.Category)
-                    .AsNoTracking()
-                    .Where(sectionCharacteristic => sectionCharacteristic.Categories.Any(sectionCharacteristicCategory => 
-                        sectionCharacteristicCategory.CategoryId == categoryId) == true);
-            }
+
+            return sectionCharacteristics.Where(sectionCharacteristic => 
+                sectionCharacteristic.Categories.Any(sectionCharacteristicCategory =>
+                    sectionCharacteristicCategory.CategoryId == categoryId) == true);
         }
 
         public void DeleteSectionCharacteristicById(Guid id)

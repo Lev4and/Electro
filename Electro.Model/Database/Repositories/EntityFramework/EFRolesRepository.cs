@@ -16,26 +16,26 @@ namespace Electro.Model.Database.Repositories.EntityFramework
 
         public ApplicatonRole GetRoleByName(string name, bool track = false)
         {
-            if (track)
+            IQueryable<ApplicatonRole> roles = _context.Roles;
+
+            if (!track)
             {
-                return _context.Roles.SingleOrDefault(role => role.Name == name);
+                roles = roles.AsNoTracking();
             }
-            else
-            {
-                return _context.Roles.AsNoTracking().SingleOrDefault(role => role.Name == name);
-            }
+
+            return roles.SingleOrDefault(role => role.Name == name);
         }
 
         public IQueryable<ApplicatonRole> GetRoles(bool track = false)
         {
-            if (track)
+            IQueryable<ApplicatonRole> roles = _context.Roles;
+
+            if (!track)
             {
-                return _context.Roles;
+                roles = roles.AsNoTracking();
             }
-            else
-            {
-                return _context.Roles.AsTracking();
-            }
+
+            return roles;
         }
     }
 }

@@ -1,0 +1,164 @@
+﻿@{
+    ViewData["Title"] = "Часто задаваемые вопросы";
+}
+<!-- ========== MAIN CONTENT ========== -->
+<main id="content" role="main">
+    <!-- breadcrumb -->
+    <div class="bg-gray-13 bg-md-transparent">
+        <div class="container">
+            <!-- breadcrumb -->
+            <div class="my-md-3">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb mb-3 flex-nowrap flex-xl-wrap overflow-auto overflow-xl-visble">
+                        <li class="breadcrumb-item flex-shrink-0 flex-xl-shrink-1"><a asp-area="" asp-controller="Home" asp-action="Index">Главная</a></li>
+                        <li class="breadcrumb-item flex-shrink-0 flex-xl-shrink-1 active" aria-current="page">Часто задаваемые вопросы</li>
+                    </ol>
+                </nav>
+            </div>
+            <!-- End breadcrumb -->
+        </div>
+    </div>
+    <!-- End breadcrumb -->
+
+    <div class="container">
+        <div class="mb-12 text-center">
+            <h1>Часто задаваемые вопросы</h1>
+            <p class="text-gray-44">Последнее изменение в это Соглашение было внесено 29 июля 2021 года</p>
+        </div>
+        <div class="border-bottom border-color-1 mb-8 rounded-0">
+            <h3 class="section-title mb-0 pb-2 font-size-25">Информация о доставке</h3>
+        </div>
+        <div class="row mb-8">
+            <div class="col-lg-6 mb-5 mb-lg-8">
+                <h3 class="font-size-18 font-weight-semi-bold text-gray-39 mb-4">Какие Способы Доставки Доступны?</h3>
+                <p class="text-gray-90">Морковь Лорем ипсум, экологический томатный суп. Phasellus sapien lorem, билеты и удостоверение личности, бландит иногда боится. Знакомства, но по всему миру он постепенно эволюционировал, чтобы охватить весь мир. Кабинет был великолепен, дети в "элементе", элайфенд тортор.</p>
+            </div>
+            <div class="col-lg-6 mb-5 mb-lg-8">
+                <h3 class="font-size-18 font-weight-semi-bold text-gray-39 mb-4">Сколько Времени Потребуется, Чтобы Получить Мою Посылку?</h3>
+                <p class="text-gray-90">Морковь Лорем ипсум, экологический томатный суп. Phasellus sapien lorem, билеты и удостоверение личности, бландит иногда боится. Знакомства, но по всему миру он постепенно эволюционировал, чтобы охватить весь мир. Кабинет был великолепен, дети в "элементе", элайфенд тортор.</p>
+            </div>
+            <div class="col-lg-6 mb-5 mb-lg-8">
+                <h3 class="font-size-18 font-weight-semi-bold text-gray-39 mb-4">Как Мне Отслеживать Свой Заказ?</h3>
+                <p class="text-gray-90">Целое число из школы, игра в карты или игра, более важная, чем это. Как цена для потребителя, так и инновационная для производства. Выберите время, чтобы инвестировать только в одного инновационного дизайнера.</p>
+            </div>
+            <div class="col-lg-6 mb-5 mb-lg-8">
+                <h3 class="font-size-18 font-weight-semi-bold text-gray-39 mb-4">Нужна Ли Мне Учетная Запись Для Размещения Заказа?</h3>
+                <p class="text-gray-90">Целое число из школы, игра в карты или игра, более важная, чем это. Как цена для потребителя, так и инновационная для производства. Выберите время, чтобы инвестировать только в одного инновационного дизайнера.</p>
+            </div>
+        </div>
+    </div>
+</main>
+<!-- ========== END MAIN CONTENT ========== -->
+@section ScriptPage
+{
+    <!-- JS Plugins Init. -->
+    <script>
+        $(window).on('load', function () {
+            // initialization of HSMegaMenu component
+            $('.js-mega-menu').HSMegaMenu({
+                event: 'hover',
+                direction: 'horizontal',
+                pageContainer: $('.container'),
+                breakpoint: 767.98,
+                hideTimeOut: 0
+            });
+        });
+
+        $(document).on('ready', function () {
+            // initialization of header
+            $.HSCore.components.HSHeader.init($('#header'));
+
+            // initialization of animation
+            $.HSCore.components.HSOnScrollAnimation.init('[data-animation]');
+
+            // initialization of unfold component
+            $.HSCore.components.HSUnfold.init($('[data-unfold-target]'), {
+                afterOpen: function () {
+                    $(this).find('input[type="search"]').focus();
+                }
+            });
+
+            // initialization of HSScrollNav component
+            $.HSCore.components.HSScrollNav.init($('.js-scroll-nav'), {
+                duration: 700
+            });
+
+            // initialization of quantity counter
+            $.HSCore.components.HSQantityCounter.init('.js-quantity');
+
+            // initialization of popups
+            $.HSCore.components.HSFancyBox.init('.js-fancybox');
+
+            // initialization of countdowns
+            var countdowns = $.HSCore.components.HSCountdown.init('.js-countdown', {
+                yearsElSelector: '.js-cd-years',
+                monthsElSelector: '.js-cd-months',
+                daysElSelector: '.js-cd-days',
+                hoursElSelector: '.js-cd-hours',
+                minutesElSelector: '.js-cd-minutes',
+                secondsElSelector: '.js-cd-seconds'
+            });
+
+            // initialization of malihu scrollbar
+            $.HSCore.components.HSMalihuScrollBar.init($('.js-scrollbar'));
+
+            // initialization of forms
+            $.HSCore.components.HSFocusState.init();
+
+            // initialization of form validation
+            $.HSCore.components.HSValidation.init('.js-validate', {
+                rules: {
+                    confirmPassword: {
+                        equalTo: '#signupPassword'
+                    }
+                }
+            });
+
+            // initialization of forms
+            $.HSCore.components.HSRangeSlider.init('.js-range-slider');
+
+            // initialization of show animations
+            $.HSCore.components.HSShowAnimation.init('.js-animation-link');
+
+            // initialization of fancybox
+            $.HSCore.components.HSFancyBox.init('.js-fancybox');
+
+            // initialization of slick carousel
+            $.HSCore.components.HSSlickCarousel.init('.js-slick-carousel');
+
+            // initialization of go to
+            $.HSCore.components.HSGoTo.init('.js-go-to');
+
+            // initialization of hamburgers
+            $.HSCore.components.HSHamburgers.init('#hamburgerTrigger');
+
+            // initialization of unfold component
+            $.HSCore.components.HSUnfold.init($('[data-unfold-target]'), {
+                beforeClose: function () {
+                    $('#hamburgerTrigger').removeClass('is-active');
+                },
+                afterClose: function () {
+                    $('#headerSidebarList .collapse.show').collapse('hide');
+                }
+            });
+
+            $('#headerSidebarList [data-toggle="collapse"]').on('click', function (e) {
+                e.preventDefault();
+
+                var target = $(this).data('target');
+
+                if ($(this).attr('aria-expanded') === "true") {
+                    $(target).collapse('hide');
+                } else {
+                    $(target).collapse('show');
+                }
+            });
+
+            // initialization of unfold component
+            $.HSCore.components.HSUnfold.init($('[data-unfold-target]'));
+
+            // initialization of select picker
+            $.HSCore.components.HSSelectPicker.init('.js-select');
+        });
+    </script>
+}

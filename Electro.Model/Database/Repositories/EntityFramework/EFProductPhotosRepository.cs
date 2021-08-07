@@ -62,49 +62,39 @@ namespace Electro.Model.Database.Repositories.EntityFramework
 
         public ProductPhoto GetProductPhotoById(Guid id, bool track = false)
         {
-            if (track)
+            IQueryable<ProductPhoto> productPhotos = _context.ProductPhotos;
+
+            if (!track)
             {
-                return _context.ProductPhotos
-                    .SingleOrDefault(productPhoto => productPhoto.Id == id);
+                productPhotos = productPhotos.AsNoTracking();
             }
-            else
-            {
-                return _context.ProductPhotos
-                    .AsNoTracking()
-                    .SingleOrDefault(productPhoto => productPhoto.Id == id);
-            }
+
+            return productPhotos.SingleOrDefault(productPhoto => productPhoto.Id == id);
         }
 
         public IQueryable<ProductPhoto> GetProductPhotosByProductId(Guid productId, bool track = false)
         {
-            if (track)
+            IQueryable<ProductPhoto> productPhotos = _context.ProductPhotos;
+
+            if (!track)
             {
-                return _context.ProductPhotos
-                    .Where(productPhoto => productPhoto.ProductId == productId);
+                productPhotos = productPhotos.AsNoTracking();
             }
-            else
-            {
-                return _context.ProductPhotos
-                    .AsNoTracking()
-                    .Where(productPhoto => productPhoto.ProductId == productId);
-            }
+
+            return productPhotos.Where(productPhoto => productPhoto.ProductId == productId);
         }
 
         public IQueryable<ProductPhoto> GetNotIncludedInTheListProductPhotosByProductId(Guid productId, List<ProductPhoto> productPhotos, bool track = false)
         {
-            if (track)
+            IQueryable<ProductPhoto> photos = _context.ProductPhotos;
+
+            if (!track)
             {
-                return _context.ProductPhotos
-                    .Where(productPhoto => productPhoto.ProductId == productId && 
-                        productPhotos.Contains(productPhoto) == false);
+                photos = photos.AsNoTracking();
             }
-            else
-            {
-                return _context.ProductPhotos
-                    .AsNoTracking()
-                    .Where(productPhoto => productPhoto.ProductId == productId && 
-                        productPhotos.Contains(productPhoto) == false);
-            }
+
+            return photos.Where(productPhoto => productPhoto.ProductId == productId &&
+                    productPhotos.Contains(productPhoto) == false);
         }
 
         public void DeleteProductPhotoById(Guid id)

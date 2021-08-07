@@ -61,32 +61,26 @@ namespace Electro.Model.Database.Repositories.EntityFramework
 
         public ProductMainPhoto GetProductMainPhotoById(Guid id, bool track = false)
         {
-            if (track)
+            IQueryable<ProductMainPhoto> productMainPhotos = _context.ProductMainPhotos;
+
+            if (!track)
             {
-                return _context.ProductMainPhotos
-                    .SingleOrDefault(productMainPhoto => productMainPhoto.Id == id);
+                productMainPhotos = productMainPhotos.AsNoTracking();
             }
-            else
-            {
-                return _context.ProductMainPhotos
-                    .AsNoTracking()
-                    .SingleOrDefault(productMainPhoto => productMainPhoto.Id == id);
-            }
+
+            return productMainPhotos.SingleOrDefault(productMainPhoto => productMainPhoto.Id == id);
         }
 
         public ProductMainPhoto GetProductMainPhotoByProductId(Guid productId, bool track = false)
         {
-            if (track)
+            IQueryable<ProductMainPhoto> productMainPhotos = _context.ProductMainPhotos;
+
+            if (!track)
             {
-                return _context.ProductMainPhotos
-                    .SingleOrDefault(productMainPhoto => productMainPhoto.ProductId == productId);
+                productMainPhotos = productMainPhotos.AsNoTracking();
             }
-            else
-            {
-                return _context.ProductMainPhotos
-                    .AsNoTracking()
-                    .SingleOrDefault(productMainPhoto => productMainPhoto.ProductId == productId);
-            }
+
+            return productMainPhotos.SingleOrDefault(productMainPhoto => productMainPhoto.ProductId == productId);
         }
 
         public void DeleteProductMainPhotoById(Guid id)

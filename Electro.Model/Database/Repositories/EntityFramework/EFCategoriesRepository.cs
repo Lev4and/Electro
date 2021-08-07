@@ -1,7 +1,10 @@
-﻿using Electro.Model.Database.Entities;
+﻿using Electro.Model.Database.AnonymousTypes;
+using Electro.Model.Database.AuxiliaryTypes;
+using Electro.Model.Database.Entities;
 using Electro.Model.Database.Repositories.Abstract;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Electro.Model.Database.Repositories.EntityFramework
@@ -59,107 +62,190 @@ namespace Electro.Model.Database.Repositories.EntityFramework
             return false;
         }
 
+        public int GetCountCategories(CategoriesFilters filters)
+        {
+            return _context.Categories.Where(category =>
+                category.Name.ToLower().Contains(filters.SearchString.ToLower()))
+                .Count();
+        }
+
         public Category GetCategoryById(Guid id, bool track = false)
         {
-            if (track)
+            IQueryable<Category> categories = _context.Categories
+                .Include(category => category.Parent).ThenInclude(category => category.Parent)
+                .Include(category => category.Photo)
+                .Include(category => category.Children).ThenInclude(category => category.Photo)
+                .Include(category => category.Children).ThenInclude(category => category.Children);
+
+            if (!track)
             {
-                return _context.Categories
-                    .Include(category => category.Parent)
-                    .Include(category => category.Photo)
-                    .Include(category => category.Children).ThenInclude(category => category.Photo)
-                    .SingleOrDefault(category => category.Id == id);
+                categories = categories.AsNoTracking();
             }
-            else
+
+            return categories.SingleOrDefault(category => category.Id == id);
+        }
+
+        public Category GetCategoryByParentNameAndName(string parentName, string name, bool track = false)
+        {
+            IQueryable<Category> categories = _context.Categories
+                .Include(category => category.Parent);
+
+            if (!track)
             {
-                return _context.Categories
-                    .Include(category => category.Parent)
-                    .Include(category => category.Photo)
-                    .Include(category => category.Children).ThenInclude(category => category.Photo)
-                    .AsNoTracking()
-                    .SingleOrDefault(category => category.Id == id);
+                categories = categories.AsNoTracking();
             }
+
+            return categories.SingleOrDefault(category => category.Name == name &&
+                    (category.Parent != null ? category.Parent.Name == parentName : true));
         }
 
         public IQueryable<Category> GetCategories(bool track = false)
         {
-            if (track)
+            IQueryable<Category> categories = _context.Categories
+                .Include(category => category.Photo)
+                .Include(category => category.Parent).ThenInclude(category => category.Parent)
+                .Include(category => category.Children).ThenInclude(category => category.Photo)
+                .Include(category => category.Children).ThenInclude(category => category.Children).ThenInclude(category => category.Photo);
+
+            if (!track)
             {
-                return _context.Categories
-                    .Include(category => category.Photo)
-                    .Include(category => category.Parent).ThenInclude(category => category.Parent)
-                    .Include(category => category.Children).ThenInclude(category => category.Photo)
-                    .Include(category => category.Children).ThenInclude(category => category.Children).ThenInclude(category => category.Photo);
+                categories = categories.AsNoTracking();
             }
-            else
+
+            return categories;
+        }
+
+        public IQueryable<Category> GetCategories(CategoriesFilters filters, bool track = false)
+        {
+            IQueryable<Category> categories = _context.Categories
+                .Include(category => category.Photo)
+                .Include(category => category.Parent).ThenInclude(category => category.Parent)
+                .Include(category => category.Children).ThenInclude(category => category.Photo)
+                .Include(category => category.Children)
+                    .ThenInclude(category => category.Children)
+                        .ThenInclude(category => category.Photo)
+                .Where(category => category.Name.ToLower().Contains(filters.SearchString))
+                .Skip((filters.NumberPage - 1) * filters.ItemsPerPage)
+                .Take(filters.ItemsPerPage);
+
+            if (!track)
             {
-                return _context.Categories
-                    .Include(category => category.Photo)
-                    .Include(category => category.Parent).ThenInclude(category => category.Parent)
-                    .Include(category => category.Children).ThenInclude(category => category.Photo)
-                    .Include(category => category.Children).ThenInclude(category => category.Children).ThenInclude(category => category.Photo)
-                    .AsNoTracking();
+                categories = categories.AsNoTracking();
             }
+
+            return categories;
+        }
+
+        public IQueryable<CategoriesManufacturer> GetCategoriesByManufacturerId(Guid manufacturerId, bool track = false)
+        {
+            IQueryable<Product> products = _context.Products
+                .Include(product => product.Category)
+                    .ThenInclude(category => category.Photo)
+                .Where(product => product.ManufacturerId == manufacturerId);
+
+            if(products != null ? products.Count() > 0 : false)
+            {
+                IQueryable<CategoriesManufacturer> categories = products.GroupBy(product => 
+                new
+                { 
+                    product.Category.Id, 
+                    product.Category.Name 
+                })
+                .Select(group => new CategoriesManufacturer
+                {
+                    Id = group.Key.Id,
+                    Name = group.Key.Name,
+                    CountProducts = group.Count()
+                });
+
+                if (!track)
+                {
+                    categories = categories.AsNoTracking();
+                }
+
+                return categories;
+            }
+
+            return new List<CategoriesManufacturer>().AsQueryable();
+        }
+
+        public IQueryable<Category> GetParentCategories(bool track = false)
+        {
+            IQueryable<Category> categories = _context.Categories
+                .Include(category => category.Photo)
+                .Include(category => category.Children).ThenInclude(category => category.Photo)
+                .Include(category => category.Children).ThenInclude(category => category.Children)
+                    .ThenInclude(category => category.Photo);
+
+            if (!track)
+            {
+                categories = categories.AsNoTracking();
+            }
+
+            return categories.Where(category => category.ParentId == null);
+        }
+
+        public IQueryable<Category> GetParentCategories(int numberPage, int itemsPerPage, bool track = false)
+        {
+            IQueryable<Category> categories = _context.Categories
+                .Include(category => category.Photo)
+                .Include(category => category.Children).ThenInclude(category => category.Photo)
+                .Include(category => category.Children).ThenInclude(category => category.Children)
+                    .ThenInclude(category => category.Photo);
+
+            if (!track)
+            {
+                categories = categories.AsNoTracking();
+            }
+
+            return categories.OrderBy(category => category.Id)
+                .Where(category => category.ParentId == null)
+                .Skip((numberPage - 1) * itemsPerPage)
+                .Take(itemsPerPage);
         }
 
         public IQueryable<Category> GetCategoriesWithoutASpecific(Guid id, bool track = false)
         {
-            if (track)
+            IQueryable<Category> categories = _context.Categories
+                .Include(category => category.Photo)
+                .Include(category => category.Parent).ThenInclude(category => category.Parent)
+                .Include(category => category.Children).ThenInclude(category => category.Photo)
+                .Include(category => category.Children).ThenInclude(category => category.Children).ThenInclude(category => category.Photo);
+
+            if (!track)
             {
-                return _context.Categories
-                    .Include(category => category.Photo)
-                    .Include(category => category.Parent).ThenInclude(category => category.Parent)
-                    .Include(category => category.Children).ThenInclude(category => category.Photo)
-                    .Include(category => category.Children).ThenInclude(category => category.Children).ThenInclude(category => category.Photo)
-                    .Where(category => category.Id != id);
+                categories = categories.AsNoTracking();
             }
-            else
-            {
-                return _context.Categories
-                    .Include(category => category.Photo)
-                    .Include(category => category.Parent).ThenInclude(category => category.Parent)
-                    .Include(category => category.Children).ThenInclude(category => category.Photo)
-                    .Include(category => category.Children).ThenInclude(category => category.Children).ThenInclude(category => category.Photo)
-                    .AsNoTracking()
-                    .Where(category => category.Id != id);
-            }
+
+            return categories.Where(category => category.Id != id);
         }
 
         public IQueryable<Category> GetNotUsedCategoriesForSectionCharacteristic(Guid sectionCharacteristicId, bool track = false)
         {
-            if (track)
+            IQueryable<Category> categories = _context.Categories
+                .Include(category => category.SectionsCharacteristics);
+
+            if (!track)
             {
-                return _context.Categories
-                    .Include(category => category.SectionsCharacteristics)
-                    .Where(category => category.SectionsCharacteristics.All(sectionCharacteristic => 
-                        sectionCharacteristic.SectionId != sectionCharacteristicId) == true);
+                categories = categories.AsNoTracking();
             }
-            else
-            {
-                return _context.Categories
-                    .Include(category => category.SectionsCharacteristics)
-                    .AsNoTracking()
-                    .Where(category => category.SectionsCharacteristics.All(sectionCharacteristic => 
-                        sectionCharacteristic.SectionId != sectionCharacteristicId) == true);
-            }
+
+            return categories.Where(category => category.SectionsCharacteristics.All(sectionCharacteristic =>
+                    sectionCharacteristic.SectionId != sectionCharacteristicId) == true);
         }
 
         public IQueryable<Category> GetNotUsedCategoriesForCharacteristic(Guid characteristicId, bool track = false)
         {
-            if (track)
+            IQueryable<Category> categories = _context.Categories
+                .Include(category => category.Characteristics);
+
+            if (!track)
             {
-                return _context.Categories
-                    .Include(category => category.Characteristics)
-                    .Where(category => category.Characteristics.All(characteristics =>
-                        characteristics.CharacteristicId != characteristicId) == true);
+                categories = categories.AsNoTracking();
             }
-            else
-            {
-                return _context.Categories
-                    .Include(category => category.Characteristics)
-                    .AsNoTracking()
-                    .Where(category => category.Characteristics.All(characteristics =>
-                        characteristics.CharacteristicId != characteristicId) == true);
-            }
+
+            return categories.Where(category => category.Characteristics.All(characteristics =>
+                    characteristics.CharacteristicId != characteristicId) == true);
         }
 
         public void DeleteCategoryById(Guid id)

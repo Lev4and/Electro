@@ -1,0 +1,52 @@
+﻿@model Product
+<li class="product-item remove-divider">
+    <div class="product-item__outer w-100">
+        <div class="product-item__inner remove-prodcut-hover py-4 row">
+            <div class="product-item__header col-6 col-md-4">
+                <div class="mb-2">
+                    <a asp-area="" asp-controller="Product" asp-action="Index" asp-route-productId="@Model.Id" class="d-block text-center" style="height: 200px; overflow: hidden;">
+                        <img @*class="img-fluid"*@ style="width: 100%; height: 100%; object-fit: contain;" src="@(Model.MainPhoto?.GetPhotoUrl())" alt="Image Description">
+                    </a>
+                </div>
+            </div>
+            <div class="product-item__body col-6 col-md-5">
+                <div class="pr-lg-10">
+                    <div class="mb-2"><a asp-area="" asp-controller="Catalog" asp-action="Products" asp-route-categoryId="@Model.Category.Id" class="font-size-12 text-gray-5">@Model.Category.Name</a></div>
+                    <h5 class="mb-2 product-item__title"><a asp-area="" asp-controller="Product" asp-action="Index" asp-route-productId="@Model.Id" class="text-blue font-weight-bold">@Model.Model</a></h5>
+                    <div class="prodcut-price mb-2 d-md-none">
+                        <div class="text-gray-100">@Model.Price.ToString("C2")</div>
+                    </div>
+                    <div class="mb-3 d-none d-md-block">
+                        <a class="d-inline-flex align-items-center small font-size-14" href="#">
+                            <div class="text-warning mr-2">
+                                <small class="fas fa-star"></small>
+                                <small class="fas fa-star"></small>
+                                <small class="fas fa-star"></small>
+                                <small class="fas fa-star"></small>
+                                <small class="far fa-star text-muted"></small>
+                            </div>
+                            <span class="text-secondary">(40)</span>
+                        </a>
+                    </div>
+                    <div class="font-size-12 p-0 text-gray-110 mb-4 d-none d-md-block">
+                        @String.Join(',', Model.CharacteristicsValues.Select(product => product.CharacteristicCategoryValue.Value))
+                    </div>
+                </div>
+            </div>
+            <div class="product-item__footer col-md-3 d-md-block">
+                <div class="mb-3">
+                    <div class="prodcut-price mb-2">
+                        <div class="text-gray-100">@Model.Price.ToString("C2")</div>
+                    </div>
+                    <div class="prodcut-add-cart">
+                        <a href="../shop/cart.html" class="btn btn-sm btn-block btn-primary-dark btn-wide transition-3d-hover">Добавить в корзину</a>
+                    </div>
+                </div>
+                <div class="flex-horizontal-center justify-content-between justify-content-wd-center flex-wrap">
+                    <a href="../shop/compare.html" class="text-gray-6 font-size-13 mx-wd-3"><i class="ec ec-compare mr-1 font-size-15"></i> Сравнить</a>
+                    <a href="../shop/wishlist.html" class="text-gray-6 font-size-13 mx-wd-3"><i class="ec ec-favorites mr-1 font-size-15"></i> В желаемое</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</li>

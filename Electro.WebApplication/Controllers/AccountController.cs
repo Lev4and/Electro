@@ -22,6 +22,17 @@ namespace Electro.WebApplication.Controllers
             _signInManager = signInManager;
         }
 
+        [Route("~/Account")]
+        public IActionResult Index()
+        {
+            if (!User.Identity.IsAuthenticated)
+            {
+                return RedirectToAction("Login");
+            }
+
+            return View();
+        }
+
         [AllowAnonymous]
         public IActionResult Login()
         {

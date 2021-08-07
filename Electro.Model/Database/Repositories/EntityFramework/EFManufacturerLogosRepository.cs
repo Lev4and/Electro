@@ -60,32 +60,26 @@ namespace Electro.Model.Database.Repositories.EntityFramework
 
         public ManufacturerLogo GetManufacturerLogoById(Guid id, bool track = false)
         {
-            if (track)
+            IQueryable<ManufacturerLogo> manufacturerLogos = _context.ManufacturerLogos;
+
+            if (!track)
             {
-                return _context.ManufacturerLogos
-                    .SingleOrDefault(manufacturerLogo => manufacturerLogo.Id == id);
+                manufacturerLogos = manufacturerLogos.AsNoTracking();
             }
-            else
-            {
-                return _context.ManufacturerLogos
-                    .AsNoTracking()
-                    .SingleOrDefault(manufacturerLogo => manufacturerLogo.Id == id);
-            }
+
+            return manufacturerLogos.SingleOrDefault(manufacturerLogo => manufacturerLogo.Id == id);
         }
 
         public ManufacturerLogo GetManufacturerLogoByManufacturerId(Guid manufacturerId, bool track = false)
         {
-            if (track)
+            IQueryable<ManufacturerLogo> manufacturerLogos = _context.ManufacturerLogos;
+
+            if (!track)
             {
-                return _context.ManufacturerLogos
-                    .SingleOrDefault(manufacturerLogo => manufacturerLogo.ManufacturerId == manufacturerId);
+                manufacturerLogos = manufacturerLogos.AsNoTracking();
             }
-            else
-            {
-                return _context.ManufacturerLogos
-                    .AsNoTracking()
-                    .SingleOrDefault(manufacturerLogo => manufacturerLogo.ManufacturerId == manufacturerId);
-            }
+
+            return manufacturerLogos.SingleOrDefault(manufacturerLogo => manufacturerLogo.ManufacturerId == manufacturerId);
         }
 
         public void DeleteManufacturerLogoById(Guid id)

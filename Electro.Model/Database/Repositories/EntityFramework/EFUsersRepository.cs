@@ -113,26 +113,26 @@ namespace Electro.Model.Database.Repositories.EntityFramework
 
         public ApplicationUser GetUserById(Guid id, bool track = false)
         {
-            if (track)
+            IQueryable<ApplicationUser> users = _userManager.Users;
+
+            if (!track)
             {
-                return _userManager.Users.SingleOrDefault(user => user.Id == id);
+                users = users.AsNoTracking();
             }
-            else
-            {
-                return _userManager.Users.AsNoTracking().SingleOrDefault(user => user.Id == id);
-            }
+
+            return users.SingleOrDefault(user => user.Id == id);
         }
 
         public IQueryable<ApplicationUser> GetManagers(bool track = false)
         {
-            if (track)
+            IQueryable<ApplicationUser> users = _userManager.GetUsersInRoleAsync("Менеджер").Result.AsQueryable();
+
+            if (!track)
             {
-                return _userManager.GetUsersInRoleAsync("Менеджер").Result.AsQueryable();
+                users = users.AsNoTracking();
             }
-            else
-            {
-                return _userManager.GetUsersInRoleAsync("Менеджер").Result.AsQueryable().AsNoTracking();
-            }
+
+            return users;
         }
 
         public void DeleteManagerById(Guid id)

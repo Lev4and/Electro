@@ -60,14 +60,14 @@ namespace Electro.Model.Database.Repositories.EntityFramework
 
         public CategoryPhoto GetCategoryPhotoById(Guid id, bool track = false)
         {
-            if (track)
+            IQueryable<CategoryPhoto> categoryPhotos = _context.CategoryPhotos;
+
+            if (!track)
             {
-                return _context.CategoryPhotos.SingleOrDefault(categoryPhoto => categoryPhoto.Id == id);
+                categoryPhotos = categoryPhotos.AsNoTracking();
             }
-            else
-            {
-                return _context.CategoryPhotos.AsNoTracking().SingleOrDefault(categoryPhoto => categoryPhoto.Id == id);
-            }
+
+            return categoryPhotos.SingleOrDefault(categoryPhoto => categoryPhoto.Id == id);
         }
 
         public void DeleteCategoryPhotoById(Guid id)

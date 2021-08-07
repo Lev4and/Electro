@@ -66,48 +66,34 @@ namespace Electro.Model.Database.Repositories.EntityFramework
 
         public ProductCharacteristicCategoryValue GetProductCharacteristicCategoryValueById(Guid id, bool track = false)
         {
-            if (track) 
+            IQueryable<ProductCharacteristicCategoryValue> productCharacteristicCategoryValues = _context.ProductCharacteristicCategoryValues
+                .Include(productCharacteristicCategoryValue => productCharacteristicCategoryValue.CharacteristicCategoryValue)
+                    .ThenInclude(characteristicCategoryValue => characteristicCategoryValue.CharacteristicCategory)
+                        .ThenInclude(characteristicCategory => characteristicCategory.Characteristic);
+
+            if (!track)
             {
-                return _context.ProductCharacteristicCategoryValues
-                    .Include(productCharacteristicCategoryValue => productCharacteristicCategoryValue.CharacteristicCategoryValue)
-                        .ThenInclude(characteristicCategoryValue => characteristicCategoryValue.CharacteristicCategory)
-                            .ThenInclude(characteristicCategory => characteristicCategory.Characteristic)
-                    .SingleOrDefault(productCharacteristicQuantityUnitValue =>
-                        productCharacteristicQuantityUnitValue.Id == id);
+                productCharacteristicCategoryValues = productCharacteristicCategoryValues.AsNoTracking();
             }
-            else
-            {
-                return _context.ProductCharacteristicCategoryValues
-                    .Include(productCharacteristicCategoryValue => productCharacteristicCategoryValue.CharacteristicCategoryValue)
-                        .ThenInclude(characteristicCategoryValue => characteristicCategoryValue.CharacteristicCategory)
-                            .ThenInclude(characteristicCategory => characteristicCategory.Characteristic)
-                    .AsNoTracking()
-                    .SingleOrDefault(productCharacteristicQuantityUnitValue =>
-                        productCharacteristicQuantityUnitValue.Id == id);
-            }
+
+            return productCharacteristicCategoryValues.SingleOrDefault(productCharacteristicQuantityUnitValue =>
+                    productCharacteristicQuantityUnitValue.Id == id);
         }
 
         public IQueryable<ProductCharacteristicCategoryValue> GetProductCharacteristicCategoryValuesByProductId(Guid productId, bool track = false)
         {
-            if (track)
+            IQueryable<ProductCharacteristicCategoryValue> productCharacteristicCategoryValues = _context.ProductCharacteristicCategoryValues
+                .Include(productCharacteristicCategoryValue => productCharacteristicCategoryValue.CharacteristicCategoryValue)
+                    .ThenInclude(characteristicCategoryValue => characteristicCategoryValue.CharacteristicCategory)
+                        .ThenInclude(characteristicCategory => characteristicCategory.Characteristic);
+
+            if (!track)
             {
-                return _context.ProductCharacteristicCategoryValues
-                    .Include(productCharacteristicCategoryValue => productCharacteristicCategoryValue.CharacteristicCategoryValue)
-                        .ThenInclude(characteristicCategoryValue => characteristicCategoryValue.CharacteristicCategory)
-                            .ThenInclude(characteristicCategory => characteristicCategory.Characteristic)
-                    .Where(productCharacteristicCategoryValue =>
-                        productCharacteristicCategoryValue.ProductId == productId);
+                productCharacteristicCategoryValues = productCharacteristicCategoryValues.AsNoTracking();
             }
-            else
-            {
-                return _context.ProductCharacteristicCategoryValues
-                    .Include(productCharacteristicCategoryValue => productCharacteristicCategoryValue.CharacteristicCategoryValue)
-                        .ThenInclude(characteristicCategoryValue => characteristicCategoryValue.CharacteristicCategory)
-                            .ThenInclude(characteristicCategory => characteristicCategory.Characteristic)
-                    .AsNoTracking()
-                    .Where(productCharacteristicCategoryValue =>
+
+            return productCharacteristicCategoryValues.Where(productCharacteristicCategoryValue =>
                         productCharacteristicCategoryValue.ProductId == productId);
-            }
         }
 
         public void DeleteProductCharacteristicCategoryValueById(Guid id)

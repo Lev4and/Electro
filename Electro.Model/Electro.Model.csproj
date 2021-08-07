@@ -15,10 +15,13 @@
     <Compile Remove="Database\Migrations\20210708123433_InitDatabase.Designer.cs" />
     <Compile Remove="Database\Migrations\20210708123940_InitDatabase.cs" />
     <Compile Remove="Database\Migrations\20210708123940_InitDatabase.Designer.cs" />
+    <Compile Remove="Database\Repositories\EntityFramework\Sorters\Product\ByDescendingNamePoductsSorter1.cs" />
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="AngleSharp" Version="0.16.0" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.1.16" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.2.5" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.16" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.1.16">
       <PrivateAssets>all</PrivateAssets>
@@ -29,6 +32,12 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+    <PackageReference Include="Selenium.WebDriver" Version="3.141.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Importers\DNS\" />
   </ItemGroup>
 
 </Project>

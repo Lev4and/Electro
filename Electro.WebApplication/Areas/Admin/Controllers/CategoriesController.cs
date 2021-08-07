@@ -1,11 +1,14 @@
 ﻿using Electro.Model.Database;
+using Electro.Model.Database.AuxiliaryTypes;
 using Electro.Model.Database.Entities;
 using Electro.WebApplication.Models;
 using Electro.WebApplication.Services;
 using Electro.WebApplication.Services.ImageResizable;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Electro.WebApplication.Areas.Admin.Controllers
@@ -24,11 +27,40 @@ namespace Electro.WebApplication.Areas.Admin.Controllers
             _imageService = imageService;
         }
 
+        private CategoriesFilters InitCategoriesFilters()
+        {
+            var filtres = new CategoriesFilters()
+            {
+                NumberPage = 1,
+                ItemsPerPage = 50,
+                SearchString = ""
+            };
+
+            return filtres;
+        }
+
+        private Pagination InitPagination(CategoriesFilters filters)
+        {
+            var pagination = new Pagination()
+            {
+                NumberPage = filters.NumberPage,
+                ItemsPerPage = filters.ItemsPerPage,
+                CountTotalItems = _dataManager.Categories.GetCountCategories(filters)
+            };
+
+            return pagination;
+        }
+
         public IActionResult Index()
         {
+            var filters = InitCategoriesFilters();
+            var pagination = InitPagination(filters);
+
             var viewModel = new CategoriesViewModel()
             {
-                Categories = _dataManager.Categories.GetCategories().ToList()
+                Filters = filters,
+                Pagination = pagination,
+                Categories = _dataManager.Categories.GetCategories(filters).ToList()
             };
 
             return View(viewModel);
@@ -91,7 +123,7 @@ namespace Electro.WebApplication.Areas.Admin.Controllers
         [Route("~/Admin/Categories/Delete/{id}")]
         public IActionResult Delete(Guid id)
         {
-            _fileService.DeleteDirectory($"categories/{id}");
+            _fileService.DeleteDirectory($"upload/categories/{id}");
             _dataManager.Categories.DeleteCategoryById(id);
 
             return RedirectToAction("Index");

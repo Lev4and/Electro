@@ -1,0 +1,262 @@
+﻿@model Product
+@{
+    ViewData["Title"] = Model.Model;
+}
+<!-- breadcrumb -->
+<div class="bg-gray-13 bg-md-transparent">
+    <div class="container">
+        <!-- breadcrumb -->
+        <div class="my-md-3">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb mb-3 flex-nowrap flex-xl-wrap overflow-auto overflow-xl-visble">
+                    <li class="breadcrumb-item flex-shrink-0 flex-xl-shrink-1"><a asp-area="" asp-controller="Home">Главная</a></li>
+                    <li class="breadcrumb-item flex-shrink-0 flex-xl-shrink-1"><a asp-area="" asp-controller="Catalog" asp-action="Index">Каталог</a></li>
+                    @await Component.InvokeAsync(typeof(CatalogBreadcrumb), Model.CategoryId)
+                    <li class="breadcrumb-item flex-shrink-0 flex-xl-shrink-1 active" aria-current="page">@Model.Model</li>
+                </ol>
+            </nav>
+        </div>
+        <!-- End breadcrumb -->
+    </div>
+</div>
+<!-- End breadcrumb -->
+<div class="container">
+    <!-- Single Product Body -->
+    <div class="mb-xl-14 mb-6">
+        <div class="row">
+            <div class="col-md-5 mb-4 mb-md-0">
+                <div id="sliderSyncingNav" class="js-slick-carousel u-slick mb-2"
+                     data-infinite="true"
+                     data-arrows-classes="d-none d-lg-inline-block u-slick__arrow-classic u-slick__arrow-centered--y rounded-circle"
+                     data-arrow-left-classes="fas fa-arrow-left u-slick__arrow-classic-inner u-slick__arrow-classic-inner--left ml-lg-2 ml-xl-4"
+                     data-arrow-right-classes="fas fa-arrow-right u-slick__arrow-classic-inner u-slick__arrow-classic-inner--right mr-lg-2 mr-xl-4"
+                     data-nav-for="#sliderSyncingThumb">
+                    @if (Model.Photos != null ? Model.Photos.Count > 0 : false)
+                    {
+                        @foreach (var photo in Model.Photos)
+                        {
+                            <div class="js-slide" style="height: 430px !important; overflow: hidden !important;">
+                                <img @*class="img-fluid"*@ style="width: 100% !important; height: 100% !important; object-fit: contain !important;" src="@photo.GetPhotoUrl()" alt="Image Description">
+                            </div>
+                        }
+                    }
+                </div>
+
+                <div id="sliderSyncingThumb" class="js-slick-carousel u-slick u-slick--slider-syncing u-slick--slider-syncing-size u-slick--gutters-1 u-slick--transform-off"
+                     data-infinite="true"
+                     data-slides-show="@(Model.Photos != null ? Model.Photos.Count : 0)"
+                     data-is-thumbs="true"
+                     data-nav-for="#sliderSyncingNav">
+                    @if (Model.Photos != null ? Model.Photos.Count > 0 : false)
+                    {
+                        @foreach (var photo in Model.Photos)
+                        {
+                            <div class="js-slide" style="height: 55px !important; overflow: hidden !important; cursor: pointer !important;">
+                                <img @*class="img-fluid"*@ style="width: 100% !important; height: 100% !important; object-fit: contain !important;" src="@photo.GetPhotoUrl()" alt="Image Description">
+                            </div>
+                        }
+                    }
+                </div>
+            </div>
+            <div class="col-md-7 mb-md-6 mb-lg-0">
+                <div class="mb-2">
+                    <div class="border-bottom mb-3 pb-md-1 pb-3">
+                        <a asp-area="" asp-controller="Catalog" asp-action="Products" asp-route-categoryId="@Model.CategoryId" class="font-size-12 text-gray-5 mb-2 d-inline-block">@Model.Category.Name</a>
+                        <h2 class="font-size-25 text-lh-1dot2">@Model.Model</h2>
+                        <div class="mb-2">
+                            <a class="d-inline-flex align-items-center small font-size-15 text-lh-1" href="#">
+                                <div class="text-warning mr-2">
+                                    <small class="fas fa-star"></small>
+                                    <small class="fas fa-star"></small>
+                                    <small class="fas fa-star"></small>
+                                    <small class="fas fa-star"></small>
+                                    <small class="far fa-star text-muted"></small>
+                                </div>
+                                <span class="text-secondary font-size-13">(3 отзывы клиентов)</span>
+                            </a>
+                        </div>
+                        <div class="d-md-flex align-items-center">
+                            <a class="max-width-150 ml-n2 mb-2 mb-md-0 d-block" style="height: 45px; overflow: hidden;" asp-area="" asp-controller="Manufacturer" asp-action="Index" asp-route-manufacturerId="@Model.ManufacturerId">
+                                <img @*class="img-fluid"*@ style="width: 100%; height: 100%; object-fit: contain;" src="@(Model.Manufacturer.Logo?.GetPhotoUrl())" alt="Image Description">
+                            </a>
+                            <div class="ml-md-3 text-gray-9 font-size-14">Наличие: <span class="text-green font-weight-bold">26 в наличии</span></div>
+                        </div>
+                    </div>
+                    <div class="flex-horizontal-center flex-wrap mb-4">
+                        <a href="#" class="text-gray-6 font-size-13 mr-2"><i class="ec ec-favorites mr-1 font-size-15"></i> В желаемое</a>
+                        <a href="#" class="text-gray-6 font-size-13 ml-2"><i class="ec ec-compare mr-1 font-size-15"></i> Сравнить</a>
+                    </div>
+                    <p><strong>Артикул</strong>: @Model.Id</p>
+                    <div class="mb-4">
+                        <div class="d-flex align-items-baseline">
+                            <ins class="font-size-36 text-decoration-none">@Model.Price.ToString("C2")</ins>
+                        </div>
+                    </div>
+                    <div class="d-md-flex align-items-end mb-3">
+                        <div class="max-width-150 mb-4 mb-md-0">
+                            <h6 class="font-size-14">Количество</h6>
+                            <!-- Quantity -->
+                            <div class="border rounded-pill py-2 px-3 border-color-1">
+                                <div class="js-quantity row align-items-center">
+                                    <div class="col">
+                                        <input class="js-result form-control h-auto border-0 rounded p-0 shadow-none" type="text" value="1">
+                                    </div>
+                                    <div class="col-auto pr-1">
+                                        <a class="js-minus btn btn-icon btn-xs btn-outline-secondary rounded-circle border-0" href="javascript:;">
+                                            <small class="fas fa-minus btn-icon__inner"></small>
+                                        </a>
+                                        <a class="js-plus btn btn-icon btn-xs btn-outline-secondary rounded-circle border-0" href="javascript:;">
+                                            <small class="fas fa-plus btn-icon__inner"></small>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- End Quantity -->
+                        </div>
+                        <div class="ml-md-3">
+                            <a href="#" class="btn px-5 btn-primary-dark transition-3d-hover"><i class="ec ec-add-to-cart mr-2 font-size-20"></i> Добавить в корзину</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- End Single Product Body -->
+    <!-- Single Product Tab -->
+    <div class="mb-8">
+        <div class="position-relative position-md-static px-md-6">
+            <ul class="nav nav-classic nav-tab nav-tab-lg justify-content-xl-center flex-nowrap flex-xl-wrap overflow-auto overflow-xl-visble border-0 pb-1 pb-xl-0 mb-n1 mb-xl-0" id="pills-tab-8" role="tablist">
+                <li class="nav-item flex-shrink-0 flex-xl-shrink-1 z-index-2">
+                    <a class="nav-link active" id="Jpills-two-example1-tab" data-toggle="pill" href="#Jpills-one-example1" role="tab" aria-controls="Jpills-one-example1" aria-selected="true">Описание</a>
+                </li>
+                <li class="nav-item flex-shrink-0 flex-xl-shrink-1 z-index-2">
+                    <a class="nav-link" id="Jpills-three-example1-tab" data-toggle="pill" href="#Jpills-two-example1" role="tab" aria-controls="Jpills-two-example1" aria-selected="false">Технические характеристики</a>
+                </li>
+            </ul>
+        </div>
+        <!-- Tab Content -->
+        <div class="borders-radius-17 border p-4 mt-4 mt-md-0 px-lg-10 py-lg-9">
+            <div class="tab-content" id="Jpills-tabContent">
+                <div class="tab-pane fade active show" id="Jpills-one-example1" role="tabpanel" aria-labelledby="Jpills-one-example1-tab">
+                    @(Html.Raw(Model.Information != null ? Model.Information.Description : "Отсутствует"))
+                </div>
+                <div class="tab-pane fade" id="Jpills-two-example1" role="tabpanel" aria-labelledby="Jpills-two-example1-tab">
+                    <div class="mx-md-5 pt-1">
+                        @await Component.InvokeAsync(typeof(ProductTechnicalSpecifications), Model)
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- End Tab Content -->
+    </div>
+    <!-- End Single Product Tab -->
+</div>
+@section ScriptPage
+{
+    <script>
+        $(window).on('load', function () {
+            // initialization of HSMegaMenu component
+            $('.js-mega-menu').HSMegaMenu({
+                event: 'hover',
+                direction: 'horizontal',
+                pageContainer: $('.container'),
+                breakpoint: 767.98,
+                hideTimeOut: 0
+            });
+        });
+
+        $(document).on('ready', function () {
+            // initialization of header
+            $.HSCore.components.HSHeader.init($('#header'));
+
+            // initialization of animation
+            $.HSCore.components.HSOnScrollAnimation.init('[data-animation]');
+
+            // initialization of unfold component
+            $.HSCore.components.HSUnfold.init($('[data-unfold-target]'), {
+                afterOpen: function () {
+                    $(this).find('input[type="search"]').focus();
+                }
+            });
+
+            // initialization of HSScrollNav component
+            $.HSCore.components.HSScrollNav.init($('.js-scroll-nav'), {
+                duration: 700
+            });
+
+            // initialization of quantity counter
+            $.HSCore.components.HSQantityCounter.init('.js-quantity');
+
+            // initialization of popups
+            $.HSCore.components.HSFancyBox.init('.js-fancybox');
+
+            // initialization of countdowns
+            var countdowns = $.HSCore.components.HSCountdown.init('.js-countdown', {
+                yearsElSelector: '.js-cd-years',
+                monthsElSelector: '.js-cd-months',
+                daysElSelector: '.js-cd-days',
+                hoursElSelector: '.js-cd-hours',
+                minutesElSelector: '.js-cd-minutes',
+                secondsElSelector: '.js-cd-seconds'
+            });
+
+            // initialization of malihu scrollbar
+            $.HSCore.components.HSMalihuScrollBar.init($('.js-scrollbar'));
+
+            // initialization of forms
+            $.HSCore.components.HSFocusState.init();
+
+            // initialization of form validation
+            $.HSCore.components.HSValidation.init('.js-validate', {
+                rules: {
+                    confirmPassword: {
+                        equalTo: '#signupPassword'
+                    }
+                }
+            });
+
+            // initialization of show animations
+            $.HSCore.components.HSShowAnimation.init('.js-animation-link');
+
+            // initialization of fancybox
+            $.HSCore.components.HSFancyBox.init('.js-fancybox');
+
+            // initialization of slick carousel
+            $.HSCore.components.HSSlickCarousel.init('.js-slick-carousel');
+
+            // initialization of go to
+            $.HSCore.components.HSGoTo.init('.js-go-to');
+
+            // initialization of hamburgers
+            $.HSCore.components.HSHamburgers.init('#hamburgerTrigger');
+
+            // initialization of unfold component
+            $.HSCore.components.HSUnfold.init($('[data-unfold-target]'), {
+                beforeClose: function () {
+                    $('#hamburgerTrigger').removeClass('is-active');
+                },
+                afterClose: function () {
+                    $('#headerSidebarList .collapse.show').collapse('hide');
+                }
+            });
+
+            $('#headerSidebarList [data-toggle="collapse"]').on('click', function (e) {
+                e.preventDefault();
+
+                var target = $(this).data('target');
+
+                if ($(this).attr('aria-expanded') === "true") {
+                    $(target).collapse('hide');
+                } else {
+                    $(target).collapse('show');
+                }
+            });
+
+            // initialization of unfold component
+            $.HSCore.components.HSUnfold.init($('[data-unfold-target]'));
+
+            // initialization of select picker
+            $.HSCore.components.HSSelectPicker.init('.js-select');
+        });
+    </script>
+} 

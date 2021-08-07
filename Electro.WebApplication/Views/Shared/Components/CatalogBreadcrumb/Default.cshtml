@@ -1,0 +1,13 @@
+﻿@model Category
+@if (Model != null)
+{
+    @if (Model.Parent != null)
+    {
+        @await Component.InvokeAsync(typeof(CatalogBreadcrumb), Model.Parent.Id)
+        <li class="breadcrumb-item flex-shrink-0 flex-xl-shrink-1"><a href="@((Model.Children != null ? Model.Children.Count > 0 : false) ? $"/Catalog/{Model.Id}" : $"/Catalog/{Model.Id}/Products")">@Model.Name</a></li>
+    }
+    else
+    {
+        <li class="breadcrumb-item flex-shrink-0 flex-xl-shrink-1"><a href="@((Model.Children != null ? Model.Children.Count > 0 : false) ? $"/Catalog/{Model.Id}" : $"/Catalog/{Model.Id}/Products")">@Model.Name</a></li>
+    }
+}

@@ -1,0 +1,303 @@
+﻿@model CatalogProductsViewModel
+@{
+    ViewData["Title"] = Model.Category.Name;
+}
+<!-- breadcrumb -->
+<div class="bg-gray-13 bg-md-transparent">
+    <div class="container">
+        <!-- breadcrumb -->
+        <div class="my-md-3">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb mb-3 flex-nowrap flex-xl-wrap overflow-auto overflow-xl-visble">
+                    <li class="breadcrumb-item flex-shrink-0 flex-xl-shrink-1"><a asp-area="" asp-controller="Home" asp-action="Index">Главная</a></li>
+                    <li class="breadcrumb-item flex-shrink-0 flex-xl-shrink-1"><a asp-area="" asp-controller="Catalog" asp-action="Index">Каталог</a></li>
+                    @await Component.InvokeAsync(typeof(CatalogBreadcrumb), Model.Category.ParentId)
+                    <li class="breadcrumb-item flex-shrink-0 flex-xl-shrink-1 active" aria-current="page">@Model.Category.Name</li>
+                </ol>
+            </nav>
+        </div>
+        <!-- End breadcrumb -->
+    </div>
+</div>
+<!-- End breadcrumb -->
+
+<div class="container">
+    <div class="row mb-8">
+        <div class="d-none d-xl-block col-xl-3 col-wd-2gdot5">
+            @await Component.InvokeAsync(typeof(Filters), new { filters = Model, version = FilterVersion.Desktop })
+        </div>
+        <div class="col-xl-9 col-wd-9gdot5">
+            <!-- Shop-control-bar Title -->
+            <div class="flex-center-between mb-3">
+                <h3 class="font-size-25 mb-0">Товары</h3>
+                <p class="font-size-14 text-gray-90 mb-0">@Model.Pagination.GetFormattedStringRange()</p>
+            </div>
+            <!-- End shop-control-bar Title -->
+            <!-- Shop-control-bar -->
+            <div class="bg-gray-1 flex-center-between borders-radius-9 py-1">
+                <div class="d-xl-none">
+                    <!-- Account Sidebar Toggle Button -->
+                    <a id="sidebarNavToggler1" class="btn btn-sm py-1 font-weight-normal" href="javascript:;" role="button"
+                       aria-controls="sidebarContent1"
+                       aria-haspopup="true"
+                       aria-expanded="false"
+                       data-unfold-event="click"
+                       data-unfold-hide-on-scroll="false"
+                       data-unfold-target="#sidebarContent1"
+                       data-unfold-type="css-animation"
+                       data-unfold-animation-in="fadeInLeft"
+                       data-unfold-animation-out="fadeOutLeft"
+                       data-unfold-duration="500">
+                        <i class="fas fa-sliders-h"></i> <span class="ml-1">Фильтры</span>
+                    </a>
+                    <!-- End Account Sidebar Toggle Button -->
+                </div>
+                <div class="px-3 d-none d-xl-block">
+                    <ul class="nav nav-tab-shop" id="pills-tab" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link active" id="pills-one-example1-tab" data-toggle="pill" href="#pills-one-example1" role="tab" aria-controls="pills-one-example1" aria-selected="false">
+                                <div class="d-md-flex justify-content-md-center align-items-md-center">
+                                    <i class="fa fa-th"></i>
+                                </div>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="pills-two-example1-tab" data-toggle="pill" href="#pills-two-example1" role="tab" aria-controls="pills-two-example1" aria-selected="false">
+                                <div class="d-md-flex justify-content-md-center align-items-md-center">
+                                    <i class="fa fa-align-justify"></i>
+                                </div>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="pills-three-example1-tab" data-toggle="pill" href="#pills-three-example1" role="tab" aria-controls="pills-three-example1" aria-selected="true">
+                                <div class="d-md-flex justify-content-md-center align-items-md-center">
+                                    <i class="fa fa-list"></i>
+                                </div>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="pills-four-example1-tab" data-toggle="pill" href="#pills-four-example1" role="tab" aria-controls="pills-four-example1" aria-selected="true">
+                                <div class="d-md-flex justify-content-md-center align-items-md-center">
+                                    <i class="fa fa-th-list"></i>
+                                </div>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                <nav class="px-3 flex-horizontal-center text-gray-20 d-none d-xl-flex">
+                    <form method="post" class="min-width-50 mr-1">
+                        <input id="input-number-number-page" size="2" min="1" max="@Model.Pagination.MaxNumberPage" step="1" type="number" class="form-control text-center px-2 height-35" value="@Model.Pagination.NumberPage">
+                    </form> of @Model.Pagination.MaxNumberPage
+                    <a id="link-show-page" class="text-gray-30 font-size-20 ml-2" href="#">→</a>
+                </nav>
+            </div>
+            <!-- End Shop-control-bar -->
+            <!-- Shop Body -->
+            <!-- Tab Content -->
+            <div class="tab-content" id="pills-tabContent">
+                <div class="tab-pane fade pt-2 show active" id="pills-one-example1" role="tabpanel" aria-labelledby="pills-one-example1-tab" data-target-group="groups">
+                    @await Html.PartialAsync("_ProductsGridTabContentPartial", Model.Products)
+                </div>
+                <div class="tab-pane fade pt-2" id="pills-two-example1" role="tabpanel" aria-labelledby="pills-two-example1-tab" data-target-group="groups">
+                    @await Html.PartialAsync("_ProductsGridExtendedTabContentPartial", Model.Products)
+                </div>
+                <div class="tab-pane fade pt-2" id="pills-three-example1" role="tabpanel" aria-labelledby="pills-three-example1-tab" data-target-group="groups">
+                    @await Html.PartialAsync("_ProductsListViewSmallTabContentPartial", Model.Products)
+                </div>
+                <div class="tab-pane fade pt-2" id="pills-four-example1" role="tabpanel" aria-labelledby="pills-four-example1-tab" data-target-group="groups">
+                    @await Html.PartialAsync("_ProductsListViewTabContentPartial", Model.Products)
+                </div>
+            </div>
+            <!-- End Tab Content -->
+            <!-- End Shop Body -->
+            <!-- Shop Pagination -->
+            <nav class="d-md-flex justify-content-between align-items-center border-top pt-3" aria-label="Page navigation example">
+                <div class="text-center text-md-left mb-3 mb-md-0">@Model.Pagination.GetFormattedStringRange()</div>
+                <ul class="pagination mb-0 pagination-shop justify-content-center justify-content-md-start">
+                    @foreach (var item in Model.Pagination.GeneratePagination())
+                    {
+                        <li class="page-item"><a class="page-link @(Model.Pagination.NumberPage == item ? "current" : "")" data-number-page="@item">@item</a></li>
+                    }
+                </ul>
+            </nav>
+            <!-- End Shop Pagination -->
+        </div>
+    </div>
+</div>
+@section SidebarNavigation
+{
+    <!-- Sidebar Navigation -->
+    <aside id="sidebarContent1" class="u-sidebar u-sidebar--left" aria-labelledby="sidebarNavToggler1">
+        <div class="u-sidebar__scroller">
+            <div class="u-sidebar__container">
+                <div class="">
+                    <!-- Toggle Button -->
+                    <div class="d-flex align-items-center pt-3 px-4 bg-white">
+                        <button type="button" class="close ml-auto"
+                                aria-controls="sidebarContent1"
+                                aria-haspopup="true"
+                                aria-expanded="false"
+                                data-unfold-event="click"
+                                data-unfold-hide-on-scroll="false"
+                                data-unfold-target="#sidebarContent1"
+                                data-unfold-type="css-animation"
+                                data-unfold-animation-in="fadeInLeft"
+                                data-unfold-animation-out="fadeOutLeft"
+                                data-unfold-duration="500">
+                            <span aria-hidden="true"><i class="ec ec-close-remove"></i></span>
+                        </button>
+                    </div>
+                    <!-- End Toggle Button -->
+                    <!-- Content -->
+                    <div class="js-scrollbar u-sidebar__body">
+                        <div class="u-sidebar__content u-header-sidebar__content px-4">
+                            @await Component.InvokeAsync(typeof(Filters), new { filters = Model, version = FilterVersion.Mobile })
+                        </div>
+                    </div>
+                    <!-- End Content -->
+                </div>
+            </div>
+        </div>
+    </aside>
+    <!-- End Sidebar Navigation -->
+}
+@section ScriptPage
+{
+    <script>
+        $(window).on('load', function () {
+            // initialization of HSMegaMenu component
+            $('.js-mega-menu').HSMegaMenu({
+                event: 'hover',
+                direction: 'horizontal',
+                pageContainer: $('.container'),
+                breakpoint: 767.98,
+                hideTimeOut: 0
+            });
+        });
+
+        $(document).on('ready', function () {
+            // initialization of header
+            $.HSCore.components.HSHeader.init($('#header'));
+
+            // initialization of animation
+            $.HSCore.components.HSOnScrollAnimation.init('[data-animation]');
+
+            // initialization of unfold component
+            $.HSCore.components.HSUnfold.init($('[data-unfold-target]'), {
+                afterOpen: function () {
+                    $(this).find('input[type="search"]').focus();
+                }
+            });
+
+            // initialization of HSScrollNav component
+            $.HSCore.components.HSScrollNav.init($('.js-scroll-nav'), {
+                duration: 700
+            });
+
+            // initialization of quantity counter
+            $.HSCore.components.HSQantityCounter.init('.js-quantity');
+
+            // initialization of popups
+            $.HSCore.components.HSFancyBox.init('.js-fancybox');
+
+            // initialization of countdowns
+            var countdowns = $.HSCore.components.HSCountdown.init('.js-countdown', {
+                yearsElSelector: '.js-cd-years',
+                monthsElSelector: '.js-cd-months',
+                daysElSelector: '.js-cd-days',
+                hoursElSelector: '.js-cd-hours',
+                minutesElSelector: '.js-cd-minutes',
+                secondsElSelector: '.js-cd-seconds'
+            });
+
+            // initialization of malihu scrollbar
+            $.HSCore.components.HSMalihuScrollBar.init($('.js-scrollbar'));
+
+            // initialization of forms
+            $.HSCore.components.HSFocusState.init();
+
+            // initialization of form validation
+            $.HSCore.components.HSValidation.init('.js-validate', {
+                rules: {
+                    confirmPassword: {
+                        equalTo: '#signupPassword'
+                    }
+                }
+            });
+
+            // initialization of forms
+            $.HSCore.components.HSRangeSlider.init('.js-range-slider');
+
+            // initialization of show animations
+            $.HSCore.components.HSShowAnimation.init('.js-animation-link');
+
+            // initialization of fancybox
+            $.HSCore.components.HSFancyBox.init('.js-fancybox');
+
+            // initialization of slick carousel
+            $.HSCore.components.HSSlickCarousel.init('.js-slick-carousel');
+
+            // initialization of go to
+            $.HSCore.components.HSGoTo.init('.js-go-to');
+
+            // initialization of hamburgers
+            $.HSCore.components.HSHamburgers.init('#hamburgerTrigger');
+
+            // initialization of unfold component
+            $.HSCore.components.HSUnfold.init($('[data-unfold-target]'), {
+                beforeClose: function () {
+                    $('#hamburgerTrigger').removeClass('is-active');
+                },
+                afterClose: function () {
+                    $('#headerSidebarList .collapse.show').collapse('hide');
+                }
+            });
+
+            $('#headerSidebarList [data-toggle="collapse"]').on('click', function (e) {
+                e.preventDefault();
+
+                var target = $(this).data('target');
+
+                if ($(this).attr('aria-expanded') === "true") {
+                    $(target).collapse('hide');
+                } else {
+                    $(target).collapse('show');
+                }
+            });
+
+            // initialization of unfold component
+            $.HSCore.components.HSUnfold.init($('[data-unfold-target]'));
+
+            // initialization of select picker
+            $.HSCore.components.HSSelectPicker.init('.js-select');
+
+            $('#link-show-page').on('click', function (e) {
+                $('#input-hidden-desktop-number-page').val($('#input-number-number-page').val());
+                $('form[data-version-form="desktop"]').submit();
+            });
+
+            $('button[type="submit"][data-version-form="desktop"]').on('click', function (e) {
+                $('#input-hidden-desktop-number-page').val(1);
+                $('form[data-version-form="desktop"]').submit();
+            });
+
+            $('button[type="submit"][data-version-form="mobile"]').on('click', function (e) {
+                $('#input-hidden-mobile-number-page').val(1);
+                $('form[data-version-form="mobile"]').submit();
+            });
+
+            $('.page-link').each(function () {
+                $(this).on('click', function (e) {
+                    if (document.documentElement.scrollWidth >= 1200) {
+                        $('#input-hidden-desktop-number-page').val($(this).attr('data-number-page'));
+                        $('form[data-version-form="desktop"]').submit();
+                    }
+                    else {
+                        $('#input-hidden-mobile-number-page').val($(this).attr('data-number-page'));
+                        $('form[data-version-form="mobile"]').submit();
+                    }
+                });
+            });
+        });
+    </script>
+}

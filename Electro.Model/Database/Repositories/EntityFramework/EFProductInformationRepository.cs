@@ -61,32 +61,26 @@ namespace Electro.Model.Database.Repositories.EntityFramework
 
         public ProductInformation GetProductInformationById(Guid id, bool track = false)
         {
-            if (track)
+            IQueryable<ProductInformation> productInformation = _context.ProductInformation;
+
+            if (!track)
             {
-                return _context.ProductInformation
-                    .SingleOrDefault(productInformation => productInformation.Id == id);
+                productInformation = productInformation.AsNoTracking();
             }
-            else
-            {
-                return _context.ProductInformation
-                    .AsNoTracking()
-                    .SingleOrDefault(productInformation => productInformation.Id == id);
-            }
+
+            return productInformation.SingleOrDefault(productInformation => productInformation.Id == id);
         }
 
         public ProductInformation GetProductInformationByProductId(Guid productId, bool track = false)
         {
-            if (track)
+            IQueryable<ProductInformation> productInformation = _context.ProductInformation;
+
+            if (!track)
             {
-                return _context.ProductInformation
-                    .SingleOrDefault(productInformation => productInformation.ProductId == productId);
+                productInformation = productInformation.AsNoTracking();
             }
-            else
-            {
-                return _context.ProductInformation
-                    .AsNoTracking()
-                    .SingleOrDefault(productInformation => productInformation.ProductId == productId);
-            }
+
+            return productInformation.SingleOrDefault(productInformation => productInformation.ProductId == productId);
         }
 
         public void DeleteProductInformationById(Guid id)

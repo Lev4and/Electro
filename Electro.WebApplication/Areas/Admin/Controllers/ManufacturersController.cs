@@ -105,7 +105,7 @@ namespace Electro.WebApplication.Areas.Admin.Controllers
         [Route("~/Admin/Manufacturers/Delete/{id}")]
         public IActionResult Delete(Guid id)
         {
-            _fileService.DeleteDirectory($"manufacturers/{id}");
+            _fileService.DeleteDirectory($"upload/manufacturers/{id}");
             _dataManager.Manufacturers.DeleteManufacturerById(id);
 
             return RedirectToAction("Index");

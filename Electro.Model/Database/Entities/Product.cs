@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
@@ -16,6 +17,9 @@ namespace Electro.Model.Database.Entities
         public string Model { get; set; }
 
         public double Price { get; set; }
+
+        [ValidateNever]
+        public DateTime CreatedAt { get; set; } 
 
         public virtual Category Category { get; set; }
 

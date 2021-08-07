@@ -1,0 +1,197 @@
+﻿@model FavoritesViewModel 
+@{
+    ViewData["Title"] = "Список желаний";
+}
+<!-- ========== MAIN CONTENT ========== -->
+<main id="content" role="main" class="cart-page">
+    <!-- breadcrumb -->
+    <div class="bg-gray-13 bg-md-transparent">
+        <div class="container">
+            <!-- breadcrumb -->
+            <div class="my-md-3">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb mb-3 flex-nowrap flex-xl-wrap overflow-auto overflow-xl-visble">
+                        <li class="breadcrumb-item flex-shrink-0 flex-xl-shrink-1"><a asp-area="" asp-controller="Home" asp-action="Index">Главная</a></li>
+                        <li class="breadcrumb-item flex-shrink-0 flex-xl-shrink-1 active" aria-current="page">Список желаний</li>
+                    </ol>
+                </nav>
+            </div>
+            <!-- End breadcrumb -->
+        </div>
+    </div>
+    <!-- End breadcrumb -->
+
+    <div class="container">
+        <div class="my-6">
+            <h1 class="text-center">Мой список желаний на Electro</h1>
+        </div>
+        <div class="mb-16 wishlist-table">
+            <form class="mb-4" action="#" method="post">
+                <div class="table-responsive">
+                    <table class="table" cellspacing="0">
+                        <thead>
+                            <tr>
+                                <th class="product-remove">&nbsp;</th>
+                                <th class="product-thumbnail">&nbsp;</th>
+                                <th class="product-name">Товар</th>
+                                <th class="product-price">Стоимость</th>
+                                <th class="product-price">Дата добавления</th>
+                                <th class="product-Stock w-lg-15">Наличие</th>
+                                <th class="product-subtotal min-width-200-md-lg">&nbsp;</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var product in Model.Content)
+                            {
+                            <tr>
+                                <td class="text-center">
+                                    <a href="#" class="text-gray-32 font-size-26">×</a>
+                                </td>
+                                <td class="d-none d-md-table-cell">
+                                    <a style="width: 100px; height: 100px; overflow: hidden;" asp-area="" asp-controller="Product" asp-action="Index" asp-route-productId="@product.Key.Id"><img @*class="img-fluid max-width-100 p-1 border border-color-1"*@ class="max-width-100 p-1 border border-color-1" style="width: 100%; height: 100%; object-fit: contain;" src="@(product.Key.MainPhoto?.GetPhotoUrl())" alt="Image Description"></a>
+                                </td>
+
+                                <td data-title="Товар">
+                                    <a asp-area="" asp-controller="Product" asp-action="Index" asp-route-productId="@product.Key.Id" class="text-gray-90">@product.Key.Model</a>
+                                </td>
+
+                                <td data-title="Стоимость">
+                                    <span class="">@product.Key.Price.ToString("C2")</span>
+                                </td>
+
+                                <td data-title="Дата добавления">
+                                    <span>@product.Value.ToString("yyyy-MM-dd HH:mm:ss")</span>
+                                </td>
+
+                                <td data-title="Наличие">
+                                    <!-- Stock Status -->
+                                    <span>В наличии</span>
+                                    <!-- End Stock Status -->
+                                </td>
+
+                                <td>
+                                    <button type="button" class="btn btn-soft-secondary mb-3 mb-md-0 font-weight-normal px-5 px-md-4 px-lg-5 w-100 w-md-auto">Добавить в корзину</button>
+                                </td>
+                            </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </form>
+        </div>
+    </div>
+</main>
+<!-- ========== END MAIN CONTENT ========== -->
+@section ScriptPage
+{
+    <!-- JS Plugins Init. -->
+    <script>
+        $(window).on('load', function () {
+            // initialization of HSMegaMenu component
+            $('.js-mega-menu').HSMegaMenu({
+                event: 'hover',
+                direction: 'horizontal',
+                pageContainer: $('.container'),
+                breakpoint: 767.98,
+                hideTimeOut: 0
+            });
+        });
+
+        $(document).on('ready', function () {
+            // initialization of header
+            $.HSCore.components.HSHeader.init($('#header'));
+
+            // initialization of animation
+            $.HSCore.components.HSOnScrollAnimation.init('[data-animation]');
+
+            // initialization of unfold component
+            $.HSCore.components.HSUnfold.init($('[data-unfold-target]'), {
+                afterOpen: function () {
+                    $(this).find('input[type="search"]').focus();
+                }
+            });
+
+            // initialization of HSScrollNav component
+            $.HSCore.components.HSScrollNav.init($('.js-scroll-nav'), {
+                duration: 700
+            });
+
+            // initialization of quantity counter
+            $.HSCore.components.HSQantityCounter.init('.js-quantity');
+
+            // initialization of popups
+            $.HSCore.components.HSFancyBox.init('.js-fancybox');
+
+            // initialization of countdowns
+            var countdowns = $.HSCore.components.HSCountdown.init('.js-countdown', {
+                yearsElSelector: '.js-cd-years',
+                monthsElSelector: '.js-cd-months',
+                daysElSelector: '.js-cd-days',
+                hoursElSelector: '.js-cd-hours',
+                minutesElSelector: '.js-cd-minutes',
+                secondsElSelector: '.js-cd-seconds'
+            });
+
+            // initialization of malihu scrollbar
+            $.HSCore.components.HSMalihuScrollBar.init($('.js-scrollbar'));
+
+            // initialization of forms
+            $.HSCore.components.HSFocusState.init();
+
+            // initialization of form validation
+            $.HSCore.components.HSValidation.init('.js-validate', {
+                rules: {
+                    confirmPassword: {
+                        equalTo: '#signupPassword'
+                    }
+                }
+            });
+
+            // initialization of forms
+            $.HSCore.components.HSRangeSlider.init('.js-range-slider');
+
+            // initialization of show animations
+            $.HSCore.components.HSShowAnimation.init('.js-animation-link');
+
+            // initialization of fancybox
+            $.HSCore.components.HSFancyBox.init('.js-fancybox');
+
+            // initialization of slick carousel
+            $.HSCore.components.HSSlickCarousel.init('.js-slick-carousel');
+
+            // initialization of go to
+            $.HSCore.components.HSGoTo.init('.js-go-to');
+
+            // initialization of hamburgers
+            $.HSCore.components.HSHamburgers.init('#hamburgerTrigger');
+
+            // initialization of unfold component
+            $.HSCore.components.HSUnfold.init($('[data-unfold-target]'), {
+                beforeClose: function () {
+                    $('#hamburgerTrigger').removeClass('is-active');
+                },
+                afterClose: function () {
+                    $('#headerSidebarList .collapse.show').collapse('hide');
+                }
+            });
+
+            $('#headerSidebarList [data-toggle="collapse"]').on('click', function (e) {
+                e.preventDefault();
+
+                var target = $(this).data('target');
+
+                if ($(this).attr('aria-expanded') === "true") {
+                    $(target).collapse('hide');
+                } else {
+                    $(target).collapse('show');
+                }
+            });
+
+            // initialization of unfold component
+            $.HSCore.components.HSUnfold.init($('[data-unfold-target]'));
+
+            // initialization of select picker
+            $.HSCore.components.HSSelectPicker.init('.js-select');
+        });
+    </script>
+}

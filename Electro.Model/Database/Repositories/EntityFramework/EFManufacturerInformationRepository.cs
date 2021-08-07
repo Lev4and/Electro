@@ -60,32 +60,27 @@ namespace Electro.Model.Database.Repositories.EntityFramework
 
         public ManufacturerInformation GetManufacturerInformationById(Guid id, bool track = false)
         {
-            if (track)
+            IQueryable<ManufacturerInformation> manufacturerInformation = _context.ManufacturerInformation;
+
+            if (!track)
             {
-                return _context.ManufacturerInformation
-                    .SingleOrDefault(manufacturerInformation => manufacturerInformation.Id == id);
+                manufacturerInformation = manufacturerInformation.AsNoTracking();
             }
-            else
-            {
-                return _context.ManufacturerInformation
-                    .AsNoTracking()
-                    .SingleOrDefault(manufacturerInformation => manufacturerInformation.Id == id);
-            }
+
+            return manufacturerInformation.SingleOrDefault(manufacturerInformation => manufacturerInformation.Id == id);
         }
 
         public ManufacturerInformation GetManufacturerInformationByManufacturerId(Guid manufacturerId, bool track = false)
         {
-            if (track)
+            IQueryable<ManufacturerInformation> manufacturerInformation = _context.ManufacturerInformation;
+
+            if (!track)
             {
-                return _context.ManufacturerInformation
-                    .SingleOrDefault(manufacturerInformation => manufacturerInformation.ManufacturerId == manufacturerId);
+                manufacturerInformation = manufacturerInformation.AsNoTracking();
             }
-            else
-            {
-                return _context.ManufacturerInformation
-                    .AsNoTracking()
-                    .SingleOrDefault(manufacturerInformation => manufacturerInformation.ManufacturerId == manufacturerId);
-            }
+
+            return manufacturerInformation.SingleOrDefault(manufacturerInformation => manufacturerInformation.ManufacturerId == 
+                manufacturerId);
         }
 
         public void DeleteManufacturerInformationById(Guid id)

@@ -63,21 +63,17 @@ namespace Electro.Model.Database.Repositories.EntityFramework
 
         public SectionCharacteristicCategory GetSectionCharacteristicCategoryById(Guid id, bool track = false)
         {
-            if (track)
+            IQueryable<SectionCharacteristicCategory> sectionCharacteristicCategories = _context.SectionCharacteristicCategories
+                .Include(sectionCharacteristicCategory => sectionCharacteristicCategory.Section)
+                .Include(sectionCharacteristicCategory => sectionCharacteristicCategory.Category);
+
+            if (!track)
             {
-                return _context.SectionCharacteristicCategories
-                    .Include(sectionCharacteristicCategory => sectionCharacteristicCategory.Section)
-                    .Include(sectionCharacteristicCategory => sectionCharacteristicCategory.Category)
-                    .SingleOrDefault(sectionCharacteristicCategory => sectionCharacteristicCategory.Id == id);
+                sectionCharacteristicCategories = sectionCharacteristicCategories.AsNoTracking();
             }
-            else
-            {
-                return _context.SectionCharacteristicCategories
-                    .Include(sectionCharacteristicCategory => sectionCharacteristicCategory.Section)
-                    .Include(sectionCharacteristicCategory => sectionCharacteristicCategory.Category)
-                    .AsNoTracking()
-                    .SingleOrDefault(sectionCharacteristicCategory => sectionCharacteristicCategory.Id == id);
-            }
+
+            return sectionCharacteristicCategories.SingleOrDefault(sectionCharacteristicCategory => 
+                sectionCharacteristicCategory.Id == id);
         }
 
         public void DeleteSectionCharacteristicCategoryById(Guid id)

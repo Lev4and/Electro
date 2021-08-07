@@ -1,17 +1,21 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
 <head>
-    @await Html.PartialAsync("TitlePartial")
-    @await Html.PartialAsync("MetatagsPartial")
-    @await Html.PartialAsync("IconPartial")
-    @await Html.PartialAsync("CssPartial")
+    @await Html.PartialAsync("_TitlePartial")
+    @await Html.PartialAsync("_MetatagsPartial")
+    @await Html.PartialAsync("_IconPartial")
+    @await Html.PartialAsync("_CssPartial")
 </head>
 <body>
-    @await Html.PartialAsync("Header/HeaderPartial.cshtml")
+    @await Html.PartialAsync("_HeaderPartial")
     @RenderBody()
-    @await Html.PartialAsync("Footer/FooterPartial.cshtml")
-    @await Html.PartialAsync("GoToTopPartial")
-    @await Html.PartialAsync("ScriptsPartial")
+    @await Html.PartialAsync("_FooterPartial")
+    @if (IsSectionDefined("SidebarNavigation")) 
+    { 
+        @await RenderSectionAsync("SidebarNavigation")
+    }
+    @await Html.PartialAsync("_GoToTopPartial")
+    @await Html.PartialAsync("_ScriptsPartial")
     @if (IsSectionDefined("ScriptPage"))
     {
         @await RenderSectionAsync("ScriptPage")

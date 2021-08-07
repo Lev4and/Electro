@@ -1,0 +1,281 @@
+﻿@model CompareViewModel
+@{
+    ViewData["Title"] = "Сравнить";
+}
+<!-- ========== MAIN CONTENT ========== -->
+<main id="content" role="main">
+    <!-- breadcrumb -->
+    <div class="bg-gray-13 bg-md-transparent">
+        <div class="container">
+            <!-- breadcrumb -->
+            <div class="my-md-3">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb mb-3 flex-nowrap flex-xl-wrap overflow-auto overflow-xl-visble">
+                        <li class="breadcrumb-item flex-shrink-0 flex-xl-shrink-1"><a asp-area="" asp-controller="Home" asp-action="Index">Главная</a></li>
+                        <li class="breadcrumb-item flex-shrink-0 flex-xl-shrink-1 active" aria-current="page">Сравнить</li>
+                    </ol>
+                </nav>
+            </div>
+            <!-- End breadcrumb -->
+        </div>
+    </div>
+    <!-- End breadcrumb -->
+
+    <div class="container">
+        <div class="table-responsive table-bordered table-compare-list mb-10 border-0">
+            <table class="table">
+                <tbody>
+                    <tr>
+                        <th class="min-width-200">Товар</th>
+                        @foreach (var product in Model.Products)
+                        {
+                            <td>
+                                <a asp-area="" asp-controller="Product" asp-action="Index" asp-route-productId="@product.Id" class="product d-block">
+                                    <div class="product-compare-image">
+                                        <div class="d-flex mb-3" style="height: 200px; overflow: hidden;">
+                                            <img @*class="img-fluid mx-auto"*@ class="mx-auto" style="width: 100%; height: 100%; object-fit: contain;" src="@(product.MainPhoto?.GetPhotoUrl())" alt="Image Description">
+                                        </div>
+                                    </div>
+                                    <h3 class="product-item__title text-blue font-weight-bold mb-3">@product.Model</h3>
+                                </a>
+                                <div class="text-warning mb-2">
+                                    <small class="fas fa-star"></small>
+                                    <small class="fas fa-star"></small>
+                                    <small class="fas fa-star"></small>
+                                    <small class="fas fa-star"></small>
+                                    <small class="fas fa-star"></small>
+                                </div>
+                            </td>
+                        }
+                    </tr>
+
+                    <tr>
+                        <th>Категория товара</th>
+                        @foreach (var product in Model.Products)
+                        {
+                            <td>
+                                <span>@product.Category.Name</span>
+                            </td>
+                        }
+                    </tr>
+
+                    <tr>
+                        <th>Производитель</th>
+                        @foreach (var product in Model.Products)
+                        {
+                            <td>
+                                <span>@product.Manufacturer.Name</span>
+                            </td>
+                        }
+                    </tr>
+
+                    <tr>
+                        <th>Стоимость</th>
+                        @foreach (var product in Model.Products)
+                        {
+                            <td>
+                                <div class="product-price">@product.Price.ToString("C2")</div>
+                            </td>
+                        }
+                    </tr>
+
+                    <tr>
+                        <th>Доступность</th>
+                        @foreach (var product in Model.Products)
+                        {
+                            <td>
+                                <span>В наличии</span>
+                            </td>
+                        }
+                    </tr>
+
+                    <tr>
+                        <th>Описание</th>
+                        @foreach (var product in Model.Products)
+                        {
+                            <td>
+                                <span>@String.Join(',', product.CharacteristicsValues.Select(product => product.CharacteristicCategoryValue.Value))</span>
+                            </td>
+                        }
+                    </tr>
+
+                    <tr>
+                        <th>Добавить в корзину</th>
+                        @foreach (var product in Model.Products)
+                        {
+                            <td>
+                                <div class=""><a href="#" class="btn btn-soft-secondary mb-3 mb-md-0 font-weight-normal px-5 px-md-3 px-xl-5">Добавить в корзину</a></div>
+                            </td>
+                        }
+                    </tr>
+
+                    <tr>
+                        <th>Атрибут</th>
+                        @foreach (var product in Model.Products)
+                        {
+                            <td>@product.Id</td>
+                        }
+                    </tr>
+
+                    @foreach (var characteristicCategory in Model.CharacteristicCategories)
+                    {
+                <tr>
+                    <th>@characteristicCategory.Characteristic.Name</th>
+                    @foreach (var product in Model.Products)
+                    {
+                        @if (product.CharacteristicsValues.FirstOrDefault(characteristicCategoryValue => characteristicCategoryValue.CharacteristicCategoryValue.CharacteristicCategoryId == characteristicCategory.Id) != null)
+                        {
+                            <td>@product.CharacteristicsValues.FirstOrDefault(characteristicCategoryValue => characteristicCategoryValue.CharacteristicCategoryValue.CharacteristicCategoryId == characteristicCategory.Id).CharacteristicCategoryValue.Value</td>
+                        }
+                        else
+                        {
+                            <td>-</td>
+                        }
+                    }
+                </tr>
+                    }
+
+                    <tr>
+                        <th>Стоимость</th>
+                        @foreach (var product in Model.Products)
+                        {
+                            <td>
+                                <div class="product-price">@product.Price.ToString("C2")</div>
+                            </td>
+                        }
+                    </tr>
+
+                    <tr>
+                        <th>Удалить</th>
+                        <td class="text-center">
+                            <a href="#" class="text-gray-90"><i class="fa fa-times"></i></a>
+                        </td>
+                        <td class="text-center">
+                            <a href="#" class="text-gray-90"><i class="fa fa-times"></i></a>
+                        </td>
+                        <td class="text-center">
+                            <a href="#" class="text-gray-90"><i class="fa fa-times"></i></a>
+                        </td>
+                        <td class="text-center">
+                            <a href="#" class="text-gray-90"><i class="fa fa-times"></i></a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</main>
+<!-- ========== END MAIN CONTENT ========== -->
+@section ScriptPage
+{
+    <!-- JS Plugins Init. -->
+    <script>
+            $(window).on('load', function () {
+                // initialization of HSMegaMenu component
+                $('.js-mega-menu').HSMegaMenu({
+                    event: 'hover',
+                    direction: 'horizontal',
+                    pageContainer: $('.container'),
+                    breakpoint: 767.98,
+                    hideTimeOut: 0
+                });
+            });
+
+            $(document).on('ready', function () {
+                // initialization of header
+                $.HSCore.components.HSHeader.init($('#header'));
+
+                // initialization of animation
+                $.HSCore.components.HSOnScrollAnimation.init('[data-animation]');
+
+                // initialization of unfold component
+                $.HSCore.components.HSUnfold.init($('[data-unfold-target]'), {
+                    afterOpen: function () {
+                        $(this).find('input[type="search"]').focus();
+                    }
+                });
+
+                // initialization of HSScrollNav component
+                $.HSCore.components.HSScrollNav.init($('.js-scroll-nav'), {
+                  duration: 700
+                });
+
+                // initialization of quantity counter
+                $.HSCore.components.HSQantityCounter.init('.js-quantity');
+
+                // initialization of popups
+                $.HSCore.components.HSFancyBox.init('.js-fancybox');
+
+                // initialization of countdowns
+                var countdowns = $.HSCore.components.HSCountdown.init('.js-countdown', {
+                    yearsElSelector: '.js-cd-years',
+                    monthsElSelector: '.js-cd-months',
+                    daysElSelector: '.js-cd-days',
+                    hoursElSelector: '.js-cd-hours',
+                    minutesElSelector: '.js-cd-minutes',
+                    secondsElSelector: '.js-cd-seconds'
+                });
+
+                // initialization of malihu scrollbar
+                $.HSCore.components.HSMalihuScrollBar.init($('.js-scrollbar'));
+
+                // initialization of forms
+                $.HSCore.components.HSFocusState.init();
+
+                // initialization of form validation
+                $.HSCore.components.HSValidation.init('.js-validate', {
+                    rules: {
+                        confirmPassword: {
+                            equalTo: '#signupPassword'
+                        }
+                    }
+                });
+
+                // initialization of forms
+                $.HSCore.components.HSRangeSlider.init('.js-range-slider');
+
+                // initialization of show animations
+                $.HSCore.components.HSShowAnimation.init('.js-animation-link');
+
+                // initialization of fancybox
+                $.HSCore.components.HSFancyBox.init('.js-fancybox');
+
+                // initialization of slick carousel
+                $.HSCore.components.HSSlickCarousel.init('.js-slick-carousel');
+
+                // initialization of go to
+                $.HSCore.components.HSGoTo.init('.js-go-to');
+
+                // initialization of hamburgers
+                $.HSCore.components.HSHamburgers.init('#hamburgerTrigger');
+
+                // initialization of unfold component
+                $.HSCore.components.HSUnfold.init($('[data-unfold-target]'), {
+                    beforeClose: function () {
+                        $('#hamburgerTrigger').removeClass('is-active');
+                    },
+                    afterClose: function() {
+                        $('#headerSidebarList .collapse.show').collapse('hide');
+                    }
+                });
+
+                $('#headerSidebarList [data-toggle="collapse"]').on('click', function (e) {
+                    e.preventDefault();
+
+                    var target = $(this).data('target');
+
+                    if($(this).attr('aria-expanded') === "true") {
+                        $(target).collapse('hide');
+                    } else {
+                        $(target).collapse('show');
+                    }
+                });
+
+                // initialization of unfold component
+                $.HSCore.components.HSUnfold.init($('[data-unfold-target]'));
+
+                // initialization of select picker
+                $.HSCore.components.HSSelectPicker.init('.js-select');
+            });
+    </script>
+}

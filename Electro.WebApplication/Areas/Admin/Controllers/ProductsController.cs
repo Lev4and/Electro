@@ -1,10 +1,13 @@
 ﻿using Electro.Model.Database;
 using Electro.Model.Database.Entities;
+using Electro.Model.Parsers.DNS;
+using Electro.Model.Parsers.DNS.ParseWorkers;
 using Electro.WebApplication.Models;
 using Electro.WebApplication.Services;
 using Electro.WebApplication.Services.ImageResizable;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -293,7 +296,7 @@ namespace Electro.WebApplication.Areas.Admin.Controllers
         [Route("~/Admin/Products/Delete/{id}")]
         public IActionResult Delete(Guid id)
         {
-            _fileService.DeleteDirectory($"products/{id}");
+            _fileService.DeleteDirectory($"upload/products/{id}");
             _dataManager.Products.DeleteProductById(id);
 
             return RedirectToAction("Index");

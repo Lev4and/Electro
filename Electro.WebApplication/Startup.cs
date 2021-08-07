@@ -1,12 +1,16 @@
+using Electro.Model.Common;
 using Electro.Model.Database;
 using Electro.Model.Database.Entities;
 using Electro.Model.Database.Repositories.Abstract;
+using Electro.Model.Database.Repositories.ADONET;
 using Electro.Model.Database.Repositories.EntityFramework;
+using Electro.Model.Database.Repositories.EntityFramework.Sorters.Product;
 using Electro.WebApplication.Services;
 using Electro.WebApplication.Services.ImageResizable;
 using Electro.WebApplication.Services.ImageResizable.ImageProfiles;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -33,6 +37,15 @@ namespace Electro.WebApplication
             services.AddTransient<IImageProfile, LogoImageProfile>();
             services.AddTransient<ImageService>();
 
+            services.AddTransient<IProductsSorter, DefaultProductsSorter>();
+            services.AddTransient<IProductsSorter, ByRecentlyProductsSorter>();
+            services.AddTransient<IProductsSorter, ByPopularityProductsSorter>();
+            services.AddTransient<IProductsSorter, ByAscendingNameProductsSorter>();
+            services.AddTransient<IProductsSorter, ByAverageRatingProductsSorter>();
+            services.AddTransient<IProductsSorter, ByAscendingPriceProductsSorter>();
+            services.AddTransient<IProductsSorter, ByDescendingNameProductsSorter>();
+            services.AddTransient<IProductsSorter, ByDescendingPriceProductsSorter>();
+
             services.AddTransient<FileService>();
 
             services.AddTransient<RoleManager<ApplicatonRole>>();
@@ -55,9 +68,34 @@ namespace Electro.WebApplication
             services.AddTransient<ISectionCharacteristicCategoriesRepository, EFSectionCharacteristicCategoriesRepository>();
             services.AddTransient<IProductCharacteristicCategoryValuesRepository, EFProductCharacteristicCategoryValuesRepository>();
             services.AddTransient<DataManager>();
+
+            //services.AddTransient<IProductsRepository, ADONETProductsRepository>();
+            //services.AddTransient<ICategoriesRepository, ADONETCategoriesRepository>();
+            //services.AddTransient<IProductPhotosRepository, ADONETProductPhotosRepository>();
+            //services.AddTransient<IManufacturersRepository, ADONETManufacturersRepository>();
+            //services.AddTransient<ICharacteristicsRepository, ADONETCharacteristicsRepository>();
+            //services.AddTransient<IProductMainPhotosRepository, ADONETProductMainPhotosRepository>();
+            //services.AddTransient<IManufacturerLogosRepository, ADONETManufacturerLogosRepository>();
+            //services.AddTransient<IProductInformationRepository, ADONETProductInformationRepository>();
+            //services.AddTransient<ISectionsCharacteristicsRepository, ADONETSectionsCharacteristicsRepository>();
+            //services.AddTransient<ICharacteristicCategoriesRepository, ADONETCharacteristicCategoriesRepository>();
+            //services.AddTransient<ICharacteristicCategoryValuesRepository, ADONETCharacteristicCategoryValuesRepository>();
+            //services.AddTransient<ISectionCharacteristicCategoriesRepository, ADONETSectionCharacteristicCategoriesRepository>();
+            //services.AddTransient<IProductCharacteristicCategoryValuesRepository, ADONETProductCharacteristicCategoryValuesRepository>();
+            //services.AddTransient<ImportDataManager>();
+
             services.AddDbContext<ElectroDbContext>((options) =>
             {
                 options.UseSqlServer(DbConfig.ConnectionString);
+            });
+
+            services.Configure<FormOptions>(option =>
+            {
+                option.ValueCountLimit = int.MaxValue;
+                option.ValueLengthLimit = int.MaxValue;
+                option.KeyLengthLimit = int.MaxValue;
+                option.MultipartBodyLengthLimit = int.MaxValue;
+                option.MultipartBoundaryLengthLimit = int.MaxValue;
             });
 
             services.AddIdentity<ApplicationUser, ApplicatonRole>(options =>

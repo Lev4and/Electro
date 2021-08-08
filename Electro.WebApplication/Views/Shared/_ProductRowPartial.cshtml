@@ -17,7 +17,10 @@
                         <div class="text-gray-100">@Model.Price.ToString("C2")</div>
                     </div>
                     <div class="font-size-12 p-0 text-gray-110 mb-4 d-none d-md-block">
-                        @String.Join(',', Model.CharacteristicsValues.Select(product => product.CharacteristicCategoryValue.Value))
+                        @if (Model.CharacteristicsValues != null ? Model.CharacteristicsValues.Count > 0 : false)
+                        {
+                            @String.Join(',', Model.CharacteristicsValues.Select(product => product.CharacteristicCategoryValue.Value))
+                        }
                     </div>
                     <div class="mb-3 d-none d-md-block">
                         <a class="d-inline-flex align-items-center small font-size-14" href="#">

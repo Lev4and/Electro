@@ -99,16 +99,7 @@ namespace Electro.Model.Database.Repositories.EntityFramework
             }
 
             IQueryable<Product> products = _context.Products
-                .Include(product => product.CharacteristicsValues)
-                    .ThenInclude(productCharacteristicCategoryValue =>
-                        productCharacteristicCategoryValue.CharacteristicCategoryValue)
-                        .ThenInclude(characteristicCategoryValue => characteristicCategoryValue.CharacteristicCategory)
-                            .ThenInclude(characteristicCategory => characteristicCategory.Characteristic)
-                .Include(product => product.CharacteristicsValues)
-                    .ThenInclude(productCharacteristicCategoryValue =>
-                        productCharacteristicCategoryValue.CharacteristicCategoryValue)
-                        .ThenInclude(characteristicCategoryValue => characteristicCategoryValue.CharacteristicCategory)
-                            .ThenInclude(characteristicCategory => characteristicCategory.Section);
+                .Include(product => product.CharacteristicsValues);
 
             products = products.Where(product => product.CategoryId == categoryId && product.Price >= filters.RangePrice.From && 
                 product.Price <= filters.RangePrice.To);
@@ -262,15 +253,8 @@ namespace Electro.Model.Database.Repositories.EntityFramework
                 .Include(product => product.MainPhoto)
                 .Include(product => product.Manufacturer)
                 .Include(product => product.CharacteristicsValues)
-                    .ThenInclude(productCharacteristicCategoryValue =>
+                     .ThenInclude(productCharacteristicCategoryValue =>
                         productCharacteristicCategoryValue.CharacteristicCategoryValue)
-                        .ThenInclude(characteristicCategoryValue => characteristicCategoryValue.CharacteristicCategory)
-                            .ThenInclude(characteristicCategory => characteristicCategory.Characteristic)
-                .Include(product => product.CharacteristicsValues)
-                    .ThenInclude(productCharacteristicCategoryValue =>
-                        productCharacteristicCategoryValue.CharacteristicCategoryValue)
-                        .ThenInclude(characteristicCategoryValue => characteristicCategoryValue.CharacteristicCategory)
-                            .ThenInclude(characteristicCategory => characteristicCategory.Section)
                 .Where(product => product.CategoryId == categoryId && product.Price >= filters.RangePrice.From &&
                     product.Price <= filters.RangePrice.To);
 
@@ -315,16 +299,6 @@ namespace Electro.Model.Database.Repositories.EntityFramework
                 .Include(product => product.Category)
                 .Include(product => product.MainPhoto)
                 .Include(product => product.Manufacturer)
-                .Include(product => product.CharacteristicsValues)
-                    .ThenInclude(productCharacteristicCategoryValue =>
-                        productCharacteristicCategoryValue.CharacteristicCategoryValue)
-                        .ThenInclude(characteristicCategoryValue => characteristicCategoryValue.CharacteristicCategory)
-                            .ThenInclude(characteristicCategory => characteristicCategory.Characteristic)
-                .Include(product => product.CharacteristicsValues)
-                    .ThenInclude(productCharacteristicCategoryValue =>
-                        productCharacteristicCategoryValue.CharacteristicCategoryValue)
-                        .ThenInclude(characteristicCategoryValue => characteristicCategoryValue.CharacteristicCategory)
-                            .ThenInclude(characteristicCategory => characteristicCategory.Section)
                 .OrderByDescending(product => product.CreatedAt)
                 .Where(product => product.CategoryId == categoryId)
                 .Take(countItemsInResult);

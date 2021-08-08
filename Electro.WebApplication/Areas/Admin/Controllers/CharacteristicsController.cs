@@ -1,4 +1,5 @@
 ﻿using Electro.Model.Database;
+using Electro.Model.Database.AuxiliaryTypes;
 using Electro.Model.Database.Entities;
 using Electro.WebApplication.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -18,14 +19,80 @@ namespace Electro.WebApplication.Areas.Admin.Controllers
             _dataManager = dataManager;
         }
 
-        public IActionResult Index()
+        private CharacteristicsFilters InitCharacteristicsFilters()
         {
-            var viewModel = new CharacteristicsViewModel()
+            var filtres = new CharacteristicsFilters()
             {
-                Characteristics = _dataManager.Characteristics.GetCharacteristics().ToList()
+                NumberPage = 1,
+                ItemsPerPage = 10,
+                SearchString = "",
+                SortingOption = SortingOption.Default
             };
 
-            return View(viewModel);
+            return filtres;
+        }
+
+        private Pagination InitPagination(CharacteristicsFilters filters)
+        {
+            var pagination = new Pagination()
+            {
+                NumberPage = filters.NumberPage,
+                ItemsPerPage = filters.ItemsPerPage,
+                CountTotalItems = _dataManager.Characteristics.GetCountCharacteristics(filters)
+            };
+
+            return pagination;
+        }
+
+        private CharacteristicsViewModel GetCharacteristicsViewModel(CharacteristicsFilters filters = null, int? numberPage = null)
+        {
+            if (filters == null)
+            {
+                filters = InitCharacteristicsFilters();
+            }
+
+            if (numberPage != null)
+            {
+                filters.NumberPage = (int)numberPage;
+            }
+
+            var pagination = InitPagination(filters);
+
+            var viewModel = new CharacteristicsViewModel()
+            {
+                Filters = filters,
+                Pagination = pagination,
+                Limits = new List<int>()
+                {
+                    5, 10, 15, 20, 25, 50, 100
+                },
+                Characteristics = _dataManager.Characteristics.GetCharacteristics(filters).ToList(),
+                SortingOptions = new Dictionary<SortingOption, string>()
+                {
+                    { SortingOption.Default, "Сортировка по умолчанию" },
+                    { SortingOption.ByAscendingName, "Сортировка по названию: от А до Я" },
+                    { SortingOption.ByDescendingName, "Сортировка по названию: от Я до А" },
+                }
+            };
+
+            return viewModel;
+        }
+
+        public IActionResult Index()
+        {
+            return View(GetCharacteristicsViewModel());
+        }
+
+        [Route("~/Admin/Characteristics/Index/{numberPage}")]
+        public IActionResult Index(int numberPage)
+        {
+            return View(GetCharacteristicsViewModel(numberPage: numberPage));
+        }
+
+        [HttpPost]
+        public IActionResult Index(CharacteristicsViewModel viewModel)
+        {
+            return View(GetCharacteristicsViewModel(viewModel.Filters));
         }
 
         public IActionResult Save()

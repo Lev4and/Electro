@@ -26,7 +26,7 @@ namespace Electro.WebApplication.Controllers
                 NumberPage = 1,
                 ItemsPerPage = 20,
                 RangePrice = new Price() { },
-                SortingOption = SortingOption.Default,
+                SortingOption = SortingOption.ByAscendingPrice,
                 ManufacturerFilters = manufacturers.Select(manufacturer => new ManufacturerFilter
                 {
                     IsUsed = false,
@@ -101,6 +101,7 @@ namespace Electro.WebApplication.Controllers
                     { SortingOption.Default, "Сортировка по умолчанию" },
                     { SortingOption.ByPopularity, "Сортировка по популярности" },
                     { SortingOption.ByAverageRating, "Сортировка по среднему рейтингу" },
+                    { SortingOption.ByAncient, "Сортировка по старым" },
                     { SortingOption.ByRecently, "Сортировка по последним" },
                     { SortingOption.ByAscendingPrice, "Сортировка по цене: от низкой до высокой" },
                     { SortingOption.ByDescendingPrice, "Сортировка по цене: от высокой до низкой" },

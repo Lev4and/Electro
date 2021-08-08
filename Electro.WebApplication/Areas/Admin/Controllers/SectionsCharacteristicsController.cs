@@ -1,4 +1,5 @@
 ﻿using Electro.Model.Database;
+using Electro.Model.Database.AuxiliaryTypes;
 using Electro.Model.Database.Entities;
 using Electro.WebApplication.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -18,14 +19,80 @@ namespace Electro.WebApplication.Areas.Admin.Controllers
             _dataManager = dataManager;
         }
 
-        public IActionResult Index()
+        private SectionsCharacteristicsFilters InitSectionsCharacteristicsFilters()
         {
-            var viewModel = new SectionsCharacteristicsViewModel()
+            var filtres = new SectionsCharacteristicsFilters()
             {
-                SectionCharacteristics = _dataManager.SectionsCharacteristics.GetSectionsCharacteristics().ToList()
+                NumberPage = 1,
+                ItemsPerPage = 10,
+                SearchString = "",
+                SortingOption = SortingOption.Default
             };
 
-            return View(viewModel);
+            return filtres;
+        }
+
+        private Pagination InitPagination(SectionsCharacteristicsFilters filters)
+        {
+            var pagination = new Pagination()
+            {
+                NumberPage = filters.NumberPage,
+                ItemsPerPage = filters.ItemsPerPage,
+                CountTotalItems = _dataManager.SectionsCharacteristics.GetCountSectionsCharacteristics(filters)
+            };
+
+            return pagination;
+        }
+
+        private SectionsCharacteristicsViewModel GetSectionsCharacteristicsViewModel(SectionsCharacteristicsFilters filters = null, int? numberPage = null)
+        {
+            if (filters == null)
+            {
+                filters = InitSectionsCharacteristicsFilters();
+            }
+
+            if (numberPage != null)
+            {
+                filters.NumberPage = (int)numberPage;
+            }
+
+            var pagination = InitPagination(filters);
+
+            var viewModel = new SectionsCharacteristicsViewModel()
+            {
+                Filters = filters,
+                Pagination = pagination,
+                Limits = new List<int>()
+                {
+                    5, 10, 15, 20, 25, 50, 100
+                },
+                SectionCharacteristics = _dataManager.SectionsCharacteristics.GetSectionsCharacteristics(filters).ToList(),
+                SortingOptions = new Dictionary<SortingOption, string>()
+                {
+                    { SortingOption.Default, "Сортировка по умолчанию" },
+                    { SortingOption.ByAscendingName, "Сортировка по названию: от А до Я" },
+                    { SortingOption.ByDescendingName, "Сортировка по названию: от Я до А" },
+                }
+            };
+
+            return viewModel;
+        }
+
+        public IActionResult Index()
+        {
+            return View(GetSectionsCharacteristicsViewModel());
+        }
+
+        [Route("~/Admin/SectionsCharacteristics/Index/{numberPage}")]
+        public IActionResult Index(int numberPage)
+        {
+            return View(GetSectionsCharacteristicsViewModel(numberPage: numberPage));
+        }
+
+        [HttpPost]
+        public IActionResult Index(SectionsCharacteristicsViewModel viewModel)
+        {
+            return View(GetSectionsCharacteristicsViewModel(viewModel.Filters));
         }
 
         public IActionResult Save()

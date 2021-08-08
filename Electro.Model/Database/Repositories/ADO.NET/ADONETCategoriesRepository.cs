@@ -59,6 +59,11 @@ namespace Electro.Model.Database.Repositories.ADONET
             throw new NotImplementedException();
         }
 
+        public IQueryable<Category> GetCategories(string searchString, int itemsPerResult, bool track = false)
+        {
+            throw new NotImplementedException();
+        }
+
         public IQueryable<Category> GetCategories(CategoriesFilters filters, bool track = false)
         {
             throw new NotImplementedException();

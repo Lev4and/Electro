@@ -2,6 +2,6 @@
 {
     public enum SortingOption
     {
-        Default, ByPopularity, ByAverageRating, ByRecently, ByAscendingPrice, ByDescendingPrice, ByAscendingName, ByDescendingName
+        Default, ByPopularity, ByAverageRating, ByAncient, ByRecently, ByAscendingPrice, ByDescendingPrice, ByAscendingName, ByDescendingName
     }
 }

@@ -6,7 +6,6 @@ using Electro.WebApplication.Services;
 using Electro.WebApplication.Services.ImageResizable;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -32,8 +31,10 @@ namespace Electro.WebApplication.Areas.Admin.Controllers
             var filtres = new CategoriesFilters()
             {
                 NumberPage = 1,
-                ItemsPerPage = 50,
-                SearchString = ""
+                ItemsPerPage = 10,
+                SearchString = "",
+                ParentCategoryId = null,
+                SortingOption = SortingOption.Default
             };
 
             return filtres;
@@ -51,27 +52,86 @@ namespace Electro.WebApplication.Areas.Admin.Controllers
             return pagination;
         }
 
-        public IActionResult Index()
+        private CategoriesViewModel GetCategoriesViewModel(CategoriesFilters filters = null, int? numberPage = null)
         {
-            var filters = InitCategoriesFilters();
+            if(filters == null)
+            {
+                filters = InitCategoriesFilters();
+            }
+
+            if (numberPage != null)
+            {
+                filters.NumberPage = (int)numberPage;
+            }
+
             var pagination = InitPagination(filters);
+            var parentCategories = filters.ParentCategoryId != null ? new List<Category> 
+            { 
+                _dataManager.Categories.GetCategoryById((Guid)filters.ParentCategoryId) 
+            } : null;
 
             var viewModel = new CategoriesViewModel()
             {
                 Filters = filters,
                 Pagination = pagination,
-                Categories = _dataManager.Categories.GetCategories(filters).ToList()
+                Limits = new List<int>()
+                {
+                    5, 10, 15, 20, 25, 50, 100
+                },
+                Categories = _dataManager.Categories.GetCategories(filters).ToList(),
+                ParentCategories = parentCategories,
+                SortingOptions = new Dictionary<SortingOption, string>()
+                {
+                    { SortingOption.Default, "Сортировка по умолчанию" },
+                    { SortingOption.ByAscendingName, "Сортировка по названию: от А до Я" },
+                    { SortingOption.ByDescendingName, "Сортировка по названию: от Я до А" },
+                }
             };
 
-            return View(viewModel);
+            return viewModel;
+        }
+
+        public IActionResult Index()
+        {
+            return View(GetCategoriesViewModel());
+        }
+
+        [Route("~/Admin/Categories/Index/{numberPage}")]
+        public IActionResult Index(int numberPage)
+        {
+            return View(GetCategoriesViewModel(numberPage: numberPage));
+        }
+
+        [HttpPost]
+        public IActionResult Index(CategoriesViewModel viewModel)
+        {
+            return View(GetCategoriesViewModel(viewModel.Filters));
+        }
+
+        [HttpPost]
+        public JsonResult ParentCategories(string searchString)
+        {
+            var parentCategories = _dataManager.Categories
+                .GetCategories(searchString, 5)
+                .ToList()
+                .Select(category => new
+                {
+                    Id = category.Id,
+                    Text = category.Name
+                });
+
+            return new JsonResult(new { results = parentCategories });
         }
 
         public IActionResult Save()
         {
             var viewModel = new CategoryViewModel()
             {
-                Category = new Category() { Photo = new CategoryPhoto() },
-                Categories = _dataManager.Categories.GetCategories().ToList()
+                Category = new Category() 
+                { 
+                    Photo = new CategoryPhoto() 
+                },
+                Categories = new List<Category>()
             };
 
             return View(viewModel);

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace Electro.Model.Database.Entities
 {
@@ -9,6 +10,7 @@ namespace Electro.Model.Database.Entities
 
         public Guid? ParentId { get; set; }
 
+        [Required]
         public string Name { get; set; }
 
         public virtual Category Parent { get; set; }

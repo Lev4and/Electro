@@ -93,6 +93,11 @@ namespace Electro.Model.Database.Repositories.ADONET
             return false;
         }
 
+        public int GetCountProducts(ProductsFilters filters)
+        {
+            throw new NotImplementedException();
+        }
+
         public int GetCountProductsByCategoryId(Guid categoryId, CatalogProductsFilters filters)
         {
             throw new NotImplementedException();
@@ -114,6 +119,11 @@ namespace Electro.Model.Database.Repositories.ADONET
         }
 
         public IQueryable<Product> GetProducts(bool track = false)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IQueryable<Product> GetProducts(ProductsFilters filters, bool track = false)
         {
             throw new NotImplementedException();
         }

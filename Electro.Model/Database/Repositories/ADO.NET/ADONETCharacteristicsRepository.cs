@@ -1,4 +1,5 @@
-﻿using Electro.Model.Database.Entities;
+﻿using Electro.Model.Database.AuxiliaryTypes;
+using Electro.Model.Database.Entities;
 using Electro.Model.Database.Repositories.Abstract;
 using System;
 using System.Collections.Generic;
@@ -68,6 +69,11 @@ namespace Electro.Model.Database.Repositories.ADONET
             return false;
         }
 
+        public int GetCountCharacteristics(CharacteristicsFilters filters)
+        {
+            throw new NotImplementedException();
+        }
+
         public Characteristic GetCharacteristicById(Guid id, bool track = false)
         {
             throw new NotImplementedException();
@@ -90,6 +96,11 @@ namespace Electro.Model.Database.Repositories.ADONET
         }
 
         public IQueryable<Characteristic> GetCharacteristics(bool track = false)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IQueryable<Characteristic> GetCharacteristics(CharacteristicsFilters filters, bool track = false)
         {
             throw new NotImplementedException();
         }

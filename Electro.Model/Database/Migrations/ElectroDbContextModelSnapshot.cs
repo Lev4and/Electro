@@ -89,13 +89,13 @@ namespace Electro.Model.Database.Migrations
                         {
                             Id = new Guid("21f7b496-c675-4e8a-a34c-fc5ec0762fdb"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "fea1b044-2b64-41eb-8969-744a0a5d37b8",
+                            ConcurrencyStamp = "df04619c-a417-46dc-8485-3e0c09fbde97",
                             Email = "andrey.levchenko.2001@gmail.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "ANDREY.LEVCHENKO.2001@GMAIL.COM",
                             NormalizedUserName = "ADMIN",
-                            PasswordHash = "AQAAAAEAACcQAAAAEEQBUuc6/1TJgzhYhVNaks9JsBdfR0lIymsWNAiqH02q9OTtwJXdSRwU2VmPguNoZQ==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEHIdjJg7+IrCiv5RXLdV8OifHLLgIgmIUe+IIxhKsYj+unU7Bda2MLHg7OcqAqU6Gw==",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "",
                             TwoFactorEnabled = false,
@@ -134,7 +134,7 @@ namespace Electro.Model.Database.Migrations
                         new
                         {
                             Id = new Guid("b867520a-92db-4658-be39-84da53a601c0"),
-                            ConcurrencyStamp = "b83ee853-ed90-437a-a4a3-bc04bd7d9f3a",
+                            ConcurrencyStamp = "b4cb6308-2595-4460-9900-a4385166becf",
                             Name = "Администратор",
                             NormalizedName = "АДМИНИСТРАТОР"
                         });
@@ -147,6 +147,7 @@ namespace Electro.Model.Database.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Name")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<Guid?>("ParentId")

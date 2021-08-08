@@ -2,9 +2,12 @@ using Electro.Model.Common;
 using Electro.Model.Database;
 using Electro.Model.Database.Entities;
 using Electro.Model.Database.Repositories.Abstract;
-using Electro.Model.Database.Repositories.ADONET;
 using Electro.Model.Database.Repositories.EntityFramework;
+using Electro.Model.Database.Repositories.EntityFramework.Sorters.Category;
+using Electro.Model.Database.Repositories.EntityFramework.Sorters.Characteristic;
+using Electro.Model.Database.Repositories.EntityFramework.Sorters.Manufacturer;
 using Electro.Model.Database.Repositories.EntityFramework.Sorters.Product;
+using Electro.Model.Database.Repositories.EntityFramework.Sorters.SectionsCharacteristic;
 using Electro.WebApplication.Services;
 using Electro.WebApplication.Services.ImageResizable;
 using Electro.WebApplication.Services.ImageResizable.ImageProfiles;
@@ -38,6 +41,7 @@ namespace Electro.WebApplication
             services.AddTransient<ImageService>();
 
             services.AddTransient<IProductsSorter, DefaultProductsSorter>();
+            services.AddTransient<IProductsSorter, ByAncientProductsSorter>();
             services.AddTransient<IProductsSorter, ByRecentlyProductsSorter>();
             services.AddTransient<IProductsSorter, ByPopularityProductsSorter>();
             services.AddTransient<IProductsSorter, ByAscendingNameProductsSorter>();
@@ -45,6 +49,22 @@ namespace Electro.WebApplication
             services.AddTransient<IProductsSorter, ByAscendingPriceProductsSorter>();
             services.AddTransient<IProductsSorter, ByDescendingNameProductsSorter>();
             services.AddTransient<IProductsSorter, ByDescendingPriceProductsSorter>();
+
+            services.AddTransient<ICategoriesSorter, DefaultCategoriesSorter>();
+            services.AddTransient<ICategoriesSorter, ByAscendingNameCategoriesSorter>();
+            services.AddTransient<ICategoriesSorter, ByDescendingNameCategoriesSorter>();
+
+            services.AddTransient<ICharacteristicsSorter, DefaultCharacteristicsSorter>();
+            services.AddTransient<ICharacteristicsSorter, ByAscendingNameCharacteristicsSorter>();
+            services.AddTransient<ICharacteristicsSorter, ByDescendingNameCharacteristicsSorter>();
+
+            services.AddTransient<IManufacturersSorter, DefaultManufacturersSorter>();
+            services.AddTransient<IManufacturersSorter, ByAscendingNameManufacturersSorter>();
+            services.AddTransient<IManufacturersSorter, ByDescendingNameManufacturersSorter>();
+
+            services.AddTransient<ISectionsCharacteristicsSorter, DefaultSectionsCharacteristicsSorter>();
+            services.AddTransient<ISectionsCharacteristicsSorter, ByAscendingNameSectionsCharacteristicsSorter>();
+            services.AddTransient<ISectionsCharacteristicsSorter, ByDescendingNameSectionsCharacteristicsSorter>();
 
             services.AddTransient<FileService>();
 

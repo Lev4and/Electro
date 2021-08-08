@@ -66,6 +66,28 @@ namespace Electro.Model.Database.Repositories.EntityFramework
             return false;
         }
 
+        public int GetCountProducts(ProductsFilters filters)
+        {
+            IQueryable<Product> products = _context.Products;
+
+            if(filters.CategoryId != null)
+            {
+                products = products.Where(product => product.CategoryId == filters.CategoryId);
+            }
+
+            if(filters.ManufacturerId != null)
+            {
+                products = products.Where(product => product.ManufacturerId == filters.ManufacturerId);
+            }
+
+            if (!string.IsNullOrEmpty(filters.SearchString))
+            {
+                products = products.Where(product => product.Model.ToLower().Contains(filters.SearchString.ToLower()));
+            }
+
+            return products.Count();
+        }
+
         public int GetCountProductsByCategoryId(Guid categoryId, CatalogProductsFilters filters)
         {
             List<Guid> manufacturers = new List<Guid>();
@@ -77,9 +99,6 @@ namespace Electro.Model.Database.Repositories.EntityFramework
             }
 
             IQueryable<Product> products = _context.Products
-                .Include(product => product.Category)
-                .Include(product => product.MainPhoto)
-                .Include(product => product.Manufacturer)
                 .Include(product => product.CharacteristicsValues)
                     .ThenInclude(productCharacteristicCategoryValue =>
                         productCharacteristicCategoryValue.CharacteristicCategoryValue)
@@ -186,6 +205,46 @@ namespace Electro.Model.Database.Repositories.EntityFramework
             return products;
         }
 
+        public IQueryable<Product> GetProducts(ProductsFilters filters, bool track = false)
+        {
+            var sorter = _sorters.FirstOrDefault(sorter => sorter.SortingOption == filters.SortingOption);
+
+            IQueryable<Product> products = _context.Products
+                .Include(product => product.MainPhoto)
+                .Include(product => product.Category)
+                .Include(product => product.Manufacturer);
+
+            if (filters.CategoryId != null)
+            {
+                products = products.Where(product => product.CategoryId == filters.CategoryId);
+            }
+
+            if (filters.ManufacturerId != null)
+            {
+                products = products.Where(product => product.ManufacturerId == filters.ManufacturerId);
+            }
+
+            if (!string.IsNullOrEmpty(filters.SearchString))
+            {
+                products = products.Where(product => product.Model.ToLower().Contains(filters.SearchString.ToLower()));
+            }
+
+            if(sorter != null)
+            {
+                products = sorter.Sort(products);
+            }
+
+            products = products.Skip((filters.NumberPage - 1) * filters.ItemsPerPage)
+                .Take(filters.ItemsPerPage);
+
+            if (!track)
+            {
+                products = products.AsNoTracking();
+            }
+
+            return products;
+        }
+
         public IQueryable<Product> GetProductsByCategoryId(Guid categoryId, CatalogProductsFilters filters, bool track = false)
         {
             var sorter = _sorters.FirstOrDefault(sorter => sorter.SortingOption == filters.SortingOption);
@@ -215,11 +274,6 @@ namespace Electro.Model.Database.Repositories.EntityFramework
                 .Where(product => product.CategoryId == categoryId && product.Price >= filters.RangePrice.From &&
                     product.Price <= filters.RangePrice.To);
 
-            if (sorter != null)
-            {
-                products = sorter.Sort(products);
-            }
-
             if (manufacturers.Count > 0)
             {
                 products = products.Where(product => manufacturers.Contains(product.ManufacturerId));
@@ -237,6 +291,11 @@ namespace Electro.Model.Database.Repositories.EntityFramework
                     products = products.Where(product => product.CharacteristicsValues.Any(characteristicsValue =>
                         characteristicValues.Contains(characteristicsValue.CharacteristicCategoryValueId)));
                 }
+            }
+
+            if (sorter != null)
+            {
+                products = sorter.Sort(products);
             }
 
             products = products.Skip((filters.NumberPage - 1) * filters.ItemsPerPage)

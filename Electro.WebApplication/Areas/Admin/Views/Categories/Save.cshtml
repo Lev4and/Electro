@@ -52,7 +52,7 @@
                             <div class="form-group row">
                                 <label class="col-sm-2 col-form-label">Фотография</label>
                                 <div class="col-sm-10 form-group-row-container-image">
-                                    <img id="current-photo-image" src="@(Model.Category.Photo != null ? Model.Category.Photo.Url : "")" />
+                                    <img id="current-photo-image" src="@(Model.Category.Photo?.GetPhotoUrl())" />
                                 </div>
                             </div>
                             <div class="form-group row">
@@ -65,7 +65,7 @@
                             <div class="form-group row">
                                 <label class="col-sm-2 col-form-label">Родительская категория</label>
                                 <div class="col-sm-10">
-                                    <select id="single-select-categories" class="single-select" asp-for="Category.ParentId">
+                                    <select id="single-select-parent-categories" class="single-select" asp-for="Category.ParentId">
                                         @if (Model.Categories != null)
                                         {
                                             @foreach (var category in Model.Categories)
@@ -116,18 +116,43 @@
     <script src="~/js/bs-custom-file-input.min.js" asp-append-version="true"></script>
     <script src="~/plugins/select2/js/select2.min.js" asp-append-version="true"></script>
     <script>
-        $('#single-select-categories').select2({
+        $('#single-select-parent-categories').select2({
             width: '100%',
             theme: 'bootstrap4',
             placeholder: $(this).data('placeholder'),
             allowClear: Boolean($(this).data('allow-clear')),
+            ajax: {
+                url: '/Admin/Categories/ParentCategories',
+                type: 'post',
+                data: function (obj) {
+                    return { searchString: obj.term };
+                },
+                dataType: 'json',
+                processResults: function (data, params) {
+                    return {
+                        results: data.results
+                    };
+                },
+                success: function (data) {
+                    if (data.results !== 'undefined') {
+                        let options = "";
+
+                        $.each(data.results, function (i, value) {
+                            options += '<option value="' + value.id + '">' + value.text + '</option>'
+                        })
+
+                        $('#single-select-parent-categories').html();
+                        $('#single-select-parent-categories').html(options);
+                        $('#single-select-parent-categories').trigger('change');
+                    }
+                }
+            }
         });
 
         $(document).ready(function () {
             bsCustomFileInput.init()
         });
-    </script>
-    <script type="text/javascript">
+
         $('#remove-current-photo-button').on('click', function () {
             $('#current-photo-image').attr('src', '');
             $('#input-hidden-photo-url').attr('value', '');

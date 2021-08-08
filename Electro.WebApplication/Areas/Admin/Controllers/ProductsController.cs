@@ -1,7 +1,6 @@
 ﻿using Electro.Model.Database;
+using Electro.Model.Database.AuxiliaryTypes;
 using Electro.Model.Database.Entities;
-using Electro.Model.Parsers.DNS;
-using Electro.Model.Parsers.DNS.ParseWorkers;
 using Electro.WebApplication.Models;
 using Electro.WebApplication.Services;
 using Electro.WebApplication.Services.ImageResizable;
@@ -118,14 +117,122 @@ namespace Electro.WebApplication.Areas.Admin.Controllers
             }
         }
 
-        public IActionResult Index()
+        private ProductsFilters InitProductsFilters()
         {
-            var viewModel = new ProductsViewModel()
+            var filtres = new ProductsFilters()
             {
-                Products = _dataManager.Products.GetProducts().ToList()
+                NumberPage = 1,
+                ItemsPerPage = 10,
+                SearchString = "",
+                CategoryId = null,
+                ManufacturerId = null,
+                SortingOption = SortingOption.Default
             };
 
-            return View(viewModel);
+            return filtres;
+        }
+
+        private Pagination InitPagination(ProductsFilters filters)
+        {
+            var pagination = new Pagination()
+            {
+                NumberPage = filters.NumberPage,
+                ItemsPerPage = filters.ItemsPerPage,
+                CountTotalItems = _dataManager.Products.GetCountProducts(filters)
+            };
+
+            return pagination;
+        }
+
+        private ProductsViewModel GetProductsViewModel(ProductsFilters filters = null, int? numberPage = null)
+        {
+            if (filters == null)
+            {
+                filters = InitProductsFilters();
+            }
+
+            if (numberPage != null)
+            {
+                filters.NumberPage = (int)numberPage;
+            }
+
+            var pagination = InitPagination(filters);
+
+            var categories = filters.CategoryId != null ? new List<Category>
+            { _dataManager.Categories.GetCategoryById((Guid)filters.CategoryId) } : null;
+
+            var manufacturers = filters.ManufacturerId != null ? new List<Manufacturer>
+            { _dataManager.Manufacturers.GetManufacturerById((Guid)filters.ManufacturerId) } : null;
+
+            var viewModel = new ProductsViewModel()
+            {
+                Filters = filters,
+                Pagination = pagination,
+                Limits = new List<int>()
+                {
+                    5, 10, 15, 20, 25, 50, 100
+                },
+                Categories = categories,
+                Manufacturers = manufacturers,
+                Products = _dataManager.Products.GetProducts(filters).ToList(),
+                SortingOptions = new Dictionary<SortingOption, string>()
+                {
+                    { SortingOption.Default, "Сортировка по умолчанию" },
+                    { SortingOption.ByAscendingName, "Сортировка по названию: от А до Я" },
+                    { SortingOption.ByDescendingName, "Сортировка по названию: от Я до А" },
+                    { SortingOption.ByAncient, "Сортировка по старым" },
+                    { SortingOption.ByRecently, "Сортировка по последним" }
+                }
+            };
+
+            return viewModel;
+        }
+
+        public IActionResult Index()
+        {
+            return View(GetProductsViewModel());
+        }
+
+        [Route("~/Admin/Products/Index/{numberPage}")]
+        public IActionResult Index(int numberPage)
+        {
+            return View(GetProductsViewModel(numberPage: numberPage));
+        }
+
+        [HttpPost]
+        public IActionResult Index(ProductsViewModel viewModel)
+        {
+            return View(GetProductsViewModel(viewModel.Filters));
+        }
+
+        [HttpPost]
+        public JsonResult Categories(string searchString)
+        {
+            var parentCategories = _dataManager.Categories
+                .GetCategories(searchString, 5)
+                .ToList()
+                .Select(category => new
+                {
+                    Id = category.Id,
+                    Text = category.Name
+                });
+
+            return new JsonResult(new { results = parentCategories });
+        }
+
+        [HttpPost]
+        public JsonResult Manufacturers(string searchString)
+        {
+            var manufacturers = _dataManager.Manufacturers
+                .GetManufacturers(searchString, 5)
+                .ToList()
+                .Select(manufacturer => new
+                {
+                    Id = manufacturer.Id,
+                    Text = manufacturer.Name
+                });
+
+            return new JsonResult(new { results = manufacturers });
         }
 
         public IActionResult Save()

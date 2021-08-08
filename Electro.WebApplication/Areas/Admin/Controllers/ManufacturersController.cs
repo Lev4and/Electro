@@ -1,4 +1,5 @@
 ﻿using Electro.Model.Database;
+using Electro.Model.Database.AuxiliaryTypes;
 using Electro.Model.Database.Entities;
 using Electro.WebApplication.Models;
 using Electro.WebApplication.Services;
@@ -6,6 +7,7 @@ using Electro.WebApplication.Services.ImageResizable;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Electro.WebApplication.Areas.Admin.Controllers
@@ -24,14 +26,80 @@ namespace Electro.WebApplication.Areas.Admin.Controllers
             _imageService = imageService;
         }
 
-        public IActionResult Index()
+        private ManufacturersFilters InitManufacturersFilters()
         {
-            var viewModel = new ManufacturersViewModel()
+            var filtres = new ManufacturersFilters()
             {
-                Manufacturers = _dataManager.Manufacturers.GetManufacturers().ToList()
+                NumberPage = 1,
+                ItemsPerPage = 10,
+                SearchString = "",
+                SortingOption = SortingOption.Default
             };
 
-            return View(viewModel);
+            return filtres;
+        }
+
+        private Pagination InitPagination(ManufacturersFilters filters)
+        {
+            var pagination = new Pagination()
+            {
+                NumberPage = filters.NumberPage,
+                ItemsPerPage = filters.ItemsPerPage,
+                CountTotalItems = _dataManager.Manufacturers.GetCountManufacturers(filters)
+            };
+
+            return pagination;
+        }
+
+        private ManufacturersViewModel GetManufacturersViewModel(ManufacturersFilters filters = null, int? numberPage = null)
+        {
+            if (filters == null)
+            {
+                filters = InitManufacturersFilters();
+            }
+
+            if (numberPage != null)
+            {
+                filters.NumberPage = (int)numberPage;
+            }
+
+            var pagination = InitPagination(filters);
+
+            var viewModel = new ManufacturersViewModel()
+            {
+                Filters = filters,
+                Pagination = pagination,
+                Limits = new List<int>()
+                {
+                    5, 10, 15, 20, 25, 50, 100
+                },
+                Manufacturers = _dataManager.Manufacturers.GetManufacturers(filters).ToList(),
+                SortingOptions = new Dictionary<SortingOption, string>()
+                {
+                    { SortingOption.Default, "Сортировка по умолчанию" },
+                    { SortingOption.ByAscendingName, "Сортировка по названию: от А до Я" },
+                    { SortingOption.ByDescendingName, "Сортировка по названию: от Я до А" },
+                }
+            };
+
+            return viewModel;
+        }
+
+        public IActionResult Index()
+        {
+            return View(GetManufacturersViewModel());
+        }
+
+        [Route("~/Admin/Manufacturers/Index/{numberPage}")]
+        public IActionResult Index(int numberPage)
+        {
+            return View(GetManufacturersViewModel(numberPage: numberPage));
+        }
+
+        [HttpPost]
+        public IActionResult Index(ManufacturersViewModel viewModel)
+        {
+            return View(GetManufacturersViewModel(viewModel.Filters));
         }
 
         public IActionResult Save()

@@ -10,6 +10,12 @@ namespace Electro.WebApplication.Models
 
         public CategoriesFilters Filters { get; set; }
 
+        public List<int> Limits { get; set; }
+
         public List<Category> Categories { get; set; }
+
+        public List<Category> ParentCategories { get; set; }
+
+        public Dictionary<SortingOption, string> SortingOptions { get; set; }
     }
 }

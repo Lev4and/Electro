@@ -11,6 +11,8 @@ namespace Electro.Model.Database.Repositories.Abstract
 
         bool SaveProduct(Product entity);
 
+        int GetCountProducts(ProductsFilters filters);
+
         int GetCountProductsByCategoryId(Guid categoryId, CatalogProductsFilters filters);
 
         double GetMinPriceProductByCategoryId(Guid categoryId);
@@ -20,6 +22,8 @@ namespace Electro.Model.Database.Repositories.Abstract
         Product GetProductById(Guid id, bool track = false);
 
         IQueryable<Product> GetProducts(bool track = false);
+
+        IQueryable<Product> GetProducts(ProductsFilters filters, bool track = false);
 
         IQueryable<Product> GetProductsByCategoryId(Guid categoryId, CatalogProductsFilters filters, bool track = false);
 

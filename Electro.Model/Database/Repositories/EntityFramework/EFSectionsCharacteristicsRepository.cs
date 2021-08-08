@@ -1,7 +1,10 @@
-﻿using Electro.Model.Database.Entities;
+﻿using Electro.Model.Database.AuxiliaryTypes;
+using Electro.Model.Database.Entities;
 using Electro.Model.Database.Repositories.Abstract;
+using Electro.Model.Database.Repositories.EntityFramework.Sorters.SectionsCharacteristic;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Electro.Model.Database.Repositories.EntityFramework
@@ -9,10 +12,12 @@ namespace Electro.Model.Database.Repositories.EntityFramework
     public class EFSectionsCharacteristicsRepository : ISectionsCharacteristicsRepository
     {
         private readonly ElectroDbContext _context;
+        private readonly IEnumerable<ISectionsCharacteristicsSorter> _sorters;
 
-        public EFSectionsCharacteristicsRepository(ElectroDbContext context)
+        public EFSectionsCharacteristicsRepository(ElectroDbContext context, IEnumerable<ISectionsCharacteristicsSorter> sorters)
         {
             _context = context;
+            _sorters = sorters;
         }
 
         public bool ContainsSectionCharacteristicByName(string name)
@@ -59,6 +64,19 @@ namespace Electro.Model.Database.Repositories.EntityFramework
             return false;
         }
 
+        public int GetCountSectionsCharacteristics(SectionsCharacteristicsFilters filters)
+        {
+            IQueryable<SectionCharacteristic> sectionCharacteristics = _context.SectionsCharacteristics;
+
+            if (!string.IsNullOrEmpty(filters.SearchString))
+            {
+                sectionCharacteristics = sectionCharacteristics.Where(sectionCharacteristic =>
+                    sectionCharacteristic.Name.ToLower().Contains(filters.SearchString.ToLower()));
+            }
+
+            return sectionCharacteristics.Count();
+        }
+
         public SectionCharacteristic GetSectionCharacteristicById(Guid id, bool track = false)
         {
             IQueryable<SectionCharacteristic> sectionCharacteristics = _context.SectionsCharacteristics
@@ -95,6 +113,29 @@ namespace Electro.Model.Database.Repositories.EntityFramework
             {
                 sectionCharacteristics = sectionCharacteristics.AsNoTracking();
             }
+
+            return sectionCharacteristics;
+        }
+
+        public IQueryable<SectionCharacteristic> GetSectionsCharacteristics(SectionsCharacteristicsFilters filters, bool track = false)
+        {
+            var sorter = _sorters.FirstOrDefault(sorter => sorter.SortingOption == filters.SortingOption);
+
+            IQueryable<SectionCharacteristic> sectionCharacteristics = _context.SectionsCharacteristics;
+
+            if (!string.IsNullOrEmpty(filters.SearchString))
+            {
+                sectionCharacteristics = sectionCharacteristics.Where(sectionCharacteristic =>
+                    sectionCharacteristic.Name.ToLower().Contains(filters.SearchString.ToLower()));
+            }
+
+            if(sorter != null)
+            {
+                sectionCharacteristics = sorter.Sort(sectionCharacteristics);
+            }
+
+            sectionCharacteristics = sectionCharacteristics.Skip((filters.NumberPage - 1) * filters.ItemsPerPage)
+                .Take(filters.ItemsPerPage);
 
             return sectionCharacteristics;
         }

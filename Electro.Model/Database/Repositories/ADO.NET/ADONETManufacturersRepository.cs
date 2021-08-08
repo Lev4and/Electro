@@ -1,4 +1,5 @@
 ﻿using Electro.Model.Database.AnonymousTypes;
+using Electro.Model.Database.AuxiliaryTypes;
 using Electro.Model.Database.Entities;
 using Electro.Model.Database.Repositories.Abstract;
 using Microsoft.Data.SqlClient;
@@ -85,6 +86,11 @@ namespace Electro.Model.Database.Repositories.ADONET
             return false;
         }
 
+        public int GetCountManufacturers(ManufacturersFilters filters)
+        {
+            throw new NotImplementedException();
+        }
+
         public Manufacturer GetManufacturerById(Guid id, bool track = false)
         {
             throw new NotImplementedException();
@@ -116,6 +122,16 @@ namespace Electro.Model.Database.Repositories.ADONET
         }
 
         public IQueryable<Manufacturer> GetManufacturers(bool track = false)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IQueryable<Manufacturer> GetManufacturers(string searchString, int itemsPerResult, bool track = false)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IQueryable<Manufacturer> GetManufacturers(ManufacturersFilters filters, bool track = false)
         {
             throw new NotImplementedException();
         }

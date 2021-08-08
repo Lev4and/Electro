@@ -1,11 +1,9 @@
-﻿using Electro.Model.Database.Entities;
+﻿using Electro.Model.Database.AuxiliaryTypes;
+using Electro.Model.Database.Entities;
 using Electro.Model.Database.Repositories.Abstract;
 using System;
-using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Electro.Model.Database.Repositories.ADONET
 {
@@ -67,6 +65,11 @@ namespace Electro.Model.Database.Repositories.ADONET
             return false;
         }
 
+        public int GetCountSectionsCharacteristics(SectionsCharacteristicsFilters filters)
+        {
+            throw new NotImplementedException();
+        }
+
         public SectionCharacteristic GetSectionCharacteristicById(Guid id, bool track = false)
         {
             throw new NotImplementedException();
@@ -88,6 +91,11 @@ namespace Electro.Model.Database.Repositories.ADONET
         }
 
         public IQueryable<SectionCharacteristic> GetSectionsCharacteristics(bool track = false)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IQueryable<SectionCharacteristic> GetSectionsCharacteristics(SectionsCharacteristicsFilters filters, bool track = false)
         {
             throw new NotImplementedException();
         }

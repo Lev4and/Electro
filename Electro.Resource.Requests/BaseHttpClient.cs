@@ -13,7 +13,7 @@ namespace Electro.Resource.Requests
 
         public BaseHttpClient(string pathAndQueryUrl)
         {
-            _baseUrl = $"http://electro-resource-api-asp-net-core.ru/api/{pathAndQueryUrl}";
+            _baseUrl = $"https://localhost:44351/api/{pathAndQueryUrl}";
 
             _handler = new HttpClientHandler();
             _handler.AllowAutoRedirect = true;

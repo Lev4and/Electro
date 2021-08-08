@@ -2,6 +2,7 @@
 using Electro.Model.Database.AuxiliaryTypes;
 using Electro.Model.Database.Entities;
 using Electro.Model.Database.Repositories.Abstract;
+using Electro.Model.Database.Repositories.EntityFramework.Sorters.Category;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -12,10 +13,12 @@ namespace Electro.Model.Database.Repositories.EntityFramework
     public class EFCategoriesRepository : ICategoriesRepository
     {
         private readonly ElectroDbContext _context;
+        private readonly IEnumerable<ICategoriesSorter> _sorters;
 
-        public EFCategoriesRepository(ElectroDbContext context)
+        public EFCategoriesRepository(ElectroDbContext context, IEnumerable<ICategoriesSorter> sorters)
         {
             _context = context;
+            _sorters = sorters;
         }
 
         public bool ContainsCategoryByParentIdAndName(Guid? parentId, string name)
@@ -64,9 +67,25 @@ namespace Electro.Model.Database.Repositories.EntityFramework
 
         public int GetCountCategories(CategoriesFilters filters)
         {
-            return _context.Categories.Where(category =>
-                category.Name.ToLower().Contains(filters.SearchString.ToLower()))
-                .Count();
+            IQueryable<Category> categories = _context.Categories
+                .Include(category => category.Photo)
+                .Include(category => category.Parent).ThenInclude(category => category.Parent)
+                .Include(category => category.Children).ThenInclude(category => category.Photo)
+                .Include(category => category.Children)
+                    .ThenInclude(category => category.Children)
+                        .ThenInclude(category => category.Photo);
+
+            if (filters.ParentCategoryId != null)
+            {
+                categories = categories.Where(category => category.ParentId == filters.ParentCategoryId);
+            }
+
+            if (!string.IsNullOrEmpty(filters.SearchString))
+            {
+                categories = categories.Where(category => category.Name.ToLower().Contains(filters.SearchString));
+            }
+
+            return categories.Count();
         }
 
         public Category GetCategoryById(Guid id, bool track = false)
@@ -117,15 +136,32 @@ namespace Electro.Model.Database.Repositories.EntityFramework
 
         public IQueryable<Category> GetCategories(CategoriesFilters filters, bool track = false)
         {
+            var sorter = _sorters.FirstOrDefault(sorter => sorter.SortingOption == filters.SortingOption);
+
             IQueryable<Category> categories = _context.Categories
                 .Include(category => category.Photo)
                 .Include(category => category.Parent).ThenInclude(category => category.Parent)
                 .Include(category => category.Children).ThenInclude(category => category.Photo)
                 .Include(category => category.Children)
                     .ThenInclude(category => category.Children)
-                        .ThenInclude(category => category.Photo)
-                .Where(category => category.Name.ToLower().Contains(filters.SearchString))
-                .Skip((filters.NumberPage - 1) * filters.ItemsPerPage)
+                        .ThenInclude(category => category.Photo);
+
+            if(filters.ParentCategoryId != null)
+            {
+                categories = categories.Where(category => category.ParentId == filters.ParentCategoryId);
+            }
+
+            if (!string.IsNullOrEmpty(filters.SearchString))
+            {
+                categories = categories.Where(category => category.Name.ToLower().Contains(filters.SearchString));
+            }
+
+            if(sorter != null)
+            {
+                categories = sorter.Sort(categories);
+            }
+
+            categories = categories.Skip((filters.NumberPage - 1) * filters.ItemsPerPage)
                 .Take(filters.ItemsPerPage);
 
             if (!track)
@@ -183,6 +219,26 @@ namespace Electro.Model.Database.Repositories.EntityFramework
             }
 
             return categories.Where(category => category.ParentId == null);
+        }
+
+        public IQueryable<Category> GetCategories(string searchString, int itemsPerResult, bool track = false)
+        {
+            if (!string.IsNullOrEmpty(searchString))
+            {
+                IQueryable<Category> categories = _context.Categories;
+
+                categories = categories.Where(category => category.Name.ToLower().Contains(searchString.ToLower()));
+                categories = categories.OrderBy(category => category.Name).Take(itemsPerResult);
+
+                if (!track)
+                {
+                    categories = categories.AsNoTracking();
+                }
+
+                return categories;
+            }
+
+            return new List<Category>().AsQueryable();
         }
 
         public IQueryable<Category> GetParentCategories(int numberPage, int itemsPerPage, bool track = false)

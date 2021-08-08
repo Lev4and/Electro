@@ -20,6 +20,8 @@ namespace Electro.Model.Database.Repositories.Abstract
 
         IQueryable<Category> GetCategories(bool track = false);
 
+        IQueryable<Category> GetCategories(string searchString, int itemsPerResult, bool track = false);
+
         IQueryable<Category> GetCategories(CategoriesFilters filters, bool track = false);
 
         IQueryable<CategoriesManufacturer> GetCategoriesByManufacturerId(Guid manufacturerId, bool track = false);

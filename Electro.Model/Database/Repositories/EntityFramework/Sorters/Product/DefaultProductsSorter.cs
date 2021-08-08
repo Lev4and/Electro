@@ -14,7 +14,7 @@ namespace Electro.Model.Database.Repositories.EntityFramework.Sorters.Product
 
         public IQueryable<Entities.Product> Sort(IQueryable<Entities.Product> products)
         {
-            return products.OrderBy(product => product.Price);
+            return products.OrderBy(product => product.Id);
         }
     }
 }

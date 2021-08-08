@@ -1,7 +1,10 @@
-﻿using Electro.Model.Database.Entities;
+﻿using Electro.Model.Database.AuxiliaryTypes;
+using Electro.Model.Database.Entities;
 using Electro.Model.Database.Repositories.Abstract;
+using Electro.Model.Database.Repositories.EntityFramework.Sorters.Characteristic;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Electro.Model.Database.Repositories.EntityFramework
@@ -9,10 +12,12 @@ namespace Electro.Model.Database.Repositories.EntityFramework
     public class EFCharacteristicsRepository : ICharacteristicsRepository
     {
         private readonly ElectroDbContext _context;
+        private readonly IEnumerable<ICharacteristicsSorter> _sorters;
 
-        public EFCharacteristicsRepository(ElectroDbContext context)
+        public EFCharacteristicsRepository(ElectroDbContext context, IEnumerable<ICharacteristicsSorter> sorters)
         {
             _context = context;
+            _sorters = sorters;
         }
 
         public bool ContainsCharacteristicByName(string name)
@@ -58,6 +63,19 @@ namespace Electro.Model.Database.Repositories.EntityFramework
             return false;
         }
 
+        public int GetCountCharacteristics(CharacteristicsFilters filters)
+        {
+            IQueryable<Characteristic> characteristics = _context.Characteristics;
+
+            if (!string.IsNullOrEmpty(filters.SearchString))
+            {
+                characteristics = characteristics.Where(characteristic => 
+                    characteristic.Name.ToLower().Contains(filters.SearchString.ToLower()));
+            }
+
+            return characteristics.Count();
+        }
+
         public Characteristic GetCharacteristicById(Guid id, bool track = false)
         {
             IQueryable<Characteristic> characteristics = _context.Characteristics
@@ -87,6 +105,34 @@ namespace Electro.Model.Database.Repositories.EntityFramework
         {
             IQueryable<Characteristic> characteristics = _context.Characteristics
                 .Include(characteristic => characteristic.Categories);
+
+            if (!track)
+            {
+                characteristics = characteristics.AsNoTracking();
+            }
+
+            return characteristics;
+        }
+
+        public IQueryable<Characteristic> GetCharacteristics(CharacteristicsFilters filters, bool track = false)
+        {
+            var sorter = _sorters.FirstOrDefault(sorter => sorter.SortingOption == filters.SortingOption);
+
+            IQueryable<Characteristic> characteristics = _context.Characteristics;
+
+            if (!string.IsNullOrEmpty(filters.SearchString))
+            {
+                characteristics = characteristics.Where(characteristic => 
+                    characteristic.Name.ToLower().Contains(filters.SearchString.ToLower()));
+            }
+
+            if(sorter != null)
+            {
+                characteristics = sorter.Sort(characteristics);
+            }
+
+            characteristics = characteristics.Skip((filters.NumberPage - 1) * filters.ItemsPerPage)
+                .Take(filters.ItemsPerPage);
 
             if (!track)
             {

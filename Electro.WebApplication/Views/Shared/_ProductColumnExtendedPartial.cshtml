@@ -6,8 +6,8 @@
                 <div class="mb-2"><a asp-area="" asp-controller="Catalog" asp-action="Products" asp-route-categoryId="@Model.Category.Id" class="font-size-12 text-gray-5">@Model.Category.Name</a></div>
                 <h5 class="mb-1 product-item__title"><a asp-area="" asp-controller="Product" asp-action="Index" asp-route-productId="@Model.Id" class="text-blue font-weight-bold">@Model.Model</a></h5>
                 <div class="mb-2">
-                    <a asp-area="" asp-controller="Product" asp-action="Index" asp-route-productId="@Model.Id" class="d-block text-center" style="height: 160px; overflow: hidden;">
-                        <img @*class="img-fluid"*@ style="width: 100%; height: 100%; object-fit: contain;" src="@(Model.MainPhoto?.GetPhotoUrl())" alt="Image Description">
+                    <a asp-area="" asp-controller="Product" asp-action="Index" asp-route-productId="@Model.Id" class="d-block text-center image-container h-160">
+                        <img class="img-fluid" src="@(Model.MainPhoto?.GetPhotoUrl())" alt="Image Description">
                     </a>
                 </div>
                 <div class="mb-3">

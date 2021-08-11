@@ -23,7 +23,7 @@ namespace Electro.Model.Database.Repositories.Abstract
 
         IQueryable<Product> GetProducts(bool track = false);
 
-        IQueryable<Product> GetProducts(ProductsFilters filters, bool track = false);
+        IQueryable<Product> GetProducts(ProductsFilters filters, bool isLiteVersion = true, bool track = false);
 
         IQueryable<Product> GetProductsByCategoryId(Guid categoryId, CatalogProductsFilters filters, bool track = false);
 

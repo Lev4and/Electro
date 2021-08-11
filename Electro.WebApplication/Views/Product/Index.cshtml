@@ -9,7 +9,7 @@
             height: 430px !important;
             overflow: hidden !important;
         }
-            #sliderSyncingNav .js-slide img {
+            #sliderSyncingNav .js-slide .img-fluid {
                 width: 100% !important;
                 height: 100% !important;
                 object-fit: contain !important;
@@ -22,7 +22,18 @@
             cursor: pointer !important;
         }
 
-            #sliderSyncingThumb .js-slide img {
+            #sliderSyncingThumb .js-slide .img-fluid {
+                width: 100% !important;
+                height: 100% !important;
+                object-fit: contain !important;
+            }
+
+        .d-md-flex manufacturer-link-image-container {
+            height: 45px;
+            overflow: hidden;
+        }
+
+            .d-md-flex manufacturer-link-image-container .img-fluid {
                 width: 100% !important;
                 height: 100% !important;
                 object-fit: contain !important;
@@ -63,7 +74,7 @@
                         @foreach (var photo in Model.Photos)
                         {
                             <div class="js-slide">
-                                <img @*class="img-fluid"*@ src="@photo.GetPhotoUrl()" alt="Image Description">
+                                <img class="img-fluid" src="@photo.GetPhotoUrl()" alt="Image Description">
                             </div>
                         }
                     }
@@ -79,7 +90,7 @@
                         @foreach (var photo in Model.Photos)
                         {
                             <div class="js-slide">
-                                <img @*class="img-fluid"*@ src="@photo.GetPhotoUrl()" alt="Image Description">
+                                <img class="img-fluid" src="@photo.GetPhotoUrl()" alt="Image Description">
                             </div>
                         }
                     }
@@ -103,8 +114,8 @@
                             </a>
                         </div>
                         <div class="d-md-flex align-items-center">
-                            <a class="max-width-150 ml-n2 mb-2 mb-md-0 d-block" style="height: 45px; overflow: hidden;" asp-area="" asp-controller="Manufacturer" asp-action="Index" asp-route-manufacturerId="@Model.ManufacturerId">
-                                <img @*class="img-fluid"*@ style="width: 100%; height: 100%; object-fit: contain;" src="@(Model.Manufacturer.Logo?.GetPhotoUrl())" alt="Image Description">
+                            <a class="max-width-150 ml-n2 mb-2 mb-md-0 d-block manufacturer-link-image-container" asp-area="" asp-controller="Manufacturer" asp-action="Index" asp-route-manufacturerId="@Model.ManufacturerId">
+                                <img class="img-fluid" src="@(Model.Manufacturer.Logo?.GetPhotoUrl())" alt="Image Description">
                             </a>
                             <div class="ml-md-3 text-gray-9 font-size-14">Наличие: <span class="text-green font-weight-bold">26 в наличии</span></div>
                         </div>

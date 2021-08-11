@@ -123,7 +123,7 @@ namespace Electro.Model.Database.Repositories.ADONET
             throw new NotImplementedException();
         }
 
-        public IQueryable<Product> GetProducts(ProductsFilters filters, bool track = false)
+        public IQueryable<Product> GetProducts(ProductsFilters filters, bool isLiteVersion = true, bool track = false)
         {
             throw new NotImplementedException();
         }

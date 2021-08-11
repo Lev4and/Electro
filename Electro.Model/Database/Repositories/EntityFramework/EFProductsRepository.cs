@@ -205,7 +205,7 @@ namespace Electro.Model.Database.Repositories.EntityFramework
             return products;
         }
 
-        public IQueryable<Product> GetProducts(ProductsFilters filters, bool track = false)
+        public IQueryable<Product> GetProducts(ProductsFilters filters, bool isLiteVersion = true, bool track = false)
         {
             var sorter = _sorters.FirstOrDefault(sorter => sorter.SortingOption == filters.SortingOption);
 
@@ -213,6 +213,12 @@ namespace Electro.Model.Database.Repositories.EntityFramework
                 .Include(product => product.MainPhoto)
                 .Include(product => product.Category)
                 .Include(product => product.Manufacturer);
+
+            if (!isLiteVersion)
+            {
+                products = products.Include(product => product.CharacteristicsValues)
+                    .ThenInclude(productCharacteristicsValue => productCharacteristicsValue.CharacteristicCategoryValue);
+            }
 
             if (filters.CategoryId != null)
             {

@@ -2,6 +2,32 @@
 @{
     ViewData["Title"] = Model.Category.Name;
 }
+@section StylePage
+{ 
+    <style>
+        .mb-2 .image-container{
+            overflow: hidden;
+        }
+
+            .mb-2 .image-container.h-120 {
+                height: 120px !important;
+            }
+
+            .mb-2 .image-container.h-160 {
+                height: 160px !important;
+            }
+
+            .mb-2 .image-container.h-200 {
+                height: 200px !important;
+            }
+
+                .mb-2 .image-container .img-fluid {
+                    width: 100% !important;
+                    height: 100% !important;
+                    object-fit: contain !important;
+                }
+    </style>
+}
 <!-- breadcrumb -->
 <div class="bg-gray-13 bg-md-transparent">
     <div class="container">

@@ -2,6 +2,21 @@
 @{
     ViewData["Title"] = "Каталог";
 }
+@section StylePage
+{
+    <style>
+        .mb-2 .image-container {
+            height: 150px;
+            overflow: hidden;
+        }
+
+            .mb-2 .image-container .img-fluid {
+                width: 100% !important;
+                height: 100% !important;
+                object-fit: contain !important;
+            }
+    </style>
+}
 <!-- breadcrumb -->
 <div class="bg-gray-13 bg-md-transparent">
     <div class="container">
@@ -32,8 +47,8 @@
                         <div class="product-item__inner px-xl-4 p-3">
                             <div class="product-item__body pb-xl-2">
                                 <div class="mb-2">
-                                    <a style="height: 150px; overflow: hidden;" href="@((category.Children != null ? category.Children.Count > 0 : false) ? $"/Catalog/{category.Id}" : $"/Catalog/{category.Id}/Products")" class="d-block text-center">
-                                        <img @*class="img-fluid"*@ style="width: 100%; height: 100%; object-fit: contain;" src="@(category.Photo?.GetPhotoUrl())" alt="Image Description">
+                                    <a href="@((category.Children != null ? category.Children.Count > 0 : false) ? $"/Catalog/{category.Id}" : $"/Catalog/{category.Id}/Products")" class="d-block text-center image-container">
+                                        <img class="img-fluid" src="@(category.Photo?.GetPhotoUrl())" alt="Image Description">
                                     </a>
                                 </div>
                                 <h5 class="text-center mb-1 product-item__title">

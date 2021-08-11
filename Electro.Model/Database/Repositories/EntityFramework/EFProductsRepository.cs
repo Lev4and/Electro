@@ -109,17 +109,26 @@ namespace Electro.Model.Database.Repositories.EntityFramework
                 products = products.Where(product => manufacturers.Contains(product.ManufacturerId));
             }
 
-            foreach (var characteristicFilter in filters.CharacteristicFilters)
+            if (filters.CharacteristicFilters != null ? filters.CharacteristicFilters.Count > 0 : false)
             {
-                var characteristicValues = characteristicFilter.CharacteristicValueFilters.Where(characteristicValue =>
-                    characteristicValue.IsUsed == true)
-                    .Select(characteristicValue => characteristicValue.CharacteristicValueId)
-                    .ToList();
+                var characteristics = filters.CharacteristicFilters.Where(characteristicFilter =>
+                    characteristicFilter.CharacteristicValueFilters.Any(characteristicValue =>
+                        characteristicValue.IsUsed == true)).ToList();
+
+                var characteristicValues = new List<Guid>();
+
+                foreach (var characteristicFilter in characteristics)
+                {
+                    characteristicValues.AddRange(characteristicFilter.CharacteristicValueFilters.Where(characteristicValue =>
+                        characteristicValue.IsUsed == true)
+                        .Select(characteristicValue => characteristicValue.CharacteristicValueId)
+                        .ToList());
+                }
 
                 if (characteristicValues.Count > 0)
                 {
-                    products = products.Where(product => product.CharacteristicsValues.Any(characteristicsValue =>
-                        characteristicValues.Contains(characteristicsValue.CharacteristicCategoryValueId)));
+                    products = products.Where(product => product.CharacteristicsValues.Where(characteristicsValue =>
+                        characteristicValues.Contains(characteristicsValue.CharacteristicCategoryValueId)).Count() == characteristics.Count);
                 }
             }
 
@@ -263,17 +272,26 @@ namespace Electro.Model.Database.Repositories.EntityFramework
                 products = products.Where(product => manufacturers.Contains(product.ManufacturerId));
             }
 
-            foreach (var characteristicFilter in filters.CharacteristicFilters)
+            if(filters.CharacteristicFilters != null ? filters.CharacteristicFilters.Count > 0 : false)
             {
-                var characteristicValues = characteristicFilter.CharacteristicValueFilters.Where(characteristicValue =>
-                    characteristicValue.IsUsed == true)
-                    .Select(characteristicValue => characteristicValue.CharacteristicValueId)
-                    .ToList();
+                var characteristics = filters.CharacteristicFilters.Where(characteristicFilter =>
+                    characteristicFilter.CharacteristicValueFilters.Any(characteristicValue => 
+                        characteristicValue.IsUsed == true)).ToList();
+
+                var characteristicValues = new List<Guid>();
+
+                foreach (var characteristicFilter in characteristics)
+                {
+                    characteristicValues.AddRange(characteristicFilter.CharacteristicValueFilters.Where(characteristicValue =>
+                        characteristicValue.IsUsed == true)
+                        .Select(characteristicValue => characteristicValue.CharacteristicValueId)
+                        .ToList());
+                }
 
                 if (characteristicValues.Count > 0)
                 {
-                    products = products.Where(product => product.CharacteristicsValues.Any(characteristicsValue =>
-                        characteristicValues.Contains(characteristicsValue.CharacteristicCategoryValueId)));
+                    products = products.Where(product => product.CharacteristicsValues.Where(characteristicsValue =>
+                        characteristicValues.Contains(characteristicsValue.CharacteristicCategoryValueId)).Count() == characteristics.Count);
                 }
             }
 

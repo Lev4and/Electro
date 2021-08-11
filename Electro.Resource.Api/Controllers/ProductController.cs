@@ -26,7 +26,7 @@ namespace Electro.Resource.Api.Controllers
 
             try
             {
-                category = _importDataManager.Categories.GetCategoryByParentNameAndName(product.Category.Parent.Name,
+                category = _dataManager.Categories.GetCategoryByParentNameAndName(product.Category.Parent.Name,
                     product.Category.Name);
             }
             catch

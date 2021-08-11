@@ -97,8 +97,12 @@ namespace Electro.Model.Database
         {
             var result = new DataTable();
 
+            _connection.Open();
+
             _dataAdapter = new SqlDataAdapter(query, _connection);
             _dataAdapter.Fill(result);
+
+            _connection.Close();
 
             return result;
         }

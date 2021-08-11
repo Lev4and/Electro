@@ -126,9 +126,10 @@ namespace Electro.Model.Database.Repositories.EntityFramework
 
         public IQueryable<CharacteristicCategory> GetCharacteristicCategoriesByCategoryId(Guid categoryId, CatalogProductsFilters filters = null, bool track = false)
         {
-            var characteristicCategories = _context.CharacteristicCategories
+            IQueryable<CharacteristicCategory> characteristicCategories = _context.CharacteristicCategories
                 .Include(characteristicCategory => characteristicCategory.Characteristic)
                 .Include(characteristicCategory => characteristicCategory.Values)
+                    //.ThenInclude(characteristicCategoryValue => characteristicCategoryValue.Products)
                 .Where(characteristicCategory => characteristicCategory.CategoryId == categoryId);
 
             if (track)

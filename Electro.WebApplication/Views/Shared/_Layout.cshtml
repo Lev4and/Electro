@@ -5,6 +5,10 @@
     @await Html.PartialAsync("_MetatagsPartial")
     @await Html.PartialAsync("_IconPartial")
     @await Html.PartialAsync("_CssPartial")
+    @if (IsSectionDefined("StylePage"))
+    {
+        @await RenderSectionAsync("StylePage")
+    }
 </head>
 <body>
     @await Html.PartialAsync("_HeaderPartial")

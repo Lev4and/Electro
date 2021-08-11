@@ -11,7 +11,7 @@
 
             <!-- View More - Collapse -->
             <div class="collapse" id="collapse-@ViewBag.Version-sorting-option">
-                @for(int i = 0; i < Model.SortingOptions.Count; i++)
+                @for (int i = 0; i < Model.SortingOptions.Count; i++)
                 {
                     <div class="form-group d-flex align-items-center justify-content-between mb-2 pb-1">
                         <div class="custom-control custom-radio">
@@ -103,7 +103,7 @@
                             <input type="checkbox" asp-for="@Model.Filters.ManufacturerFilters[i].IsUsed" class="custom-control-input" id="checkbox-@ViewBag.Version-manufacturer-filter-@i">
                             <label class="custom-control-label" for="checkbox-@ViewBag.Version-manufacturer-filter-@i">
                                 @Model.ProductsManufacturers[i].ManufacturerName
-                                @*<span class="text-gray-25 font-size-12 font-weight-normal"> (@Model.ProductsManufacturers[i].CountProducts)</span>*@
+                                <span class="text-gray-25 font-size-12 font-weight-normal"> (@(Model.ProductsManufacturers[i] != null ? Model.ProductsManufacturers[i].CountProducts : 0))</span>
                             </label>
                         </div>
                     </div>
@@ -122,41 +122,42 @@
         </div>
         @for (int i = 0; i < Model.CharacteristicCategories.Count; i++)
         {
-    <div class="border-bottom pb-4 mb-4">
-        <h4 class="font-size-14 mb-3 font-weight-bold">@Model.CharacteristicCategories[i].Characteristic.Name</h4>
+            <div class="border-bottom pb-4 mb-4">
+                <h4 class="font-size-14 mb-3 font-weight-bold">@Model.CharacteristicCategories[i].Characteristic.Name</h4>
 
-        <input type="hidden" asp-for="@Model.Filters.CharacteristicFilters[i].CharacteristicId" />
+                <input type="hidden" asp-for="@Model.Filters.CharacteristicFilters[i].CharacteristicId" />
 
-        <!-- View More - Collapse -->
-        <div class="collapse" id="collapse-@ViewBag.Version-filter-@i">
-            @for (int j = 0; j < Model.CharacteristicCategories[i].Values.Count; j++)
-            {
-                <div class="form-group d-flex align-items-center justify-content-between mb-2 pb-1">
-                    <div class="custom-control custom-checkbox">
-                        <input type="hidden" asp-for="@Model.Filters.CharacteristicFilters[i].CharacteristicValueFilters[j].CharacteristicValueId" />
-                        <input type="checkbox" asp-for="@Model.Filters.CharacteristicFilters[i].CharacteristicValueFilters[j].IsUsed" class="custom-control-input" id="checkbox-@ViewBag.Version-filter-@i-@j">
-                        <label class="custom-control-label" for="checkbox-@ViewBag.Version-filter-@i-@j">
-                            @Model.CharacteristicCategories[i].Values.ElementAt(j).Value
-                            @*<span class="text-gray-25 font-size-12 font-weight-normal"> (@Model.CharacteristicCategories[i].Values.ElementAt(j).Products.Count)</span>*@
-                        </label>
-                    </div>
+                <!-- View More - Collapse -->
+                <div class="collapse" id="collapse-@ViewBag.Version-filter-@i">
+                    @for (int j = 0; j < Model.CharacteristicCategories[i].Values.Count; j++)
+                    {
+                        <div class="form-group d-flex align-items-center justify-content-between mb-2 pb-1">
+                            <div class="custom-control custom-checkbox">
+                                <input type="hidden" asp-for="@Model.Filters.CharacteristicFilters[i].CharacteristicValueFilters[j].CharacteristicValueId" />
+                                <input type="hidden" asp-for="@Model.Filters.CharacteristicFilters[i].CharacteristicValueFilters[j].Counter" />
+                                <input type="checkbox" asp-for="@Model.Filters.CharacteristicFilters[i].CharacteristicValueFilters[j].IsUsed" class="custom-control-input" id="checkbox-@ViewBag.Version-filter-@i-@j">
+                                <label class="custom-control-label" for="checkbox-@ViewBag.Version-filter-@i-@j">
+                                    @Model.CharacteristicCategories[i].Values.ElementAt(j).Value
+                                    <span class="text-gray-25 font-size-12 font-weight-normal"> (@Model.Filters.CharacteristicFilters[i].CharacteristicValueFilters[j].Counter) </span>
+                                </label>
+                            </div>
+                        </div>
+                    }
                 </div>
-            }
-        </div>
-        <!-- End View More - Collapse -->
-        <!-- Link -->
-        <a class="link link-collapse small font-size-13 text-gray-27 d-inline-flex mt-2" data-toggle="collapse" href="#collapse-@ViewBag.Version-filter-@i" role="button" aria-expanded="false" aria-controls="collapse-@ViewBag.Version-filter-@i">
-            <span class="link__icon text-gray-27 bg-white">
-                <span class="link__icon-inner">+</span>
-            </span>
-            <span class="link-collapse__default">Показать больше</span>
-            <span class="link-collapse__active">Показывать меньше</span>
-        </a>
-        <!-- End Link -->
-    </div>
+                <!-- End View More - Collapse -->
+                <!-- Link -->
+                <a class="link link-collapse small font-size-13 text-gray-27 d-inline-flex mt-2" data-toggle="collapse" href="#collapse-@ViewBag.Version-filter-@i" role="button" aria-expanded="false" aria-controls="collapse-@ViewBag.Version-filter-@i">
+                    <span class="link__icon text-gray-27 bg-white">
+                        <span class="link__icon-inner">+</span>
+                    </span>
+                    <span class="link-collapse__default">Показать больше</span>
+                    <span class="link-collapse__active">Показывать меньше</span>
+                </a>
+                <!-- End Link -->
+            </div>
         }
         <button type="submit" data-version-form="@ViewBag.Version" class="btn px-4 btn-block btn-primary-dark-w py-2 rounded-lg">Применить</button>
-        <button type="reset" class="btn px-4 btn-block btn-primary-dark-w py-2 rounded-lg">Сбросить</button>
+        <button asp-area="" asp-controller="Catalog" asp-action="Products" asp-route-categoryId="@Model.Category.Id" class="btn px-4 btn-block btn-primary-dark-w py-2 rounded-lg">Сбросить</button>
     </form>
 </div>
 @if (Model.LatestProducts != null ? Model.LatestProducts.Count > 0 : false)

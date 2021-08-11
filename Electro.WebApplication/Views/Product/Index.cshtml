@@ -2,6 +2,33 @@
 @{
     ViewData["Title"] = Model.Model;
 }
+@section StylePage
+{
+    <style>
+        #sliderSyncingNav .js-slide {
+            height: 430px !important;
+            overflow: hidden !important;
+        }
+            #sliderSyncingNav .js-slide img {
+                width: 100% !important;
+                height: 100% !important;
+                object-fit: contain !important;
+            }
+
+        #sliderSyncingThumb .js-slide {
+            width: 55px !important;
+            height: 55px !important;
+            overflow: hidden !important;
+            cursor: pointer !important;
+        }
+
+            #sliderSyncingThumb .js-slide img {
+                width: 100% !important;
+                height: 100% !important;
+                object-fit: contain !important;
+            }
+    </style>
+} 
 <!-- breadcrumb -->
 <div class="bg-gray-13 bg-md-transparent">
     <div class="container">
@@ -35,8 +62,8 @@
                     {
                         @foreach (var photo in Model.Photos)
                         {
-                            <div class="js-slide" style="height: 430px !important; overflow: hidden !important;">
-                                <img @*class="img-fluid"*@ style="width: 100% !important; height: 100% !important; object-fit: contain !important;" src="@photo.GetPhotoUrl()" alt="Image Description">
+                            <div class="js-slide">
+                                <img @*class="img-fluid"*@ src="@photo.GetPhotoUrl()" alt="Image Description">
                             </div>
                         }
                     }
@@ -51,8 +78,8 @@
                     {
                         @foreach (var photo in Model.Photos)
                         {
-                            <div class="js-slide" style="height: 55px !important; overflow: hidden !important; cursor: pointer !important;">
-                                <img @*class="img-fluid"*@ style="width: 100% !important; height: 100% !important; object-fit: contain !important;" src="@photo.GetPhotoUrl()" alt="Image Description">
+                            <div class="js-slide">
+                                <img @*class="img-fluid"*@ src="@photo.GetPhotoUrl()" alt="Image Description">
                             </div>
                         }
                     }

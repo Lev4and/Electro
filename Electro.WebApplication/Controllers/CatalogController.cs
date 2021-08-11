@@ -38,6 +38,7 @@ namespace Electro.WebApplication.Controllers
                     CharacteristicValueFilters = characteristic.Values.Select(characteristicValue => new CharacteristicValueFilter 
                     {
                         IsUsed = false,
+                        Counter = (characteristicValue.Products != null ? characteristicValue.Products.Count : 0),
                         CharacteristicValueId = characteristicValue.Id
                     }).ToList()
                 }).ToList()

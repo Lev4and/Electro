@@ -7,6 +7,10 @@
   <PropertyGroup>
     <TypeScriptCompileBlocked>true</TypeScriptCompileBlocked>
   </PropertyGroup>
+  
+  <ItemGroup>
+    <Content Remove="compilerconfig.json" />
+  </ItemGroup>
 
   <ItemGroup>
     <Folder Include="Areas\Client\Controllers\" />
@@ -14,6 +18,10 @@
     <Folder Include="wwwroot\upload\categories\" />
     <Folder Include="wwwroot\upload\manufacturers\" />
     <Folder Include="wwwroot\upload\products\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="compilerconfig.json" />
   </ItemGroup>
 
   <ItemGroup>

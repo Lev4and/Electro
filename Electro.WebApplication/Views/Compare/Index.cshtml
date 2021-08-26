@@ -119,7 +119,7 @@
                         @foreach (var product in Model.Products)
                         {
                             <td>
-                                <div class=""><a href="#" class="btn btn-soft-secondary mb-3 mb-md-0 font-weight-normal px-5 px-md-3 px-xl-5">Добавить в корзину</a></div>
+                                <div class=""><a data-product-action="cart" data-product-id="@product.Id" class="btn btn-soft-secondary mb-3 mb-md-0 font-weight-normal px-5 px-md-3 px-xl-5" style="cursor: pointer;">Добавить в корзину</a></div>
                             </td>
                         }
                     </tr>
@@ -162,18 +162,12 @@
 
                     <tr>
                         <th>Удалить</th>
-                        <td class="text-center">
-                            <a href="#" class="text-gray-90"><i class="fa fa-times"></i></a>
-                        </td>
-                        <td class="text-center">
-                            <a href="#" class="text-gray-90"><i class="fa fa-times"></i></a>
-                        </td>
-                        <td class="text-center">
-                            <a href="#" class="text-gray-90"><i class="fa fa-times"></i></a>
-                        </td>
-                        <td class="text-center">
-                            <a href="#" class="text-gray-90"><i class="fa fa-times"></i></a>
-                        </td>
+                        @foreach (var product in Model.Products)
+                        {
+                            <td class="text-center">
+                                <a data-product-action="compare" data-compare-action="update" data-product-id="@product.Id" data-product-category-id="@product.CategoryId" data-product-compare-state="@product.ContainsInCompare(Context.Request)" class="text-gray-90" style="cursor: pointer;"><i class="fa fa-times text-red"></i></a>
+                            </td>
+                        }
                     </tr>
                 </tbody>
             </table>
@@ -291,6 +285,8 @@
 
                 // initialization of select picker
                 $.HSCore.components.HSSelectPicker.init('.js-select');
+
+                initializationProductItems();
             });
     </script>
 }

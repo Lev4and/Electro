@@ -1,0 +1,5 @@
+﻿@model CatalogProductsViewModel
+@await Html.PartialAsync("_ShopTabControlBarTitlePartial", Model.Pagination)
+@await Html.PartialAsync("_ShopTabControlBarPartial", Model.Pagination)
+@await Html.PartialAsync("_ShopTabContentPartial", Model.Products)
+@await Html.PartialAsync("_ShopTabPaginationPartial", Model.Pagination)

@@ -1,0 +1,22 @@
+﻿@model List<Manufacturer>
+<ul class="row list-unstyled products-group no-gutters mb-6">
+    @foreach (var manufacturer in Model)
+    {
+        <li class="col-6 col-md-2 product-item">
+            <div class="product-item__outer h-100 w-100">
+                <div class="product-item__inner px-xl-4 p-3">
+                    <div class="product-item__body pb-xl-2">
+                        <div class="mb-2">
+                            <a class="d-block text-center image-container" asp-area="" asp-controller="Manufacturer" asp-action="Index" asp-route-manufacturerId="@manufacturer.Id">
+                                <img class="img-fluid" src="@(manufacturer.Logo?.GetPhotoUrl())" alt="Image Description">
+                            </a>
+                        </div>
+                        <h5 class="text-center mb-1 product-item__title">
+                            <a asp-area="" asp-controller="Manufacturer" asp-action="Index" asp-route-manufacturerId="@manufacturer.Id" class="font-size-15 text-gray-90">@manufacturer.Name</a>
+                        </h5>
+                    </div>
+                </div>
+            </div>
+        </li>
+    }
+</ul>

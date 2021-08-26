@@ -1,0 +1,6 @@
+﻿[
+  {
+    "outputFile": "wwwroot/css/electro/theme.css",
+    "inputFile": "wwwroot/scss/electro/_electro.scss"
+  }
+]

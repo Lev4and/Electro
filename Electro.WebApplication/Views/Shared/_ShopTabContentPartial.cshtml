@@ -1,0 +1,19 @@
+﻿@model List<Product>
+<!-- Shop Body -->
+<!-- Tab Content -->
+<div class="tab-content" id="pills-tabContent">
+    <div class="tab-pane fade pt-2 show active" id="pills-one-example1" role="tabpanel" aria-labelledby="pills-one-example1-tab" data-target-group="groups">
+        @await Html.PartialAsync("_ProductsGridTabContentPartial", Model)
+    </div>
+    <div class="tab-pane fade pt-2" id="pills-two-example1" role="tabpanel" aria-labelledby="pills-two-example1-tab" data-target-group="groups">
+        @await Html.PartialAsync("_ProductsGridExtendedTabContentPartial", Model)
+    </div>
+    <div class="tab-pane fade pt-2" id="pills-three-example1" role="tabpanel" aria-labelledby="pills-three-example1-tab" data-target-group="groups">
+        @await Html.PartialAsync("_ProductsListViewSmallTabContentPartial", Model)
+    </div>
+    <div class="tab-pane fade pt-2" id="pills-four-example1" role="tabpanel" aria-labelledby="pills-four-example1-tab" data-target-group="groups">
+        @await Html.PartialAsync("_ProductsListViewTabContentPartial", Model)
+    </div>
+</div>
+<!-- End Tab Content -->
+<!-- End Shop Body -->

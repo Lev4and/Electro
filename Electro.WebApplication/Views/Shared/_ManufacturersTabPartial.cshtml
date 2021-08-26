@@ -1,0 +1,4 @@
+﻿@model ManufacturersViewModel
+@await Html.PartialAsync("_ManufacturersTabTitlePartial")
+@await Html.PartialAsync("_ManufacturersTabContentPartial", Model.Manufacturers)
+@await Html.PartialAsync("_ManufacturersTabPagination", Model.Pagination)

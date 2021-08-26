@@ -42,7 +42,7 @@
             <h1 class="text-center">Корзина</h1>
         </div>
         <div class="mb-10 cart-table">
-            <form class="mb-4" action="#" method="post">
+            <form class="mb-4" method="post">
                 <table class="table" cellspacing="0">
                     <thead>
                         <tr>
@@ -59,7 +59,7 @@
                         {
                             <tr class="">
                                 <td class="text-center">
-                                    <a asp-area="" asp-controller="Product" asp-action="Index" asp-route-productId="@product.Key.Id" class="text-gray-32 font-size-26">×</a>
+                                    <a class="text-gray-32 font-size-26" style="cursor: pointer !important;">×</a>
                                 </td>
                                 <td class="d-none d-md-table-cell">
                                     <a class="image-container" asp-area="" asp-controller="Product" asp-action="Index" asp-route-productId="@product.Key.Id">
@@ -72,7 +72,7 @@
                                 </td>
 
                                 <td data-title="Стоимость">
-                                    <span class="">@product.Key.Price.ToString("C2")</span>
+                                    <span class="" data-product-id="@product.Key.Id" data-product-price="@product.Key.Price">@product.Key.Price.ToString("C2")</span>
                                 </td>
 
                                 <td data-title="Количество">
@@ -81,7 +81,7 @@
                                     <div class="border rounded-pill py-1 width-122 w-xl-80 px-3 border-color-1">
                                         <div class="js-quantity row align-items-center">
                                             <div class="col">
-                                                <input class="js-result form-control h-auto border-0 rounded p-0 shadow-none" type="text" value="@product.Value">
+                                                <input class="js-result form-control h-auto border-0 rounded p-0 shadow-none" data-product-id="@product.Key.Id" type="text" name="quantity" value="@product.Value">
                                             </div>
                                             <div class="col-auto pr-1">
                                                 <a class="js-minus btn btn-icon btn-xs btn-outline-secondary rounded-circle border-0" href="javascript:;">
@@ -97,7 +97,7 @@
                                 </td>
 
                                 <td data-title="Итого">
-                                    <span class="">@((product.Key.Price * product.Value).ToString("C2"))</span>
+                                    <span class="" data-product-id="@product.Key.Id" data-product-total-price="@((product.Key.Price * product.Value))">@((product.Key.Price * product.Value).ToString("C2"))</span>
                                 </td>
                             </tr>
                         }

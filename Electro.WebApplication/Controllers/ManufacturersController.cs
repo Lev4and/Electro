@@ -81,10 +81,10 @@ namespace Electro.WebApplication.Controllers
             return View(GetManufacturersViewModel());
         }
 
-        [Route("~/Manufacturers/page={numberPage}")]
-        public IActionResult Index(int numberPage)
+        [HttpPost]
+        public PartialViewResult Index(int numberPage)
         {
-            return View(GetManufacturersViewModel(numberPage: numberPage));
+            return PartialView("_ManufacturersTabPartial", GetManufacturersViewModel(numberPage: numberPage));
         }
     }
 }

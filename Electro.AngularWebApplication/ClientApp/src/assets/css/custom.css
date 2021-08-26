@@ -1,0 +1,27 @@
+﻿.table td .container-image {
+    width: 80px;
+    height: 45px;
+    display: flex;
+    display: flex;
+    margin: 0 auto;
+    text-align: center;
+    align-content: center;
+    vertical-align: middle;
+    justify-content: center;
+}
+
+    .table td .container-image img {
+        margin: auto;
+        max-width: 80px;
+        max-height: 45px;
+    }
+
+.form-group .form-group-row-container-image {
+    display: flex;
+}
+
+    .form-group .form-group-row-container-image img {
+        margin: auto;
+        max-width: 100%;
+        max-height: 200px;
+    }

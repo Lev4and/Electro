@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Web;
 
 namespace Electro.WebApplication.Controllers
 {
@@ -59,10 +60,14 @@ namespace Electro.WebApplication.Controllers
             return pagination;
         }
 
-        private CatalogProductsViewModel GetCatalogProductsViewModel(Guid categoryId, CatalogProductsFilters filters = null, Guid? manufacturerId = null, int? numberPage = null)
+        private CatalogProductsViewModel GetCatalogProductsViewModel(Guid categoryId, CatalogProductsFilters filters = null, bool updateFilters = true, Guid? manufacturerId = null, int? numberPage = null)
         {
-            var manufacturers = _dataManager.Manufacturers.GetManufacturersByCategoryId(categoryId).ToList();
-            var characteristicCategories = _dataManager.CharacteristicCategories.GetCharacteristicCategoriesByCategoryId(categoryId).ToList();
+            var manufacturers = updateFilters ? 
+                    _dataManager.Manufacturers.GetManufacturersByCategoryId(categoryId).ToList() : 
+                        new List<ProductsManufacturer>();
+            var characteristicCategories = updateFilters ? 
+                _dataManager.CharacteristicCategories.GetCharacteristicCategoriesByCategoryId(categoryId).ToList() : 
+                    new List<CharacteristicCategory>();
 
             if(filters == null)
             {
@@ -96,7 +101,8 @@ namespace Electro.WebApplication.Controllers
                 },
                 Category = _dataManager.Categories.GetCategoryById(categoryId),
                 Products = _dataManager.Products.GetProductsByCategoryId(categoryId, filters).ToList(),
-                LatestProducts = _dataManager.Products.GetLatestProductsByCategoryId(categoryId, 5).ToList(),
+                LatestProducts = updateFilters ? _dataManager.Products.GetLatestProductsByCategoryId(categoryId, 5).ToList() : 
+                    new List<Product>(),
                 SortingOptions = new Dictionary<SortingOption, string>() 
                 {
                     { SortingOption.Default, "Сортировка по умолчанию" },
@@ -108,7 +114,9 @@ namespace Electro.WebApplication.Controllers
                     { SortingOption.ByDescendingPrice, "Сортировка по цене: от высокой до низкой" },
                     { SortingOption.ByAscendingName, "Сортировка по названию: от А до Я" },
                     { SortingOption.ByDescendingName, "Сортировка по названию: от Я до А" },
-                }
+                },
+                Favorites = CatalogProductsViewModel.GetFavoritesByJsonString(
+                    HttpUtility.UrlDecode(Request.Cookies["favorites"]))
             };
 
             return viewModel;
@@ -147,9 +155,9 @@ namespace Electro.WebApplication.Controllers
 
         [HttpPost]
         [Route("~/Catalog/{categoryId}/Products")]
-        public IActionResult Products(Guid categoryId, CatalogProductsViewModel viewModel)
+        public PartialViewResult Products(Guid categoryId, CatalogProductsViewModel viewModel)
         {
-            return View(GetCatalogProductsViewModel(categoryId, viewModel.Filters));
+            return PartialView("_ShopTabPartial", GetCatalogProductsViewModel(categoryId, viewModel.Filters, updateFilters: false));
         }
 
         [Route("~/Catalog/{categoryId}/Products/{numberPage}")]

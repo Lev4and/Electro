@@ -2,41 +2,45 @@
 @{
     ViewData["Title"] = $"Производитель товаров {Model.Manufacturer.Name}";
 }
-<!-- breadcrumb -->
-<div class="bg-gray-13 bg-md-transparent">
-    <div class="container">
-        <!-- breadcrumb -->
-        <div class="my-md-3">
-            <nav aria-label="breadcrumb">
-                <ol class="breadcrumb mb-3 flex-nowrap flex-xl-wrap overflow-auto overflow-xl-visble">
-                    <li class="breadcrumb-item flex-shrink-0 flex-xl-shrink-1"><a asp-area="" asp-controller="Home" asp-action="Index">Главная</a></li>
-                    <li class="breadcrumb-item flex-shrink-0 flex-xl-shrink-1"><a asp-area="" asp-controller="Manufacturers" asp-action="Index">Производители</a></li>
-                    <li class="breadcrumb-item flex-shrink-0 flex-xl-shrink-1 active" aria-current="page">@Model.Manufacturer.Name</li>
-                </ol>
-            </nav>
+<!-- ========== MAIN CONTENT ========== -->
+<main id="content" role="main">
+    <!-- breadcrumb -->
+    <div class="bg-gray-13 bg-md-transparent">
+        <div class="container">
+            <!-- breadcrumb -->
+            <div class="my-md-3">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb mb-3 flex-nowrap flex-xl-wrap overflow-auto overflow-xl-visble">
+                        <li class="breadcrumb-item flex-shrink-0 flex-xl-shrink-1"><a asp-area="" asp-controller="Home" asp-action="Index">Главная</a></li>
+                        <li class="breadcrumb-item flex-shrink-0 flex-xl-shrink-1"><a asp-area="" asp-controller="Manufacturers" asp-action="Index">Производители</a></li>
+                        <li class="breadcrumb-item flex-shrink-0 flex-xl-shrink-1 active" aria-current="page">@Model.Manufacturer.Name</li>
+                    </ol>
+                </nav>
+            </div>
+            <!-- End breadcrumb -->
         </div>
-        <!-- End breadcrumb -->
     </div>
-</div>
-<!-- End breadcrumb -->
+    <!-- End breadcrumb -->
 
-<div class="container">
-    <div class="mb-4 mb-md-6 text-center">
-        <h1>@Model.Manufacturer.Name</h1>
-    </div>
-    <div class="mb-8">
-        <div class="row no-gutters ec-store-directory align-items-start">
-            @foreach (var category in Model.Categories)
-            {
-                <ul class="col-md-3 border-top border-color-1 mb-4 mb-md-0">
-                    <li>
-                        <a asp-area="" asp-controller="Catalog" asp-action="Products" asp-route-categoryId="@category.Id" asp-route-manufacturerId="@Model.Manufacturer.Id">@category.Name (@category.CountProducts)</a>
-                    </li>
-                </ul>
-            }
+    <div class="container">
+        <div class="mb-4 mb-md-6 text-center">
+            <h1>@Model.Manufacturer.Name</h1>
+        </div>
+        <div class="mb-8">
+            <div class="row no-gutters ec-store-directory align-items-start">
+                @foreach (var category in Model.Categories)
+                {
+                    <ul class="col-md-3 border-top border-color-1 mb-4 mb-md-0">
+                        <li>
+                            <a asp-area="" asp-controller="Catalog" asp-action="Products" asp-route-categoryId="@category.Id" asp-route-manufacturerId="@Model.Manufacturer.Id">@category.Name (@category.CountProducts)</a>
+                        </li>
+                    </ul>
+                }
+            </div>
         </div>
     </div>
-</div>
+</main>
+<!-- ========== END MAIN CONTENT ========== -->
 @section ScriptPage
 {
     <!-- JS Plugins Init. -->

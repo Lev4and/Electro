@@ -11,7 +11,7 @@
                     </a>
                 </div>
                 <div class="mb-3">
-                    <a class="d-inline-flex align-items-center small font-size-14" href="#">
+                    <a class="d-inline-flex align-items-center small font-size-14">
                         <div class="text-warning mr-2">
                             <small class="fas fa-star"></small>
                             <small class="fas fa-star"></small>
@@ -28,14 +28,14 @@
                         <div class="text-gray-100">@Model.Price.ToString("C2")</div>
                     </div>
                     <div class="d-none d-xl-block prodcut-add-cart">
-                        <a href="../shop/cart.html" class="btn-add-cart btn-primary transition-3d-hover"><i class="ec ec-add-to-cart"></i></a>
+                        <a data-product-action="cart" data-product-id="@Model.Id"  class="btn-add-cart btn-primary transition-3d-hover cursor-pointer"><i class="ec ec-add-to-cart"></i></a>
                     </div>
                 </div>
             </div>
             <div class="product-item__footer">
                 <div class="border-top pt-2 flex-center-between flex-wrap">
-                    <a href="../shop/compare.html" class="text-gray-6 font-size-13"><i class="ec ec-compare mr-1 font-size-15"></i> Сравнить</a>
-                    <a href="../shop/wishlist.html" class="text-gray-6 font-size-13"><i class="ec ec-favorites mr-1 font-size-15"></i> В желаемое</a>
+                    <a data-product-action="compare" data-product-id="@Model.Id" data-product-category-id="@Model.CategoryId" data-product-compare-state="@Model.ContainsInCompare(Context.Request)"  class="text-gray-6 font-size-13"><i class="ec ec-compare mr-1 font-size-15"></i> Сравнить</a>
+                    <a data-product-action="favorite" data-product-id="@Model.Id" data-product-favorite-state="@Model.ContainsInFavorites(Context.Request)"  class="text-gray-6 font-size-13 cursor-pointer"><i class="ec ec-favorites mr-1 font-size-15"></i> В желаемое</a>
                 </div>
             </div>
         </div>

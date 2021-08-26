@@ -1,0 +1,25 @@
+﻿@model List<Product>
+<ul class="list-unstyled px-3 pt-3">
+    @foreach (var product in Model)
+    {
+        <li class="border-bottom pb-3 mb-3">
+            <div class="">
+                <ul class="list-unstyled row mx-n2">
+                    <li class="px-2 col-auto" style="width: 75px !important; height: 75px !important; overflow: hidden !important;">
+                        <img class="img-fluid" style="width: 100% !important; height: 100% !important; object-fit: contain !important;" src="@product.MainPhoto?.GetPhotoUrl()" alt="Image Description">
+                    </li>
+                    <li class="px-2 col">
+                        <h5 class="text-blue font-size-14 font-weight-bold">@product.Model</h5>
+                        <span class="font-size-14">@product.Price.ToString("C2")</span>
+                    </li>
+                    <li class="px-2 col-auto">
+                        <a class="text-gray-90" style="cursor: pointer !important;" data-compare-action="remove" data-compare-category-id="@product.CategoryId" data-compare-product-id="@product.Id"><i class="ec ec-close-remove"></i></a>
+                    </li>
+                </ul>
+            </div>
+        </li>
+    }
+</ul>
+<div class="flex-center-between px-4 pt-2">
+    <a asp-area="" asp-controller="Compare" asp-action="Index" class="btn btn-soft-secondary mb-3 mb-md-0 font-weight-normal px-5 px-md-4 px-lg-5">Сравнить</a>
+</div>    

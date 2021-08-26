@@ -9,6 +9,9 @@ using Electro.Model.Database.Repositories.EntityFramework.Sorters.Manufacturer;
 using Electro.Model.Database.Repositories.EntityFramework.Sorters.Product;
 using Electro.Model.Database.Repositories.EntityFramework.Sorters.SectionsCharacteristic;
 using Electro.WebApplication.Services;
+using Electro.WebApplication.Services.Cookie;
+using Electro.WebApplication.Services.Cookie.JsonConverts;
+using Electro.WebApplication.Services.Decoders;
 using Electro.WebApplication.Services.ImageResizable;
 using Electro.WebApplication.Services.ImageResizable.ImageProfiles;
 using Microsoft.AspNetCore.Builder;
@@ -39,6 +42,18 @@ namespace Electro.WebApplication
             services.AddTransient<IImageProfile, BoxImageProfile>();
             services.AddTransient<IImageProfile, LogoImageProfile>();
             services.AddTransient<ImageService>();
+
+            services.AddTransient<CookieDecoder>();
+
+            services.AddTransient<CartJsonConverter>();
+            services.AddTransient<ViewsJsonConverter>();
+            services.AddTransient<CompareJsonConverter>();
+            services.AddTransient<FavoritesJsonConverter>();
+
+            services.AddTransient<CartCookieService>();
+            services.AddTransient<ViewsCookieService>();
+            services.AddTransient<CompareCookieService>();
+            services.AddTransient<FavoritesCookieService>();
 
             services.AddTransient<IProductsSorter, DefaultProductsSorter>();
             services.AddTransient<IProductsSorter, ByAncientProductsSorter>();
@@ -88,21 +103,6 @@ namespace Electro.WebApplication
             services.AddTransient<ISectionCharacteristicCategoriesRepository, EFSectionCharacteristicCategoriesRepository>();
             services.AddTransient<IProductCharacteristicCategoryValuesRepository, EFProductCharacteristicCategoryValuesRepository>();
             services.AddTransient<DataManager>();
-
-            //services.AddTransient<IProductsRepository, ADONETProductsRepository>();
-            //services.AddTransient<ICategoriesRepository, ADONETCategoriesRepository>();
-            //services.AddTransient<IProductPhotosRepository, ADONETProductPhotosRepository>();
-            //services.AddTransient<IManufacturersRepository, ADONETManufacturersRepository>();
-            //services.AddTransient<ICharacteristicsRepository, ADONETCharacteristicsRepository>();
-            //services.AddTransient<IProductMainPhotosRepository, ADONETProductMainPhotosRepository>();
-            //services.AddTransient<IManufacturerLogosRepository, ADONETManufacturerLogosRepository>();
-            //services.AddTransient<IProductInformationRepository, ADONETProductInformationRepository>();
-            //services.AddTransient<ISectionsCharacteristicsRepository, ADONETSectionsCharacteristicsRepository>();
-            //services.AddTransient<ICharacteristicCategoriesRepository, ADONETCharacteristicCategoriesRepository>();
-            //services.AddTransient<ICharacteristicCategoryValuesRepository, ADONETCharacteristicCategoryValuesRepository>();
-            //services.AddTransient<ISectionCharacteristicCategoriesRepository, ADONETSectionCharacteristicCategoriesRepository>();
-            //services.AddTransient<IProductCharacteristicCategoryValuesRepository, ADONETProductCharacteristicCategoryValuesRepository>();
-            //services.AddTransient<ImportDataManager>();
 
             services.AddDbContext<ElectroDbContext>((options) =>
             {

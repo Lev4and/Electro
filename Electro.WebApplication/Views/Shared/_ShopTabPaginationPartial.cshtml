@@ -1,0 +1,12 @@
+﻿@model Pagination
+<!-- Shop Pagination -->
+<nav class="d-md-flex justify-content-between align-items-center border-top pt-3" aria-label="Page navigation example">
+    <div class="text-center text-md-left mb-3 mb-md-0">@Model.GetFormattedStringRange()</div>
+    <ul class="pagination mb-0 pagination-shop justify-content-center justify-content-md-start">
+        @foreach (var item in Model.GeneratePagination())
+        {
+            <li class="page-item"><a class="page-link @(Model.NumberPage == item ? "current" : "")" data-number-page="@item">@item</a></li>
+        }
+    </ul>
+</nav>
+<!-- End Shop Pagination -->

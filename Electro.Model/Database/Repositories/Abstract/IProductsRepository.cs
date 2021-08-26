@@ -1,6 +1,7 @@
 ﻿using Electro.Model.Database.AuxiliaryTypes;
 using Electro.Model.Database.Entities;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Electro.Model.Database.Repositories.Abstract
@@ -28,6 +29,8 @@ namespace Electro.Model.Database.Repositories.Abstract
         IQueryable<Product> GetProductsByCategoryId(Guid categoryId, CatalogProductsFilters filters, bool track = false);
 
         IQueryable<Product> GetLatestProductsByCategoryId(Guid categoryId, int countItemsInResult, bool track = false);
+
+        IQueryable<Product> GetProductsByIds(List<Guid> ids, bool track = false);
 
         void DeleteProductById(Guid id);
     }

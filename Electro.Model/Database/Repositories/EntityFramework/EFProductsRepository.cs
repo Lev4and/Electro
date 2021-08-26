@@ -335,6 +335,25 @@ namespace Electro.Model.Database.Repositories.EntityFramework
             return products;
         }
 
+        public IQueryable<Product> GetProductsByIds(List<Guid> ids, bool track = false)
+        {
+            var products = _context.Products
+                .Include(product => product.Category)
+                .Include(product => product.MainPhoto)
+                .Include(product => product.Manufacturer)
+                .Include(product => product.CharacteristicsValues)
+                     .ThenInclude(productCharacteristicCategoryValue =>
+                        productCharacteristicCategoryValue.CharacteristicCategoryValue)
+                .Where(product => ids.Contains(product.Id));
+
+            if (!track)
+            {
+                products = products.AsNoTracking();
+            }
+
+            return products;
+        }
+
         public void DeleteProductById(Guid id)
         {
             _context.Products.Remove(GetProductById(id));

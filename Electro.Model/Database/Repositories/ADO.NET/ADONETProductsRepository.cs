@@ -138,6 +138,11 @@ namespace Electro.Model.Database.Repositories.ADONET
             throw new NotImplementedException();
         }
 
+        public IQueryable<Product> GetProductsByIds(List<Guid> ids, bool track = false)
+        {
+            throw new NotImplementedException();
+        }
+
         public void DeleteProductById(Guid id)
         {
             throw new NotImplementedException();

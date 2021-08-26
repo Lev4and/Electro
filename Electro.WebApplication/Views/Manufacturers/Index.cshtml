@@ -16,63 +16,33 @@
                 object-fit: contain !important;
             }
     </style>
-} 
-<!-- breadcrumb -->
-<div class="bg-gray-13 bg-md-transparent">
-    <div class="container">
-        <!-- breadcrumb -->
-        <div class="my-md-3">
-            <nav aria-label="breadcrumb">
-                <ol class="breadcrumb mb-3 flex-nowrap flex-xl-wrap overflow-auto overflow-xl-visble">
-                    <li class="breadcrumb-item flex-shrink-0 flex-xl-shrink-1"><a asp-area="" asp-controller="Home" asp-action="Index">Главная</a></li>
-                    <li class="breadcrumb-item flex-shrink-0 flex-xl-shrink-1 active" aria-current="page">Производители</li>
-                </ol>
-            </nav>
+}
+<!-- ========== MAIN CONTENT ========== -->
+<main id="content" role="main">
+    <!-- breadcrumb -->
+    <div class="bg-gray-13 bg-md-transparent">
+        <div class="container">
+            <!-- breadcrumb -->
+            <div class="my-md-3">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb mb-3 flex-nowrap flex-xl-wrap overflow-auto overflow-xl-visble">
+                        <li class="breadcrumb-item flex-shrink-0 flex-xl-shrink-1"><a asp-area="" asp-controller="Home" asp-action="Index">Главная</a></li>
+                        <li class="breadcrumb-item flex-shrink-0 flex-xl-shrink-1 active" aria-current="page">Производители</li>
+                    </ol>
+                </nav>
+            </div>
+            <!-- End breadcrumb -->
         </div>
-        <!-- End breadcrumb -->
     </div>
-</div>
-<!-- End breadcrumb -->
+    <!-- End breadcrumb -->
 
-<div class="container">
-    <div class="mb-6">
-        <div class="d-flex justify-content-between align-items-center border-bottom border-color-1 flex-lg-nowrap flex-wrap mb-4">
-            <h3 class="section-title section-title__full mb-0 pb-2 font-size-22">Производители</h3>
+    <div class="container">
+        <div class="mb-6">
+            @await Html.PartialAsync("_ManufacturersTabPartial", Model)
         </div>
-        <ul class="row list-unstyled products-group no-gutters mb-6">
-            @foreach (var manufacturer in Model.Manufacturers)
-            {
-                <li class="col-6 col-md-2 product-item">
-                    <div class="product-item__outer h-100 w-100">
-                        <div class="product-item__inner px-xl-4 p-3">
-                            <div class="product-item__body pb-xl-2">
-                                <div class="mb-2">
-                                    <a class="d-block text-center image-container" asp-area="" asp-controller="Manufacturer" asp-action="Index" asp-route-manufacturerId="@manufacturer.Id">
-                                        <img class="img-fluid" src="@(manufacturer.Logo?.GetPhotoUrl())" alt="Image Description">
-                                    </a>
-                                </div>
-                                <h5 class="text-center mb-1 product-item__title">
-                                    <a asp-area="" asp-controller="Manufacturer" asp-action="Index" asp-route-manufacturerId="@manufacturer.Id" class="font-size-15 text-gray-90">@manufacturer.Name</a>
-                                </h5>
-                            </div>
-                        </div>
-                    </div>
-                </li>
-            }
-        </ul>
-        <!-- Manufacturers Pagination -->
-        <nav class="d-md-flex justify-content-between align-items-center border-top pt-3" aria-label="Page navigation example">
-            <div class="text-center text-md-left mb-3 mb-md-0">@Model.Pagination.GetFormattedStringRange()</div>
-            <ul class="pagination mb-0 pagination-shop justify-content-center justify-content-md-start">
-                @foreach (var item in Model.Pagination.GeneratePagination())
-                {
-                    <li class="page-item"><a class="page-link @(Model.Pagination.NumberPage == item ? "current" : "")" asp-area="" asp-controller="Manufacturers" asp-action="Index" asp-route-numberPage="@item">@item</a></li>
-                }
-            </ul>
-        </nav>
-        <!-- End Manufacturers Pagination -->
     </div>
-</div>
+</main>
+<!-- ========== END MAIN CONTENT ========== -->
 @section ScriptPage
 {
     <!-- JS Plugins Init. -->
@@ -180,6 +150,30 @@
 
             // initialization of select picker
             $.HSCore.components.HSSelectPicker.init('.js-select');
+
+            initialization();
+
+            function initialization() {
+                $('.page-link').each(function () {
+                    $(this).on('click', function (e) {
+                        showPage(this);
+                    });
+                });
+            }
+
+            function showPage(pageLink) {
+                $.ajax({
+                    url: '/Manufacturers/Index',
+                    method: 'POST',
+                    data: { numberPage: $(pageLink).attr('data-number-page') },
+                    success: function (data) {
+                        $('main div.container div.mb-6').html();
+                        $('main div.container div.mb-6').html(data);
+
+                        initialization();
+                    }
+                })
+            }
         });
     </script>
 }

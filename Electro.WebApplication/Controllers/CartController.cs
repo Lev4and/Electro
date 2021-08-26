@@ -1,34 +1,62 @@
 ﻿using Electro.Model.Database;
-using Electro.Model.Database.Entities;
 using Electro.WebApplication.Models;
+using Electro.WebApplication.Services.Cookie;
 using Microsoft.AspNetCore.Mvc;
 using System;
-using System.Collections.Generic;
+using System.Linq;
 
 namespace Electro.WebApplication.Controllers
 {
     public class CartController : Controller
     {
         private readonly DataManager _dataManager;
+        private readonly CartCookieService _cartCookieService;
 
-        public CartController(DataManager dataManager)
+        public CartController(DataManager dataManager, CartCookieService cartCookieService)
         {
             _dataManager = dataManager;
+            _cartCookieService = cartCookieService;
         }
 
         [Route("~/Cart")]
         public IActionResult Index()
         {
-            var viewModel = new CartViewModel()
+            var viewModel = new CartViewModel();
+
+            if (User.Identity.IsAuthenticated)
             {
-                Content = new Dictionary<Product, int>()
-                {
-                    { _dataManager.Products.GetProductById(Guid.Parse("1a1196e1-cb3d-4ad7-b859-042a935986b9")), 1 },
-                    { _dataManager.Products.GetProductById(Guid.Parse("7b339d95-f6c0-417b-a466-15989c33639f")), 2 }
-                }
-            };
+
+            }
+            else
+            {
+                var cartContent = _cartCookieService.GetCartContent(Request);
+
+                viewModel.Content = _dataManager.Products.GetProductsByIds(cartContent.Keys.ToList())
+                    .ToDictionary(key => key, value => cartContent[value.Id]);
+            }
 
             return View(viewModel);
+        }
+
+        [HttpPost]
+        public PartialViewResult DropdownContent()
+        {
+            var cartContent = _cartCookieService.GetCartContent(Request);
+
+            return PartialView("_CartDropdownContentPartial", _dataManager.Products.GetProductsByIds(cartContent.Keys.ToList())
+                    .ToDictionary(key => key, value => cartContent[value.Id]));
+        }
+
+        [HttpPost]
+        public JsonResult Add(Guid productId, int quantity = 1)
+        {
+            return new JsonResult(new { count = _cartCookieService.AddProductInCart(productId, quantity, Request, Response) });
+        }
+
+        [HttpPost]
+        public JsonResult Remove(Guid productId)
+        {
+            return new JsonResult(new { count = _cartCookieService.RemoveProductFromCart(productId, Request, Response) });
         }
     }
 }

@@ -33,24 +33,6 @@ namespace Electro.Resource.Api
 
             services.AddTransient<RoleManager<ApplicatonRole>>();
             services.AddTransient<UserManager<ApplicationUser>>();
-
-            //services.AddTransient<IRolesRepository, EFRolesRepository>();
-            //services.AddTransient<IUsersRepository, EFUsersRepository>();
-            //services.AddTransient<IProductsRepository, EFProductsRepository>();
-            //services.AddTransient<ICategoriesRepository, EFCategoriesRepository>();
-            //services.AddTransient<IProductPhotosRepository, EFProductPhotosRepository>();
-            //services.AddTransient<IManufacturersRepository, EFManufacturersRepository>();
-            //services.AddTransient<ICategoryPhotosRepository, EFCategoryPhotosRepository>();
-            //services.AddTransient<ICharacteristicsRepository, EFCharacteristicsRepository>();
-            //services.AddTransient<IProductMainPhotosRepository, EFProductMainPhotosRepository>();
-            //services.AddTransient<IManufacturerLogosRepository, EFManufacturerLogosRepository>();
-            //services.AddTransient<IProductInformationRepository, EFProductInformationRepository>();
-            //services.AddTransient<ISectionsCharacteristicsRepository, EFSectionsCharacteristicsRepository>();
-            //services.AddTransient<IManufacturerInformationRepository, EFManufacturerInformationRepository>();
-            //services.AddTransient<ICharacteristicCategoriesRepository, EFCharacteristicCategoriesRepository>();
-            //services.AddTransient<ICharacteristicCategoryValuesRepository, EFCharacteristicCategoryValuesRepository>();
-            //services.AddTransient<ISectionCharacteristicCategoriesRepository, EFSectionCharacteristicCategoriesRepository>();
-            //services.AddTransient<IProductCharacteristicCategoryValuesRepository, EFProductCharacteristicCategoryValuesRepository>();
             
             services.AddTransient<EFRolesRepository>();
             services.AddTransient<EFUsersRepository>();
@@ -90,20 +72,6 @@ namespace Electro.Resource.Api
                     provider.GetRequiredService<EFSectionsCharacteristicsRepository>(),
                     provider.GetRequiredService<EFUsersRepository>());
             });
-
-            //services.AddTransient<IProductsRepository, ADONETProductsRepository>();
-            //services.AddTransient<ICategoriesRepository, ADONETCategoriesRepository>();
-            //services.AddTransient<IProductPhotosRepository, ADONETProductPhotosRepository>();
-            //services.AddTransient<IManufacturersRepository, ADONETManufacturersRepository>();
-            //services.AddTransient<ICharacteristicsRepository, ADONETCharacteristicsRepository>();
-            //services.AddTransient<IProductMainPhotosRepository, ADONETProductMainPhotosRepository>();
-            //services.AddTransient<IManufacturerLogosRepository, ADONETManufacturerLogosRepository>();
-            //services.AddTransient<IProductInformationRepository, ADONETProductInformationRepository>();
-            //services.AddTransient<ISectionsCharacteristicsRepository, ADONETSectionsCharacteristicsRepository>();
-            //services.AddTransient<ICharacteristicCategoriesRepository, ADONETCharacteristicCategoriesRepository>();
-            //services.AddTransient<ICharacteristicCategoryValuesRepository, ADONETCharacteristicCategoryValuesRepository>();
-            //services.AddTransient<ISectionCharacteristicCategoriesRepository, ADONETSectionCharacteristicCategoriesRepository>();
-            //services.AddTransient<IProductCharacteristicCategoryValuesRepository, ADONETProductCharacteristicCategoryValuesRepository>();
 
             services.AddTransient<ADONETProductsRepository>();
             services.AddTransient<ADONETCategoriesRepository>();
@@ -180,8 +148,7 @@ namespace Electro.Resource.Api
 
             services.AddControllersWithViews()
                 .AddNewtonsoftJson(options => options.SerializerSettings.ReferenceLoopHandling = 
-                    Newtonsoft.Json.ReferenceLoopHandling.Ignore
-            );
+                    Newtonsoft.Json.ReferenceLoopHandling.Ignore);
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
